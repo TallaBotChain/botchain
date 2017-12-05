@@ -1,3 +1,11 @@
-node_modules/
-build/
-
+node_modules
+build
+*.log
+lib
+package-lock.json
+secrets.json
+coverage
+coverage.json
+allFiredEvents
+scTopics
+coverageEnv
