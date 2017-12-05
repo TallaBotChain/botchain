@@ -7,14 +7,6 @@ import './Bot.sol';
 
 contract BotChain {
     
-    //ERC20 Token Information
-    string public constant symbol = "BOT";
-    string public constant name = "BotCoin";
-    uint8 public constant decimals = 18;
-    uint256 public constant totalSupply = 1.5 * 10^9;
-    mapping(address => uint256) public balanceOf;
-    mapping(address => mapping (address => uint256)) public allowed;
-    
     //List of the costs of service
     //Indexes correspond to service
     //0 is creating DeveloperRecord
@@ -54,7 +46,7 @@ contract BotChain {
     function BotChain (uint256[] costsToUse, uint256 length) public {
         isOwner[msg.sender] = true;
         owners.push(msg.sender);
-        balanceOf[address(this)] = totalSupply * (10 ** decimals);
+        // balanceOf[address(this)] = totalSupply * (10 ** decimals);
         for(uint256 i=0;i<length;i++) {
             costs.push(costsToUse[i]);
         }
@@ -114,7 +106,7 @@ contract BotChain {
     //Creates a new DeveloperRecord if the sender is an approved dev and has not already created a DeveloperRecord.
     //Note: new DeveloperRecord will be empty, updateDeveloperRecord will need to be called.
     function addDeveloperRecord() public {
-        if(isApprovedDev[msg.sender] && botDeveloperRecords[msg.sender]==0x0 && useBotCoinBalance(0)) {
+        if(isApprovedDev[msg.sender] && botDeveloperRecords[msg.sender]==0x0) {
             DeveloperRecord devRecord = new DeveloperRecord();
             botDeveloperRecords[msg.sender] = devRecord;
         } else {
@@ -124,7 +116,7 @@ contract BotChain {
     
     //Updates DeveloperRecord associated with sender address if sender is an approved developer
     function updateDeveloperRecord(string name, string organization, string street1, string street2, string city, string state, string postalCode, string country, string phone, string phoneExtension, string email) public {
-        if(isApprovedDev[msg.sender] && botDeveloperRecords[msg.sender]!=0x0 && useBotCoinBalance(1)) {
+        if(isApprovedDev[msg.sender] && botDeveloperRecords[msg.sender]!=0x0) {
             DeveloperRecord devRecord = DeveloperRecord(botDeveloperRecords[msg.sender]);
             devRecord.updateRecord1(msg.sender,name,organization,street1,street2,city);
             devRecord.updateRecord2(state,postalCode,country,phone,phoneExtension,email);
@@ -133,7 +125,7 @@ contract BotChain {
     
     //Creates a new bot belonging to sender address if sender is an approved developer
     function addBot(string name, string date, string tags) public {
-        if(isApprovedDev[msg.sender] && botDeveloperRecords[msg.sender] != 0x0 && useBotCoinBalance(2)) {
+        if(isApprovedDev[msg.sender] && botDeveloperRecords[msg.sender] != 0x0) {
             Bot newBot = new Bot(botDeveloperRecords[msg.sender], name, date, tags);
             botOwners[newBot] = botDeveloperRecords[msg.sender];
             botIndex[newBot] = bots.length;
@@ -145,7 +137,7 @@ contract BotChain {
     
     //Edits a bot with id belonging to sender address if sender is an approved developer
     function updateBot(address id, string name, string date, string tags) public {
-        if(isApprovedDev[msg.sender] && botOwners[id]==msg.sender && useBotCoinBalance(3)) {
+        if(isApprovedDev[msg.sender] && botOwners[id]==msg.sender) {
             Bot thisBot = Bot(id);
             thisBot.updateBot(botDeveloperRecords[msg.sender], name, date, tags);
         } else {
@@ -160,55 +152,4 @@ contract BotChain {
         }
         costsLength = length;
     }
-    
-    function useBotCoinBalance (uint256 service) private returns (bool success) {
-        if(balanceOf[msg.sender] >= costs[service]) {
-            return transfer(address(this), costs[service]);
-        } else {
-            return false;
-        }
-    }
-    
-    //ERC20 Functions
-    function transfer(address _to, uint256 _amount) public returns (bool success) {
-        if (balanceOf[msg.sender] >= _amount 
-                && _amount > 0
-                && balanceOf[_to] + _amount > balanceOf[_to]) {
-            balanceOf[msg.sender] -= _amount;
-            balanceOf[_to] += _amount;
-            Transfer(msg.sender, _to, _amount);
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    function transferFrom(address _from, address _to, uint256 _amount) public returns (bool success) {
-            if ((
-                (isOwner[msg.sender] && _from == address(this)) 
-                || (balanceOf[_from] >= _amount && allowed[_from][msg.sender] >= _amount))
-                && _amount > 0
-                && balanceOf[_to] + _amount > balanceOf[_to]) {
-            balanceOf[_from] -= _amount;
-            allowed[_from][msg.sender] -= _amount;
-            balanceOf[_to] += _amount;
-            Transfer(_from, _to, _amount);
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    function approve(address _spender, uint256 _amount) public returns (bool success) {
-        allowed[msg.sender][_spender] = _amount;
-        Approval(msg.sender, _spender, _amount);
-        return true;
-    }
-
-    function allowance(address _owner, address _spender) public constant returns (uint256 remaining) {
-        return allowed[_owner][_spender];
-    }
-    
-    event Transfer(address indexed _from, address indexed _to, uint256 _value);
-    event Approval(address indexed _owner, address indexed _spender, uint256 _value);
 }
