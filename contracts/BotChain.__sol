@@ -7,16 +7,6 @@ import './Bot.sol';
 
 contract BotChain {
     
-    //List of the costs of service
-    //Indexes correspond to service
-    //0 is creating DeveloperRecord
-    //1 is updating DeveloperRecord
-    //2 is creating a Bot
-    //3 is updating a Bot
-    uint256[] public costs;
-    
-    uint256 public costsLength;
-    
     //Returns true if address is an owner of this contract
     mapping(address => bool) public isOwner;
     //Returns the index of address in owners array
@@ -42,15 +32,9 @@ contract BotChain {
     address[] public bots;
     
     //Creates a BotChain Contract with sender as an owner
-    //Set the costs of services to passed in array
-    function BotChain (uint256[] costsToUse, uint256 length) public {
+    function BotChain() public {
         isOwner[msg.sender] = true;
         owners.push(msg.sender);
-        // balanceOf[address(this)] = totalSupply * (10 ** decimals);
-        for(uint256 i=0;i<length;i++) {
-            costs.push(costsToUse[i]);
-        }
-        costsLength = length;
     }
     
     //Adds a new owner to the BotChain contract
@@ -143,13 +127,5 @@ contract BotChain {
         } else {
             revert();
         }
-    }
-    
-    //Update the costs to use services
-    function updateCosts(uint256[] costsToUse, uint256 length) public {
-        for(uint256 i=0;i<length;i++) {
-            costs[i] = costsToUse[i];
-        }
-        costsLength = length;
     }
 }
