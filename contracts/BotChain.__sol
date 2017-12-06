@@ -16,10 +16,6 @@ contract BotChain {
     
     //Returns true if address belongs to an approved developer
     mapping(address => bool) public isApprovedDev;
-    //Returns the index of address in the approvedDevs array
-    mapping(address => uint256) public devIndex;
-    //List of all approved developer addresses
-    address[] public approvedDevs;
     
     //Returns address of DeveloperRecord associated with given address
     mapping(address => address) public botDeveloperRecords;
@@ -65,13 +61,7 @@ contract BotChain {
     //Adds an address to the list of approved developers
     function addApprovedDev(address newDev) public {
         if(isOwner[msg.sender] && !isApprovedDev[newDev]) {
-            isApprovedDev[newDev] = true;
-            if(approvedDevs.length > devIndex[msg.sender] && approvedDevs[devIndex[msg.sender]]==0x0) {
-                approvedDevs[devIndex[msg.sender]] = msg.sender;
-            } else {
-                devIndex[msg.sender] = approvedDevs.length;
-                approvedDevs.push(newDev);
-            }
+            // Set neDev as approved
         } else {
             revert();
         }
@@ -80,8 +70,7 @@ contract BotChain {
     //Removes an address from the list of approved developers
     function removeApprovedDev(address dev) public {
         if(isOwner[msg.sender] && isApprovedDev[dev]) {
-            isApprovedDev[dev] = false;
-            approvedDevs[devIndex[msg.sender]]=0x0;
+            // Set dev as not approved
         } else {
             revert();
         }
