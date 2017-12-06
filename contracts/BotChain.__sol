@@ -88,22 +88,19 @@ contract BotChain {
     }
     
     //Creates a new bot belonging to sender address if sender is an approved developer
-    function addBot(string name, string date, string tags) public {
+    function addBot(address botAddress) public {
         if(isApprovedDev[msg.sender] && botDeveloperRecords[msg.sender] != 0x0) {
-            Bot newBot = new Bot(botDeveloperRecords[msg.sender], name, date, tags);
-            botOwners[newBot] = botDeveloperRecords[msg.sender];
-            botIndex[newBot] = bots.length;
-            bots.push(newBot);
+            // Set botOwner
+            // Create bot record
         } else {
             revert();
         }
     }
     
-    //Edits a bot with id belonging to sender address if sender is an approved developer
-    function updateBot(address id, string name, string date, string tags) public {
+    //Edits a bot's metaData hash
+    function updateBot(address id, string metaData) public {
         if(isApprovedDev[msg.sender] && botOwners[id]==msg.sender) {
-            Bot thisBot = Bot(id);
-            thisBot.updateBot(botDeveloperRecords[msg.sender], name, date, tags);
+            // Update bot metadata
         } else {
             revert();
         }
