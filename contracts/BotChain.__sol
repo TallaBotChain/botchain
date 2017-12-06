@@ -87,26 +87,6 @@ contract BotChain {
         }
     }
     
-    //Creates a new DeveloperRecord if the sender is an approved dev and has not already created a DeveloperRecord.
-    //Note: new DeveloperRecord will be empty, updateDeveloperRecord will need to be called.
-    function addDeveloperRecord() public {
-        if(isApprovedDev[msg.sender] && botDeveloperRecords[msg.sender]==0x0) {
-            DeveloperRecord devRecord = new DeveloperRecord();
-            botDeveloperRecords[msg.sender] = devRecord;
-        } else {
-            revert();
-        }
-    }
-    
-    //Updates DeveloperRecord associated with sender address if sender is an approved developer
-    function updateDeveloperRecord(string name, string organization, string street1, string street2, string city, string state, string postalCode, string country, string phone, string phoneExtension, string email) public {
-        if(isApprovedDev[msg.sender] && botDeveloperRecords[msg.sender]!=0x0) {
-            DeveloperRecord devRecord = DeveloperRecord(botDeveloperRecords[msg.sender]);
-            devRecord.updateRecord1(msg.sender,name,organization,street1,street2,city);
-            devRecord.updateRecord2(state,postalCode,country,phone,phoneExtension,email);
-        }
-    }
-    
     //Creates a new bot belonging to sender address if sender is an approved developer
     function addBot(string name, string date, string tags) public {
         if(isApprovedDev[msg.sender] && botDeveloperRecords[msg.sender] != 0x0) {
