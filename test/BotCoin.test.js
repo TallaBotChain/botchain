@@ -1,6 +1,7 @@
-/* globals contract beforeEach it artifacts expect */
+/* globals contract beforeEach it artifacts */
 
 import { expect } from 'chai'
+import tryAsync from './helpers/tryAsync'
 
 const BotCoin = artifacts.require('./BotCoin.sol')
 
@@ -17,14 +18,6 @@ contract('BotCoin', function (accounts) {
 })
 
 async function newBotCoin () {
-  const shrmp = await tryAsync(BotCoin.new())
-  return shrmp
-}
-
-async function tryAsync (asyncFn) {
-  try {
-    return await asyncFn
-  } catch (err) {
-    console.error(err)
-  }
+  const bc = await tryAsync(BotCoin.new())
+  return bc
 }
