@@ -62,7 +62,7 @@ contract BotChain {
     }
     
     //Creates a new bot belonging to sender address if sender is an approved developer
-    function addBot(address botAddress) public {
+    function addBot(address botAddress, string metaData) public {
         // Check that msg.sender is an approvedDev with necessary information (i.e. metaData)
         if() {
             // Set botOwner
@@ -79,5 +79,10 @@ contract BotChain {
         } else {
             revert();
         }
+    }
+    
+    //Verify that a bot is registered
+    function verifyBot(address id, string metaData) public {
+        // check that bot is present with passed in metaData hash
     }
 }
