@@ -9,21 +9,13 @@ contract BotChain {
     
     //Returns true if address is an owner of this contract
     mapping(address => bool) public isOwner;
-    //Returns the index of address in owners array
-    mapping(address => uint256) public ownerIndex;
-    //Array of all owners addresses
-    address[] public owners;
     
     //Returns true if address belongs to an approved developer
     mapping(address => bool) public isApprovedDev;
     
-    //Returns address of DeveloperRecord associated with given address
-    mapping(address => address) public botDeveloperRecords;
-    
     //Returns the address of the owner of the given bot
     mapping(address => address) public botOwners;
-    //Returns index of address in bots array
-    mapping(address => uint256) public botIndex;
+
     //List of all bot addresses
     address[] public bots;
     
@@ -36,13 +28,7 @@ contract BotChain {
     //Adds a new owner to the BotChain contract
     function addOwner(address newOwner) public {
         if(isOwner[msg.sender] && !isOwner[newOwner]) {
-            isOwner[newOwner] = true;
-            if(owners.length > ownerIndex[msg.sender] && owners[ownerIndex[msg.sender]]==0x0) {
-                owners[ownerIndex[msg.sender]] = msg.sender;
-            } else {
-                ownerIndex[msg.sender] = owners.length;
-                owners.push(newOwner);
-            }
+            // add newOwner as owner
         } else {
             revert();
         }
@@ -51,8 +37,7 @@ contract BotChain {
     //Removes an owner from the BotChain contract
     function removeOwner(address ownerToRemove) public {
         if(isOwner[msg.sender] && isOwner[ownerToRemove]) {
-            isOwner[ownerToRemove] = false;
-            owners[ownerIndex[msg.sender]]=0x0;
+            //  Remove ownerToRemove from owners
         } else {
             revert();
         }
@@ -78,7 +63,8 @@ contract BotChain {
     
     //Creates a new bot belonging to sender address if sender is an approved developer
     function addBot(address botAddress) public {
-        if(isApprovedDev[msg.sender] && botDeveloperRecords[msg.sender] != 0x0) {
+        // Check that msg.sender is an approvedDev with necessary information (i.e. metaData)
+        if() {
             // Set botOwner
             // Create bot record
         } else {
