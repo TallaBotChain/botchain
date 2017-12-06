@@ -62,8 +62,8 @@ contract BotChain {
     }
     
     //Creates a new bot belonging to sender address if sender is an approved developer
-    function addBot(address botAddress) public {
-        // Check that msg.sender is an approvedDev with necessary information (i.e. metaData)
+    function addBot(address botAddress, bytes metaDataHash) public {
+        // Check that msg.sender is an approvedDev with necessary information (i.e. metaDataHash)
         if() {
             // Set botOwner
             // Create bot record
@@ -72,12 +72,17 @@ contract BotChain {
         }
     }
     
-    //Edits a bot's metaData hash
-    function updateBot(address id, string metaData) public {
+    //Edits a bot's metaDataHash
+    function updateBot(address id, bytes metaDataHash) public {
         if(isApprovedDev[msg.sender] && botOwners[id]==msg.sender) {
-            // Update bot metadata
+            // Update bot metadataHash
         } else {
             revert();
         }
+    }
+    
+    //Verify that a bot is registered
+    function verifyBot(address id, bytes metaDataHash) public {
+        // check that bot is present with passed in metaDataHash
     }
 }
