@@ -29,11 +29,12 @@ function getRinkebyConfig () {
     console.log('could not find ./secrets.json')
   }
 
-  var rinkebyProvider = new HDWalletProvider(secrets.mnemonic, 'https://rinkeby.infura.io/' + secrets.infura_apikey)
+  var rinkebyProvider = () => {
+    return new HDWalletProvider(secrets.mnemonic, 'https://rinkeby.infura.io/' + secrets.infura_apikey)
+  }
 
   return {
     network_id: 4,
-    provider: rinkebyProvider,
-    from: rinkebyProvider.getAddress()
+    provider: rinkebyProvider
   }
 }
