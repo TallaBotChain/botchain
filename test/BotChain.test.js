@@ -3,19 +3,21 @@
 import { expect } from 'chai'
 import { web3 } from './helpers/w3'
 import tryAsync from './helpers/tryAsync'
+import isNonZeroAddress from './helpers/isNonZeroAddress'
 
-// const BotChain = artifacts.require('./BotChain.sol')
+const BotChain = artifacts.require('./BotChain.sol')
 const { accounts } = web3.eth
 
 contract('BotChain', () => {
   describe('when deployed', () => {
     let bc
     beforeEach(async () => {
-      // bc = await newBotChain()
+      bc = await newBotChain()
     })
 
-    it('should...', async () => {
-      //
+    it('should create a new BotManagerOwernship contract', async () => {
+      const addr = await bc.botOwnershipManager.call()
+      expect(isNonZeroAddress(addr)).to.equal(true)
     })
   })
 
@@ -99,6 +101,6 @@ contract('BotChain', () => {
 })
 
 async function newBotChain () {
-  // const bc = await tryAsync(BotChain.new())
-  // return bc
+  const bc = await tryAsync(BotChain.new())
+  return bc
 }
