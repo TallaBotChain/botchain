@@ -5,11 +5,10 @@ pragma solidity ^ 0.4.18
  * @dev Interface for Subscription contracts
  */
 contract Subscription {
-  event SubscriptionFunded(address member, uint256 amount);
-  event FundsCollected(address member);
+  event SubscriptionExtended(address subscriber, uint256 payment, uint256 timeExtended);
 
-  function fund(address member, uint256 amount) payable public returns (bool);
-  function collectFunds(address member, uint256 amount) public returns (bool);
-  function checkBalance(address member) public returns (uint256);
-  function sufficientFunds(address member, greaterThanAmount uint256) public returns (uint256);
+  function setSubscriptionParameters(uint256 cost, uint256 duration, uint256 maxSubscription) public returns(bool);
+  function extendSubscription(address subscriber, uint256 payment) payable public returns (bool);
+  function checkSubscriptionStatus(address subscriber) public returns (bool);
+  function checkSubscriptionExpiration(address subscriber) public returns (uint256);
 }
