@@ -17,7 +17,7 @@ contract BotOwnershipManager is Pausable, ERC721 {
   /// @dev A mapping from Bot public keys to bot index
   mapping(address => uint256) public botPublicKeyToIndex;
 
-  /// @dev A mapping from Bot index to an address approved or transfer.
+  /// @dev A mapping from Bot index to an address approved for transfer.
   mapping(uint256 => address) public botIndexToApproved;
 
   Bot[] bots;

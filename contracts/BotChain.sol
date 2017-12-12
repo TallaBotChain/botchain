@@ -83,8 +83,7 @@ contract BotChain is Ownable {
     botOwnershipManager.createBot(msg.sender, _botPublicKey, _botData);
   }
   
-  /// @dev Creates a new bot. The new bot is owned by msg.sender, which needs
-  ///  to be an approved developer.
+  /// @dev Updates an existing bot.
   /// @param _botPublicKey The public key of the new Bot
   /// @param _botData A hash of the data associated with this Bot
   function updateBot(address _botPublicKey, bytes _botData) external {
