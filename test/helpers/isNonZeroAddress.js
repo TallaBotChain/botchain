@@ -1,6 +1,7 @@
-import { web3 } from '../w3'
+import { web3 } from './w3'
 
 export default (address) => {
+  if (address === '0x0000000000000000000000000000000000000000') return false
   if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
     return false
   } else if (/^(0x)?[0-9a-f]{40}$/.test(address) || /^(0x)?[0-9A-F]{40}$/.test(address)) {
