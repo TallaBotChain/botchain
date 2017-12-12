@@ -15,8 +15,8 @@ contract Subscribable {
 	function Subscribable(Subscription _subscription) {
 		subscription = _subscription;
 	}
-	
-  function isSubscribed(address _subscriber) {
-  	return subscription.checkSubscriptionStatus(_subscriber)
+
+  function isSubscribed(address _subscriber) returns(bool) {
+  	return subscription.checkStatus(_subscriber);
   }
 }
