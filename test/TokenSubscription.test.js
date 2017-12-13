@@ -12,13 +12,13 @@ const cost = 100
 const duration = 100
 const maxSubscription = 100
 
-const BasicSubscription = artifacts.require('./BasicSubscription.sol')
+const TokenSubscription = artifacts.require('./TokenSubscription.sol')
 
-contract('BasicSubscription', () => {
-  let basicSubscription
+contract('TokenSubscription', () => {
+  let tokenSubscription
 
   beforeEach(async () => {
-    basicSubscription = await newBasicSubscription();
+    tokenSubscription = await newTokenSubscription();
   })
 
   describe('setParameters()', () => {
@@ -26,26 +26,29 @@ contract('BasicSubscription', () => {
       let txResult
 
       beforeEach(async () => {
-        txResult = await basicSubscription.setParameters(cost, duration, maxSubscription)
+        txResult = await tokenSubscription.setParameters(cost, duration, maxSubscription)
       })
 
       it('should set the cost', async () => {
-        expect((await basicSubscription.cost.call()).toNumber()).to.equal(cost)
+        expect((await tokenSubscription.cost.call()).toNumber()).to.equal(cost)
       })
 
       it('should set the duration', async () => {
-        expect((await basicSubscription.duration.call()).toNumber()).to.equal(cost)
+        expect((await tokenSubscription.duration.call()).toNumber()).to.equal(cost)
       })
 
       it('should set the maxSubscription', async () => {
-        expect((await basicSubscription.maxSubscription.call()).toNumber()).to.equal(cost)
+        expect((await tokenSubscription.maxSubscription.call()).toNumber()).to.equal(cost)
       })
     })
   })
 
+
+
+
 })
 
-async function newBasicSubscription () {
-  const basicSubscription = await tryAsync(BasicSubscription.new())
-  return basicSubscription
+async function newTokenSubscription () {
+  const tokenSubscription = await tryAsync(TokenSubscription.new())
+  return tokenSubscription
 }
