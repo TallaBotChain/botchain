@@ -15,14 +15,16 @@ contract BasicSubscription is Subscription, Ownable {
   // Address where funds are collected
   address public wallet;
   
-  uint256 cost;
-  uint256 duration;
-  uint256 maxSubscription;
+  uint256 public cost;
+  uint256 public duration;
+  uint256 public maxSubscription;
 
   // Set cost of subscription for a specified duration
   // Set the maximum amount of time that a subscriber can have subscribed into the future
   function setParameters(uint256 _cost, uint256 _duration, uint256 _maxSubscription) onlyOwner external returns(bool) {
-    //  Set contract values to passed in parameters
+      cost = _cost;
+      duration = _duration;
+      maxSubscription = _maxSubscription;
   }
 
   function checkStatus(address _subscriber) external returns (bool) {
