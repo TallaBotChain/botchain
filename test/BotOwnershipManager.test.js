@@ -21,10 +21,10 @@ const updatedDataHash = web3.sha3('some modified data to hash')
 const BotOwnershipManager = artifacts.require('./BotOwnershipManager.sol')
 
 contract('BotOwnershipManager', () => {
-  let bc
+  let bom
 
   beforeEach(async () => {
-    bc = await newBotOwnershipManager()
+    bom = await newBotOwnershipManager()
   })
 
   describe('createBot()', () => {
@@ -32,18 +32,18 @@ contract('BotOwnershipManager', () => {
       let txResult
 
       beforeEach(async () => {
-        txResult = await bc.createBot(devAddr, botAddr1, dataHash)
+        txResult = await bom.createBot(devAddr, botAddr1, dataHash)
       })
 
       it('should add bot with the given owner, bot address, and data hash', async () => {
-        let bot = await bc.getBot.call(1)
+        let bot = await bom.getBot.call(1)
         expect(bot[0]).to.equal(devAddr)
         expect(bot[1]).to.equal(botAddr1)
         expect(bot[2]).to.equal(dataHash)
       })
 
       it('should add bot address to bot ID mapping', async () => {
-        expect(await bc.botExists.call(botAddr1)).to.equal(true)
+        expect(await bom.botExists.call(botAddr1)).to.equal(true)
       })
 
       it('should log BotCreated event', () => {
@@ -53,32 +53,32 @@ contract('BotOwnershipManager', () => {
 
     describe('when executed by non-owner', () => {
       it('should throw', async () => {
-        await expectRevert(bc.createBot(devAddr, botAddr1, dataHash, { from: nonOwnerAddr }))
+        await expectRevert(bom.createBot(devAddr, botAddr1, dataHash, { from: nonOwnerAddr }))
       })
     })
 
     describe('when given invalid owner address', () => {
       it('should throw', async () => {
-        await expectRevert(bc.createBot(zero, botAddr1, dataHash))
+        await expectRevert(bom.createBot(zero, botAddr1, dataHash))
       })
     })
 
     describe('when given invalid bot address', () => {
       it('should throw', async () => {
-        await expectRevert(bc.createBot(devAddr, zero, dataHash))
+        await expectRevert(bom.createBot(devAddr, zero, dataHash))
       })
     })
 
     describe('when given invalid data', () => {
       it('should throw', async () => {
-        await expectRevert(bc.createBot(devAddr, botAddr1, zero))
+        await expectRevert(bom.createBot(devAddr, botAddr1, zero))
       })
     })
 
     describe('when bot address already exists', () => {
       it('should throw', async () => {
-        await bc.createBot(devAddr, botAddr1, dataHash)
-        await expectRevert(bc.createBot(devAddr, botAddr1, dataHash))
+        await bom.createBot(devAddr, botAddr1, dataHash)
+        await expectRevert(bom.createBot(devAddr, botAddr1, dataHash))
       })
     })
   })
@@ -88,9 +88,9 @@ contract('BotOwnershipManager', () => {
       let bot
 
       beforeEach(async () => {
-        await bc.createBot(devAddr, botAddr1, dataHash)
-        await bc.createBot(devAddr2, botAddr2, dataHash2)
-        bot = await bc.getBot(2)
+        await bom.createBot(devAddr, botAddr1, dataHash)
+        await bom.createBot(devAddr2, botAddr2, dataHash2)
+        bot = await bom.getBot(2)
       })
 
       it('should return bot owner', () => {
