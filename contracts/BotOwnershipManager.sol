@@ -8,6 +8,7 @@ import './ERC721.sol';
 contract BotOwnershipManager is Pausable, ERC721 {
 
   event BotCreated(uint256 botId, address botOwner, address botAddress, bytes32 data);
+  event BotUpdated(uint256 botId, address botAddress, bytes32 data);
 
   /// @dev A mapping from owner address to count of tokens that address owns.
   ///  Used internally inside balanceOf() to resolve ownership count.
@@ -73,16 +74,22 @@ contract BotOwnershipManager is Pausable, ERC721 {
     BotCreated(_newBotId, _botOwner, _botAddress, _data);
   }
 
-  function updateBot(address _botAddress, bytes32 _data) onlyOwner external {
-    // TODO: require checks for valid data
+  function updateBot(uint256 _botId, address _botAddress, bytes32 _data) onlyOwner external {
+    require(_botId > 0 && _botId < bots.length);
+    require(_botAddress != 0x0);
+    require(_data != 0x0);
 
-    // uint256 _botId = botAddressToId[_botAddress];
-    // require(_botId > 0);
+    Bot storage _bot = bots[_botId];
+    botAddressToId[_bot.botAddress] = 0;
 
-    // TODO: require bot exists
+    bots[_botId] = Bot({
+      botAddress: _botAddress,
+      botData: _data
+    });
 
-    // bots[_botId].publicKey = _botAddress;
-    // bots[_botId].data = _data;
+    botAddressToId[_botAddress] = _botId;
+
+    BotUpdated(_botId, _botAddress, _data);
   }
 
   /// @dev Returns the ID of a bot, given the bot's address.
@@ -96,12 +103,13 @@ contract BotOwnershipManager is Pausable, ERC721 {
   function getBot(uint256 _botId)
     external
     view
-    returns(
+    returns
+  (
     address owner,
     address botAddress,
     bytes32 data
   ) {
-    Bot _bot = bots[_botId];
+    Bot storage _bot = bots[_botId];
     owner = _getBotOwner(_botId);
     botAddress = _bot.botAddress;
     data = _bot.botData;
