@@ -1,6 +1,7 @@
 pragma solidity ^ 0.4.18;
 
 import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
+import 'zeppelin-solidity/contracts/token/ERC20.sol';
 
 /**
  * @title TokenSubscription
@@ -11,42 +12,84 @@ contract TokenSubscription is Ownable {
   event SubscriptionExtended(address subscriber, uint256 payment, uint256 timeExtended);
 
   // Mapping of subscription end times; can be up to the maxSubscription time into the future
-  mapping(address => uint256) subscriptionEndTimes;
+  mapping(address => uint256) public subscriptionEndTimes;
   
   // Address where funds are collected
   address public wallet;
   
   uint256 public cost;
   uint256 public duration;
-  uint256 public maxSubscription;
+  uint256 public maxSubscriptionLength;
+  
+  ERC20 public token;
 
-  // Set cost of subscription for a specified duration
-  // Set the maximum amount of time that a subscriber can have subscribed into the future
-  function setParameters(uint256 _cost, uint256 _duration, uint256 _maxSubscription) onlyOwner external returns(bool) {
+  // Add constructor to set default cost, duration, maxSubscriptionLength, ERC20 token, and wallet
+  function TokenSubscription(address _wallet, uint256 _cost, uint256 _duration, uint256 _maxSubscriptionLength) public {
+    wallet = _wallet;
+    // TODO fix taking in token
+    // token = _token;
+    cost = _cost;
+    duration = _duration;
+    maxSubscriptionLength = _maxSubscriptionLength;
+  }
+
+  // Update cost of subscription for a specified duration
+  // Update the maximum amount of time that a subscriber can have subscribed into the future
+  function updateParameters(uint256 _cost, uint256 _duration, uint256 _maxSubscriptionLength) onlyOwner external returns(bool) {
       cost = _cost;
       duration = _duration;
-      maxSubscription = _maxSubscription;
+      maxSubscriptionLength = _maxSubscriptionLength;
   }
 
+  // Check whether developer has been registered/subscribed before
+  function checkRegistration(address _subscriber) public returns (bool) {
+    // check to see if subscriber is in the system
+    return subscriptionEndTimes[_subscriber] != 0;
+  }
+
+  // Calculate whether registered subscriber is currently paid
   function checkStatus(address _subscriber) external returns (bool) {
-    // Calculate whether subscription has expired and return boolean
+    require(checkRegistration(_subscriber));
+    return subscriptionEndTimes[_subscriber] > now;
   }
 
-  // Returns the time (date?) at which the subscriber's paid subsription expires
-  function checkExpiration(address _subscriber) external returns (uint256) {
+  // Returns the time (date?) at which the registered subscriber's subsription expires
+  function checkExpiration(address _subscriber) public returns (uint256) {
+    require(checkRegistration(_subscriber));
     // return time at which current paid subscription expires
+    return subscriptionEndTimes[_subscriber];
   }
 
   // Changes subscription end date
   // Forwards payment to service provider offering the subscription  
-  function extend(address _subscriber, uint256 _payment) external returns (bool) {
-    // Extend subscriber's subscription
+  function extend(uint256 _payment) external returns (bool) {
+    // Calculate amount to extend subscription
+    // TODO Can extend any amount of time or only in discreet units?
+    uint256 timeToExtend = (_payment/cost) * duration;
+    // Check if currently subscribed
+    if (checkRegistration(msg.sender)) {
+      // Check that maxSubscriptionLength not exceeded
+      // Note that current time can only be relied on as an approximation
+      require(((checkExpiration(msg.sender) - now) + maxSubscriptionLength) > timeToExtend);
+      // Extend subscriber's subscription
+      subscriptionEndTimes[msg.sender] = subscriptionEndTimes[msg.sender] + timeToExtend;
+    } else {
+      // Check that maxSubscriptionLength not exceeded
+      // Note that current time can only be relied on as an approximation
+      require(maxSubscriptionLength > timeToExtend);
+      // Set subscription expiration
+      subscriptionEndTimes[msg.sender] = now + timeToExtend;
+    }
+    
     // Forward funds to service provider
+    forwardFunds(msg.sender, _payment);
+    // TODO return boolean?
   }
   
   // Forward funds to the fund collection wallet
   // Override to create custom fund forwarding mechanisms
-  function forwardFunds(uint256 _payment) internal {
-    wallet.transfer(_payment);
+  function forwardFunds(address _subscriber, uint256 _payment) internal {
+    // Note for testing approve transaction first
+    // token.transferFrom(_subscriber, wallet, _payment);
   }
 }
