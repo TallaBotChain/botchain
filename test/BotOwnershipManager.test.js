@@ -106,6 +106,73 @@ contract('BotOwnershipManager', () => {
       })
     })
   })
+
+  describe('updateBot()', () => {
+    let bot
+
+    beforeEach(async () => {
+      bot = await bom.createBot(devAddr, botAddr1, dataHash)
+    })
+
+    describe('when given a valid bot ID and valid data', () => {
+      let txResult
+
+      beforeEach(async () => {
+        txResult = await bom.updateBot(1, botAddr2, dataHash2)
+        bot = await bom.getBot(1)
+      })
+
+      it('should update the address of the bot', () => {
+        expect(bot[1]).to.equal(botAddr2)
+      })
+
+      it('should update the dataHash of the bot', () => {
+        expect(bot[2]).to.equal(dataHash2)
+      })
+
+      it('should remove mapping to previous bot address', async () => {
+        expect(await bom.botExists.call(botAddr1)).to.equal(false)
+      })
+
+      it('should add mapping to new bot address', async () => {
+        expect(await bom.botExists.call(botAddr2)).to.equal(true)
+      })
+
+      it('should log BotUpdated event', () => {
+        expect(hasEvent(txResult, 'BotUpdated')).to.equal(true)
+      })
+    })
+
+    describe('when executed by non-owner', () => {
+      it('should throw', async () => {
+        await expectRevert(bom.updateBot(1, botAddr2, dataHash2, { from: nonOwnerAddr }))
+      })
+    })
+
+    describe('when given a bot ID that does not exist', () => {
+      it('should throw', async () => {
+        await expectRevert(bom.updateBot(123, botAddr2, dataHash2))
+      })
+    })
+
+    describe('when given bot ID of `0`, which is an invalid empty bot', () => {
+      it('should throw', async () => {
+        await expectRevert(bom.updateBot(0, botAddr2, dataHash2))
+      })
+    })
+
+    describe('when given an invalid bot address', () => {
+      it('should throw', async () => {
+        await expectRevert(bom.updateBot(1, zero, dataHash2))
+      })
+    })
+
+    describe('when given an invalid data hash', () => {
+      it('should throw', async () => {
+        await expectRevert(bom.updateBot(1, botAddr2, zero))
+      })
+    })
+  })
 })
 
 async function newBotOwnershipManager () {
