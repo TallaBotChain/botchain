@@ -38,7 +38,14 @@ $ npm test
 
 Run `npm run test:coverage` to run with coverage reporting
 
-### Deployment Setup
+### Deployment
+
+* `npm run deploy:development` - deploy to local TestRPC
+* `npm run deploy:kovan` - deploy to kovan testnet
+* `npm run deploy:rinkeby-infura` - deploy to rinkeby testnet via infura service
+* `npm run deploy:mainnet` - deploy to mainnet
+
+### Rinkeby-Infura Deployment Setup
 
 Add `secrets.json` to the project root
 
