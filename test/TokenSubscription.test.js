@@ -2,17 +2,23 @@
 
 import { expect } from 'chai'
 import { web3 } from './helpers/w3'
+import moment from 'moment'
+import lkTestHelpers from 'lk-test-helpers'
 import tryAsync from './helpers/tryAsync'
 import expectRevert from './helpers/expectRevert'
 import { hasEvent } from './helpers/event'
 import isNonZeroAddress from './helpers/isNonZeroAddress'
 
 // TODO set duration and maxSubscriptionLength to appropriate time
+const { increaseTime, latestTime } = lkTestHelpers(web3)
+
 const cost = 100 // in ether
-const duration = 1 // in months
+const currentTime = 2
+const duration = 1 // in weeks
 const maxSubscriptionLength = 100
 const payment = 100 // in ether
 const subscriber = '0x72c2ba659460151cdfbb3cd8005ae7fbe68191b1'
+const nonSubscriber = '0x85626d4d9a5603a049f600d9cfef23d28ecb7b8b'
 const wallet = '0x319f2c0d4e7583dff11a37ec4f2c907c8e76593a'
 
 const BotCoin = artifacts.require('./BotCoin.sol')
@@ -25,7 +31,7 @@ contract('TokenSubscription', () => {
   beforeEach(async () => {
     // TODO fix passing in token
     // botCoin = await newBotCoin();
-    tokenSubscription = await newTokenSubscription();
+    tokenSubscription = await newTokenSubscription()
   })
 
   describe('updateParameters()', () => {
@@ -51,29 +57,93 @@ contract('TokenSubscription', () => {
   })
 
   describe('extend()', () => {
-    describe('when given valid parameters', () => {
-      let txResult
+    // describe('when extending an existing subscriber', () => {
+    //   let txResult
       
+    //   beforeEach(async () => {
+    //     // Setting up the contract to be in the right state
+    //     // TODO adjust payment to be the right amount
+    //     await tokenSubscription.extend.call(payment, { from: subscriber })
+    //     txResult = await tokenSubscription.extend.call(payment, { from: subscriber} )
+    //   })
+
+    //   it('should extend existing subscriber subscription correctly', async () => {
+    //     let endTime = (await tokenSubscription.subscriptionEndTimes.call(subscriber)).toNumber()
+    //     // TODO figure out how to handle time
+    //     expect(endTime).to.equal(defaultEndTime())
+    //   })
+      
+    //   it('should require timeToExtend plus time remaining in the current subscription to be less than maxSubscriptionLength', async () => {
+    //     // set payment to an amount that would cause the extending of the subscription to be greater than maxSubscriptionLength
+    //     expectRevert(tokenSubscription.extend.call(3 * payment, { from: subscriber} ))
+    //   })
+      
+    //   it('forwards funds correctly', async () => {
+    //     // expect balance in wallet to increase by payment
+    //     // TODO figure out how to get balance of the wallet; why is below returning an address?
+    //     expect(await tokenSubscription.wallet.balance.call()).to.equal(payment)
+    //   })
+    // })
+
+    describe('when extending a new subscriber', () => {
       beforeEach(async () => {
-        await tokenSubscription.updateParameters(cost, duration, maxSubscriptionLength)
         //  Question: How to set who is calling the function?
-        txResult = await tokenSubscription.extend(payment)
+        await tokenSubscription.extend(payment, { from: subscriber })
       })
       
-      it('should extend subscriber subscription correctly', async () => {
-        let endTime = (await tokenSubscription.subscriptionEndTimes.call(subscriber)).toNumber();
+      it('should set the subscription correctly', async () => {
+        let endTime = (await tokenSubscription.subscriptionEndTimes.call(subscriber)).toNumber()
         // TODO figure out how to handle time
-        expect(endTime).to.equal((payment/cost) * duration);
+        expect(endTime).to.equal(defaultEndTime())
       })
-      
+
+      it('should require timeToExtend to be less than maxSubscriptionLength', async () => {
+        // set payment to an amount that would cause the extending of the subscription to be greater than maxSubscriptionLength
+        // Expect to throw an exception
+      })
+
       it('forwards funds correctly', async () => {
-        // expect(await tokenSubscription.wallet.call())
+        // expect balance in wallet to increase by payment
+        // TODO figure out how to get balance of the wallet
+        expect(await tokenSubscription.wallet.call()).to.equal(payment)
       })
     })
+  })
+
+  describe('checkRegistration()', () => {
+    let txResult
+    
+    beforeEach(async () => {
+      //  Question: How to set who is calling the function to the subscriber?
+      await tokenSubscription.extend(payment)
+    })
+
+    describe('when checking whether a registered subscriber exists', () => {
+      it('should return true', async () => {
+        txResult = await tokenSubscription.checkRegistration.call(subscriber)
+        expect(txResult).to.equal(true)
+      })    
+    })
+
+    describe('when checking whether an unregistered subscriber exists', () => {
+      it('should return false', async () => {
+        txResult = await tokenSubscription.checkRegistration.call(nonSubscriber)
+        expect(txResult).to.equal(true)
+      })    
+    })
+  })
+
+  describe('checkStatus()', () => {
+
+  })
+
+  describe('checkExpiration()', () => {
     
   })
 
-
+  describe('forwardFunds()', () => {
+    
+  })
 })
 
 async function newTokenSubscription () {
@@ -85,3 +155,11 @@ async function newBotCoin () {
   const bc = await tryAsync(BotCoin.new())
   return bc
 }
+
+async function defaultEndTime () {
+  if (!_latestTime) {
+    _latestTime = await latestTime()
+  }
+  return moment(_latestTime).add(24 * 30 + 1, 'hours')
+}
+

@@ -17,9 +17,9 @@ contract TokenSubscription is Ownable {
   // Address where funds are collected
   address public wallet;
   
-  uint256 public cost;
-  uint256 public duration;
-  uint256 public maxSubscriptionLength;
+  uint256 public cost; // in botcoin
+  uint256 public duration; // in weeks
+  uint256 public maxSubscriptionLength; // in weeks
   
   ERC20 public token;
 
@@ -65,18 +65,18 @@ contract TokenSubscription is Ownable {
   function extend(uint256 _payment) external returns (bool) {
     // Calculate amount to extend subscription
     // TODO Can extend any amount of time or only in discreet units?
-    uint256 timeToExtend = (_payment/cost) * duration;
+    uint256 timeToExtend = ((_payment/cost) * duration) * 1 weeks;
     // Check if currently subscribed
     if (checkRegistration(msg.sender)) {
       // Check that maxSubscriptionLength not exceeded
       // Note that current time can only be relied on as an approximation
-      require(((checkExpiration(msg.sender) - now) + maxSubscriptionLength) > timeToExtend);
+      require(((checkExpiration(msg.sender) - now) + maxSubscriptionLength) * 1 weeks > timeToExtend);
       // Extend subscriber's subscription
       subscriptionEndTimes[msg.sender] = subscriptionEndTimes[msg.sender] + timeToExtend;
     } else {
       // Check that maxSubscriptionLength not exceeded
       // Note that current time can only be relied on as an approximation
-      require(maxSubscriptionLength > timeToExtend);
+      require(maxSubscriptionLength * 1 weeks > timeToExtend);
       // Set subscription expiration
       subscriptionEndTimes[msg.sender] = now + timeToExtend;
     }
