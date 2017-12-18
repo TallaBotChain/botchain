@@ -3,6 +3,27 @@ require('babel-polyfill')
 
 module.exports = {
   networks: {
+    mainnet: {
+      // * run parity on mainnet: `parity`
+      // * update host/port to point at parity RPC
+      host: 'localhost',
+      port: 8546,
+      network_id: 1,
+      gas: 4600000,
+      // `gasPrice: 5` is relatively low price and could result in long transaction times (> 30 minutes)
+      // If network activity is spiking and gas prices are very high, a transaction at `gasPrice: 5`
+      // may not be mined at all until prices drop, which in some cases could take days. Increase this
+      // to incentivize miners to mine the tx!
+      gasPrice: 5
+    },
+    kovan: {
+      // * run parity on kovan testnet: `parity --chain kovan`
+      // * update host/port to point at parity RPC
+      host: 'localhost',
+      port: 8546,
+      network_id: 42,
+      gas: 4600000
+    },
     development: {
       host: 'localhost',
       port: 8546,
@@ -16,11 +37,12 @@ module.exports = {
       gas: 0xfffffffffff,
       gasPrice: 0x01
     },
-    rinkeby: getRinkebyConfig()
+    rinkeby_infura: getInfuraConfig('rinkeby', 4),
+    kovan_infura: getInfuraConfig('kovan', 42)
   }
 }
 
-function getRinkebyConfig () {
+function getInfuraConfig (networkName, networkId) {
   var HDWalletProvider = require('truffle-hdwallet-provider')
   var secrets = {}
   try {
@@ -29,12 +51,10 @@ function getRinkebyConfig () {
     console.log('could not find ./secrets.json')
   }
 
-  var rinkebyProvider = () => {
-    return new HDWalletProvider(secrets.mnemonic, 'https://rinkeby.infura.io/' + secrets.infura_apikey)
-  }
-
   return {
-    network_id: 4,
-    provider: rinkebyProvider
+    network_id: networkId,
+    provider: () => {
+      return new HDWalletProvider(secrets.mnemonic, `https://${networkName}.infura.io/` + secrets.infura_apikey)
+    }
   }
 }
