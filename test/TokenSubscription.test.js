@@ -143,10 +143,14 @@ contract('TokenSubscription', () => {
     })
 
     describe('when checking whether a subscribed user is paid', () => {
+      it('should require that user is registered', async () => {
+        await expectRevert(tokenSubscription.checkStatus.call(nonSubscriber))
+      })
+      
       it('should return true', async () => {
         txResult = await tokenSubscription.checkStatus.call(subscriber)
         expect(txResult).to.equal(true)
-      })    
+      })
     })
 
     describe('when checking whether a user with an expired subscription exists', () => {
@@ -159,7 +163,7 @@ contract('TokenSubscription', () => {
   })
 
   describe('checkExpiration()', () => {
-    
+
   })
 
   describe('forwardFunds()', () => {
