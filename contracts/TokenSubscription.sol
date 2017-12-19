@@ -70,13 +70,13 @@ contract TokenSubscription is Ownable {
     if (checkRegistration(msg.sender)) {
       // Check that maxSubscriptionLength not exceeded
       // Note that current time can only be relied on as an approximation
-      require(((checkExpiration(msg.sender) - now) + maxSubscriptionLength) * 1 weeks > timeToExtend);
+      require(((checkExpiration(msg.sender) - now) + timeToExtend) < maxSubscriptionLength * 1 weeks);
       // Extend subscriber's subscription
       subscriptionEndTimes[msg.sender] = subscriptionEndTimes[msg.sender] + timeToExtend;
     } else {
       // Check that maxSubscriptionLength not exceeded
       // Note that current time can only be relied on as an approximation
-      require(maxSubscriptionLength * 1 weeks > timeToExtend);
+      require(timeToExtend < maxSubscriptionLength * 1 weeks);
       // Set subscription expiration
       subscriptionEndTimes[msg.sender] = now + timeToExtend;
     }

@@ -17,7 +17,7 @@ const { accounts } = web3.eth
 const cost = 100 // in ether
 const currentTime = 2
 const duration = 1 // in weeks
-const maxSubscriptionLength = 100
+const maxSubscriptionLength = 4
 const payment = 100 // in ether
 // const subscriber = '0x72c2ba659460151cdfbb3cd8005ae7fbe68191b1'
 const subscriber = accounts[1]
@@ -60,57 +60,56 @@ contract('TokenSubscription', () => {
   })
 
   describe('extend()', () => {
-    // describe('when extending an existing subscriber', () => {
-    //   let txResult
-      
-    //   beforeEach(async () => {
-    //     // Setting up the contract to be in the right state
-    //     // TODO adjust payment to be the right amount
-    //     await tokenSubscription.extend.call(payment, { from: subscriber })
-    //     txResult = await tokenSubscription.extend.call(payment, { from: subscriber} )
-    //   })
+    describe('when extending an existing subscriber', () => {
+      let txResult
 
-    //   it('should extend existing subscriber subscription correctly', async () => {
-    //     let endTime = (await tokenSubscription.subscriptionEndTimes.call(subscriber)).toNumber()
-    //     // TODO figure out how to handle time
-    //     expect(endTime).to.equal(defaultEndTime())
-    //   })
-      
-    //   it('should require timeToExtend plus time remaining in the current subscription to be less than maxSubscriptionLength', async () => {
-    //     // set payment to an amount that would cause the extending of the subscription to be greater than maxSubscriptionLength
-    //     expectRevert(tokenSubscription.extend.call(3 * payment, { from: subscriber} ))
-    //   })
-      
-    //   it('forwards funds correctly', async () => {
-    //     // expect balance in wallet to increase by payment
-    //     // TODO figure out how to get balance of the wallet; why is below returning an address?
-    //     expect(await tokenSubscription.wallet.balance.call()).to.equal(payment)
-    //   })
-    // })
+      beforeEach(async () => {
+        // Setting up the contract to be in the right state
+        await tokenSubscription.extend(payment, { from: subscriber })
+        txResult = await tokenSubscription.extend(payment, { from: subscriber} )
+      })
+
+      it('should extend existing subscriber subscription correctly', async () => {
+        let endTime = (await tokenSubscription.subscriptionEndTimes.call(subscriber)).toNumber()
+        // TODO figure out how to handle time
+        const defaultTime = await defaultEndTime()
+        expect(endTime).to.equal(moment(defaultTime.add(24 * 7, 'hours')).unix())
+      })
+
+      it('should require timeToExtend plus time remaining in the current subscription to be less than maxSubscriptionLength', async () => {
+        const bigPayment = 5 * payment
+        await expectRevert(tokenSubscription.extend.call(bigPayment, { from: subscriber}))
+      })
+
+      // TODO Implement after figuring out ERC20
+      // it('forwards funds correctly', async () => {
+      //   // expect balance in wallet to increase by payment
+      //   // TODO figure out how to get balance of the wallet; why is below returning an address?
+      //   expect(await tokenSubscription.wallet.balance.call()).to.equal(payment)
+      // })
+    })
 
     describe('when extending a new subscriber', () => {
-      beforeEach(async () => {
-        //  Question: How to set who is calling the function?
-        await tokenSubscription.extend(payment, { from: subscriber })
-      })
-      
+     
       it('should set the subscription correctly', async () => {
+        await tokenSubscription.extend(payment, { from: subscriber })
         let endTime = (await tokenSubscription.subscriptionEndTimes.call(subscriber)).toNumber()
         const validEndTime = await defaultEndTime()
-        // TODO figure out how to handle time
         expect(endTime).to.equal(moment(validEndTime).unix())
       })
 
       it('should require timeToExtend to be less than maxSubscriptionLength', async () => {
         // set payment to an amount that would cause the extending of the subscription to be greater than maxSubscriptionLength
-        // Expect to throw an exception
+        const bigPayment = 5 * payment
+        await expectRevert(tokenSubscription.extend.call(bigPayment, { from: subscriber}))
       })
 
-      it('forwards funds correctly', async () => {
-        // expect balance in wallet to increase by payment
-        // TODO figure out how to get balance of the wallet
-        expect(await tokenSubscription.wallet.call()).to.equal(payment)
-      })
+      // TODO Implement after figuring out ERC20
+      // it('forwards funds correctly', async () => {
+      //   // expect balance in wallet to increase by payment
+      //   // TODO figure out how to get balance of the wallet
+      //   // expect(await tokenSubscription.wallet.call()).to.equal(payment)
+      // })
     })
   })
 
@@ -118,8 +117,7 @@ contract('TokenSubscription', () => {
     let txResult
     
     beforeEach(async () => {
-      //  Question: How to set who is calling the function to the subscriber?
-      await tokenSubscription.extend(payment)
+      await tokenSubscription.extend(payment, { from: subscriber })
     })
 
     describe('when checking whether a registered subscriber exists', () => {
@@ -132,7 +130,7 @@ contract('TokenSubscription', () => {
     describe('when checking whether an unregistered subscriber exists', () => {
       it('should return false', async () => {
         txResult = await tokenSubscription.checkRegistration.call(nonSubscriber)
-        expect(txResult).to.equal(true)
+        expect(txResult).to.equal(false)
       })    
     })
   })
