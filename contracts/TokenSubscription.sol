@@ -53,7 +53,7 @@ contract TokenSubscription is Ownable {
     return subscriptionEndTimes[_subscriber] > now;
   }
 
-  // Returns the time (date?) at which the registered subscriber's subsription expires
+  // Returns the time at which the registered subscriber's subsription expires
   function checkExpiration(address _subscriber) public returns (uint256) {
     require(checkRegistration(_subscriber));
     // return time at which current paid subscription expires

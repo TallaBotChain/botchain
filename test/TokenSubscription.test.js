@@ -163,12 +163,29 @@ contract('TokenSubscription', () => {
   })
 
   describe('checkExpiration()', () => {
+    let txResult
 
-  })
-
-  describe('forwardFunds()', () => {
+    beforeEach(async () => {
+      await tokenSubscription.extend(payment, { from: subscriber })
+    })
     
+    describe('when checking a subsribed user expiration', () => {
+      it('should require that user is registered', async () => {
+        await expectRevert(tokenSubscription.checkExpiration.call(nonSubscriber))
+      })
+
+      it('should return the user expiration', async () => {
+        txResult = (await tokenSubscription.checkExpiration.call(subscriber)).toNumber()
+        const defaultTime = await defaultEndTime()
+        expect(txResult).to.equal(moment(defaultTime).unix())
+      })
+    })
   })
+
+  // TODO implement after getting ERC20 working
+  // describe('forwardFunds()', () => {
+    
+  // })
 })
 
 async function newTokenSubscription () {
