@@ -11,13 +11,16 @@ import isNonZeroAddress from './helpers/isNonZeroAddress'
 
 // TODO set duration and maxSubscriptionLength to appropriate time
 const { increaseTime, latestTime } = lkTestHelpers(web3)
+const { accounts } = web3.eth
+
 
 const cost = 100 // in ether
 const currentTime = 2
 const duration = 1 // in weeks
 const maxSubscriptionLength = 100
 const payment = 100 // in ether
-const subscriber = '0x72c2ba659460151cdfbb3cd8005ae7fbe68191b1'
+// const subscriber = '0x72c2ba659460151cdfbb3cd8005ae7fbe68191b1'
+const subscriber = accounts[1]
 const nonSubscriber = '0x85626d4d9a5603a049f600d9cfef23d28ecb7b8b'
 const wallet = '0x319f2c0d4e7583dff11a37ec4f2c907c8e76593a'
 
@@ -93,8 +96,9 @@ contract('TokenSubscription', () => {
       
       it('should set the subscription correctly', async () => {
         let endTime = (await tokenSubscription.subscriptionEndTimes.call(subscriber)).toNumber()
+        const validEndTime = await defaultEndTime()
         // TODO figure out how to handle time
-        expect(endTime).to.equal(defaultEndTime())
+        expect(endTime).to.equal(moment(validEndTime).unix())
       })
 
       it('should require timeToExtend to be less than maxSubscriptionLength', async () => {
@@ -156,10 +160,12 @@ async function newBotCoin () {
   return bc
 }
 
+let _latestTime // a moment() object
+
 async function defaultEndTime () {
   if (!_latestTime) {
     _latestTime = await latestTime()
   }
-  return moment(_latestTime).add(24 * 30 + 1, 'hours')
+  return moment(_latestTime).add(24 * 7, 'hours')
 }
 
