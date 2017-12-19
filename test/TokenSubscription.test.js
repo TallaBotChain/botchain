@@ -136,7 +136,26 @@ contract('TokenSubscription', () => {
   })
 
   describe('checkStatus()', () => {
+    let txResult
 
+    beforeEach(async () => {
+      await tokenSubscription.extend(payment, { from: subscriber })
+    })
+
+    describe('when checking whether a subscribed user is paid', () => {
+      it('should return true', async () => {
+        txResult = await tokenSubscription.checkStatus.call(subscriber)
+        expect(txResult).to.equal(true)
+      })    
+    })
+
+    describe('when checking whether a user with an expired subscription exists', () => {
+      it('should return false', async () => {
+        await increaseDays(10)
+        txResult = await tokenSubscription.checkStatus.call(subscriber)
+        expect(txResult).to.equal(false)
+      })    
+    })
   })
 
   describe('checkExpiration()', () => {
@@ -167,3 +186,13 @@ async function defaultEndTime () {
   return moment(_latestTime).add(24 * 7, 'hours')
 }
 
+async function increaseDays (days) {
+  const t = await increaseTestrpcTime(days * 60 * 60 * 24)
+  return t
+}
+
+async function increaseTestrpcTime (duration) {
+  await increaseTime(duration)
+  _latestTime = await latestTime()
+  return _latestTime
+}
