@@ -61,9 +61,9 @@ contract TokenSubscription is Ownable {
 
   // Changes subscription end date
   // Forwards payment to service provider offering the subscription  
-  function extend(uint256 _payment) external returns (bool) {
+  function extend(uint256 _payment) external {
     // Calculate amount to extend subscription
-    // TODO Can extend any amount of time or only in discreet units?
+    // Can extend any amount of time within the maxSubscriptionLength limit
     uint256 timeToExtend = ((_payment/cost) * duration) * 1 weeks;
     // Check if currently subscribed
     if (checkRegistration(msg.sender)) {
@@ -82,7 +82,6 @@ contract TokenSubscription is Ownable {
     
     // Forward funds to service provider
     forwardFunds(msg.sender, _payment);
-    // TODO return boolean?
   }
   
   // Forward funds to the fund collection wallet

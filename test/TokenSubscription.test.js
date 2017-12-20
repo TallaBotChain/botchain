@@ -29,7 +29,6 @@ contract('TokenSubscription', () => {
   let botCoin
 
   beforeEach(async () => {
-    // TODO fix passing in token
     botCoin = await newBotCoin();
     tokenSubscription = await newTokenSubscription(botCoin.address)
     walletAddress = await tokenSubscription.wallet.call()
@@ -72,9 +71,9 @@ contract('TokenSubscription', () => {
 
       it('should extend existing subscriber subscription correctly', async () => {
         let endTime = (await tokenSubscription.subscriptionEndTimes.call(subscriber)).toNumber()
-        // TODO figure out how to handle time
         const defaultTime = await defaultEndTime()
-        expect(endTime).to.equal(moment(defaultTime.add(24 * 7, 'hours')).unix())
+        expect(endTime).to.be.above(moment(defaultTime).add(24 * 7, 'hours').subtract(10, 'seconds').unix())
+        expect(endTime).to.not.be.above(moment(defaultTime).add(24 * 7, 'hours').add(10, 'seconds').unix())
       })
 
       it('should require timeToExtend plus time remaining in the current subscription to be less than maxSubscriptionLength', async () => {
@@ -98,7 +97,8 @@ contract('TokenSubscription', () => {
         await tokenSubscription.extend(payment, { from: subscriber })
         let endTime = (await tokenSubscription.subscriptionEndTimes.call(subscriber)).toNumber()
         const validEndTime = await defaultEndTime()
-        expect(endTime).to.equal(moment(validEndTime).unix())
+        expect(endTime).to.be.above(moment(validEndTime).subtract(10, 'seconds').unix())
+        expect(endTime).to.not.be.above(moment(validEndTime).add(10, 'seconds').unix())
       })
 
       it('should require timeToExtend to be less than maxSubscriptionLength', async () => {
@@ -185,7 +185,8 @@ contract('TokenSubscription', () => {
       it('should return the user expiration', async () => {
         txResult = (await tokenSubscription.checkExpiration.call(subscriber)).toNumber()
         const defaultTime = await defaultEndTime()
-        expect(txResult).to.equal(moment(defaultTime).unix())
+        expect(txResult).to.be.above(moment(defaultTime).subtract(10, 'seconds').unix())
+        expect(txResult).to.not.be.above(moment(defaultTime).add(10, 'seconds').unix())
       })
     })
   })
