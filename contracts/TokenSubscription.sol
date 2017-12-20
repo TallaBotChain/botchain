@@ -24,10 +24,9 @@ contract TokenSubscription is Ownable {
   ERC20 public token;
 
   // Add constructor to set default cost, duration, maxSubscriptionLength, ERC20 token, and wallet
-  function TokenSubscription(address _wallet, uint256 _cost, uint256 _duration, uint256 _maxSubscriptionLength) public {
+  function TokenSubscription(ERC20 _token, address _wallet, uint256 _cost, uint256 _duration, uint256 _maxSubscriptionLength) public {
     wallet = _wallet;
-    // TODO fix taking in token
-    // token = _token;
+    token = _token;
     cost = _cost;
     duration = _duration;
     maxSubscriptionLength = _maxSubscriptionLength;
@@ -90,6 +89,6 @@ contract TokenSubscription is Ownable {
   // Override to create custom fund forwarding mechanisms
   function forwardFunds(address _subscriber, uint256 _payment) internal {
     // Note for testing approve transaction first
-    // token.transferFrom(_subscriber, wallet, _payment);
+    token.transferFrom(_subscriber, wallet, _payment);
   }
 }

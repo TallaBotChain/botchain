@@ -19,9 +19,8 @@ const currentTime = 2
 const duration = 1 // in weeks
 const maxSubscriptionLength = 4
 const payment = 100 // in ether
-// const subscriber = '0x72c2ba659460151cdfbb3cd8005ae7fbe68191b1'
 const subscriber = accounts[1]
-const nonSubscriber = '0x85626d4d9a5603a049f600d9cfef23d28ecb7b8b'
+const nonSubscriber = accounts[2]
 const wallet = '0x319f2c0d4e7583dff11a37ec4f2c907c8e76593a'
 
 const BotCoin = artifacts.require('./BotCoin.sol')
@@ -33,8 +32,8 @@ contract('TokenSubscription', () => {
 
   beforeEach(async () => {
     // TODO fix passing in token
-    // botCoin = await newBotCoin();
-    tokenSubscription = await newTokenSubscription()
+    botCoin = await newBotCoin();
+    tokenSubscription = await newTokenSubscription(botCoin.address)
   })
 
   describe('updateParameters()', () => {
@@ -65,6 +64,8 @@ contract('TokenSubscription', () => {
 
       beforeEach(async () => {
         // Setting up the contract to be in the right state
+        const approvedPayment = 2 * payment
+        await botCoin.approve(tokenSubscription.address, approvedPayment, { from: subscriber })
         await tokenSubscription.extend(payment, { from: subscriber })
         txResult = await tokenSubscription.extend(payment, { from: subscriber} )
       })
@@ -81,17 +82,16 @@ contract('TokenSubscription', () => {
         await expectRevert(tokenSubscription.extend.call(bigPayment, { from: subscriber}))
       })
 
-      // TODO Implement after figuring out ERC20
-      // it('forwards funds correctly', async () => {
-      //   // expect balance in wallet to increase by payment
-      //   // TODO figure out how to get balance of the wallet; why is below returning an address?
-      //   expect(await tokenSubscription.wallet.balance.call()).to.equal(payment)
-      // })
+      it('forwards funds correctly', async () => {
+        // expect balance in wallet to increase by payment
+        expect(await tokenSubscription.wallet.balance.call()).to.equal(payment)
+      })
     })
 
     describe('when extending a new subscriber', () => {
      
       it('should set the subscription correctly', async () => {
+        await botCoin.approve(tokenSubscription.address, payment, { from: subscriber })
         await tokenSubscription.extend(payment, { from: subscriber })
         let endTime = (await tokenSubscription.subscriptionEndTimes.call(subscriber)).toNumber()
         const validEndTime = await defaultEndTime()
@@ -104,12 +104,10 @@ contract('TokenSubscription', () => {
         await expectRevert(tokenSubscription.extend.call(bigPayment, { from: subscriber}))
       })
 
-      // TODO Implement after figuring out ERC20
-      // it('forwards funds correctly', async () => {
-      //   // expect balance in wallet to increase by payment
-      //   // TODO figure out how to get balance of the wallet
-      //   // expect(await tokenSubscription.wallet.call()).to.equal(payment)
-      // })
+      it('forwards funds correctly', async () => {
+        // expect balance in wallet to increase by payment
+        expect(await tokenSubscription.wallet.call()).to.equal(payment)
+      })
     })
   })
 
@@ -117,6 +115,7 @@ contract('TokenSubscription', () => {
     let txResult
     
     beforeEach(async () => {
+      await botCoin.approve(tokenSubscription.address, payment, { from: subscriber })
       await tokenSubscription.extend(payment, { from: subscriber })
     })
 
@@ -139,6 +138,7 @@ contract('TokenSubscription', () => {
     let txResult
 
     beforeEach(async () => {
+      await botCoin.approve(tokenSubscription.address, payment, { from: subscriber })
       await tokenSubscription.extend(payment, { from: subscriber })
     })
 
@@ -166,6 +166,7 @@ contract('TokenSubscription', () => {
     let txResult
 
     beforeEach(async () => {
+      await botCoin.approve(tokenSubscription.address, payment, { from: subscriber })
       await tokenSubscription.extend(payment, { from: subscriber })
     })
     
@@ -181,15 +182,10 @@ contract('TokenSubscription', () => {
       })
     })
   })
-
-  // TODO implement after getting ERC20 working
-  // describe('forwardFunds()', () => {
-    
-  // })
 })
 
-async function newTokenSubscription () {
-  const tokenSubscription = await tryAsync(TokenSubscription.new(wallet, cost, duration, maxSubscriptionLength))
+async function newTokenSubscription (_botCoinAddress) {
+  const tokenSubscription = await tryAsync(TokenSubscription.new(_botCoinAddress, wallet, cost, duration, maxSubscriptionLength))
   return tokenSubscription
 }
 
