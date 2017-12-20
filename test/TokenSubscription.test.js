@@ -9,16 +9,14 @@ import expectRevert from './helpers/expectRevert'
 import { hasEvent } from './helpers/event'
 import isNonZeroAddress from './helpers/isNonZeroAddress'
 
-// TODO set duration and maxSubscriptionLength to appropriate time
 const { increaseTime, latestTime } = lkTestHelpers(web3)
 const { accounts } = web3.eth
 
-
-const cost = 100 // in ether
+const cost = 100 // in BotCoin
 const currentTime = 2
 const duration = 1 // in weeks
-const maxSubscriptionLength = 4
-const payment = 100 // in ether
+const maxSubscriptionLength = 4 // in weeks
+const payment = 100 // in BotCoin
 const subscriber = accounts[1]
 const nonSubscriber = accounts[2]
 const wallet = '0x319f2c0d4e7583dff11a37ec4f2c907c8e76593a'
@@ -68,6 +66,7 @@ contract('TokenSubscription', () => {
         const approvedPayment = 2 * payment
         await botCoin.transfer(subscriber, approvedPayment)
         await botCoin.approve(tokenSubscription.address, approvedPayment, { from: subscriber })
+        await tokenSubscription.extend(payment, { from: subscriber })
         txResult = await tokenSubscription.extend(payment, { from: subscriber })
       })
 
@@ -85,14 +84,17 @@ contract('TokenSubscription', () => {
 
       it('forwards funds correctly', async () => {
         // expect balance in wallet to increase by payment
-        expect(await botcoinBalanceOf(botCoin, walletAddress)).to.equal(payment)
+        expect(await botcoinBalanceOf(botCoin, walletAddress)).to.equal(2 * payment)
       })
     })
 
     describe('when extending a new subscriber', () => {
+      beforeEach(async () => {
+        await botCoin.transfer(subscriber, payment)
+        await botCoin.approve(tokenSubscription.address, payment, { from: subscriber })        
+      })
      
       it('should set the subscription correctly', async () => {
-        await botCoin.approve(tokenSubscription.address, payment, { from: subscriber })
         await tokenSubscription.extend(payment, { from: subscriber })
         let endTime = (await tokenSubscription.subscriptionEndTimes.call(subscriber)).toNumber()
         const validEndTime = await defaultEndTime()
@@ -102,12 +104,13 @@ contract('TokenSubscription', () => {
       it('should require timeToExtend to be less than maxSubscriptionLength', async () => {
         // set payment to an amount that would cause the extending of the subscription to be greater than maxSubscriptionLength
         const bigPayment = 5 * payment
-        await expectRevert(tokenSubscription.extend.call(bigPayment, { from: subscriber}))
+        await expectRevert(tokenSubscription.extend(bigPayment, { from: subscriber}))
       })
 
       it('forwards funds correctly', async () => {
+        await tokenSubscription.extend(payment, { from: subscriber })
         // expect balance in wallet to increase by payment
-        expect(await tokenSubscription.wallet.call()).to.equal(payment)
+        expect(await botcoinBalanceOf(botCoin, walletAddress)).to.equal(payment)
       })
     })
   })
@@ -116,6 +119,7 @@ contract('TokenSubscription', () => {
     let txResult
     
     beforeEach(async () => {
+      await botCoin.transfer(subscriber, payment)
       await botCoin.approve(tokenSubscription.address, payment, { from: subscriber })
       await tokenSubscription.extend(payment, { from: subscriber })
     })
@@ -139,6 +143,7 @@ contract('TokenSubscription', () => {
     let txResult
 
     beforeEach(async () => {
+      await botCoin.transfer(subscriber, payment)
       await botCoin.approve(tokenSubscription.address, payment, { from: subscriber })
       await tokenSubscription.extend(payment, { from: subscriber })
     })
@@ -167,6 +172,7 @@ contract('TokenSubscription', () => {
     let txResult
 
     beforeEach(async () => {
+      await botCoin.transfer(subscriber, payment)
       await botCoin.approve(tokenSubscription.address, payment, { from: subscriber })
       await tokenSubscription.extend(payment, { from: subscriber })
     })
