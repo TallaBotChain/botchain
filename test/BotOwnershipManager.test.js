@@ -184,6 +184,18 @@ contract('BotOwnershipManager', () => {
       expect(numBots).to.equal(3)
     })
   })
+
+  describe('transfer()', () => {
+    beforeEach(async () => {
+      await bom.createBot(accounts[7], botAddr1, dataHash)
+      await bom.transfer(devAddr, 1, { from: accounts[7] })
+    })
+
+    it('should update bot owner in mapping', async () => {
+      const botOwnerAddr = await bom.ownerOf(1)
+      expect(botOwnerAddr).to.equal(devAddr)
+    })
+  })
 })
 
 async function newBotOwnershipManager () {
