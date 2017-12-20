@@ -27,13 +27,14 @@ const BotCoin = artifacts.require('./BotCoin.sol')
 const TokenSubscription = artifacts.require('./TokenSubscription.sol')
 
 contract('TokenSubscription', () => {
-  let tokenSubscription
+  let tokenSubscription, walletAddress
   let botCoin
 
   beforeEach(async () => {
     // TODO fix passing in token
     botCoin = await newBotCoin();
     tokenSubscription = await newTokenSubscription(botCoin.address)
+    walletAddress = await tokenSubscription.wallet.call()
   })
 
   describe('updateParameters()', () => {
@@ -65,9 +66,9 @@ contract('TokenSubscription', () => {
       beforeEach(async () => {
         // Setting up the contract to be in the right state
         const approvedPayment = 2 * payment
+        await botCoin.transfer(subscriber, approvedPayment)
         await botCoin.approve(tokenSubscription.address, approvedPayment, { from: subscriber })
-        await tokenSubscription.extend(payment, { from: subscriber })
-        txResult = await tokenSubscription.extend(payment, { from: subscriber} )
+        txResult = await tokenSubscription.extend(payment, { from: subscriber })
       })
 
       it('should extend existing subscriber subscription correctly', async () => {
@@ -84,7 +85,7 @@ contract('TokenSubscription', () => {
 
       it('forwards funds correctly', async () => {
         // expect balance in wallet to increase by payment
-        expect(await tokenSubscription.wallet.balance.call()).to.equal(payment)
+        expect(await botcoinBalanceOf(botCoin, walletAddress)).to.equal(payment)
       })
     })
 
@@ -183,6 +184,11 @@ contract('TokenSubscription', () => {
     })
   })
 })
+
+async function botcoinBalanceOf (botCoin, address) {
+  const bnBal = await botCoin.balanceOf(address)
+  return bnBal.toNumber()
+}
 
 async function newTokenSubscription (_botCoinAddress) {
   const tokenSubscription = await tryAsync(TokenSubscription.new(_botCoinAddress, wallet, cost, duration, maxSubscriptionLength))
