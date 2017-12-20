@@ -1,7 +1,7 @@
 pragma solidity ^0.4.18;
 
 import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
-import './Subscription.sol';
+import './TokenSubscription.sol';
 
 /**
  * @title Subscribable
@@ -10,13 +10,13 @@ import './Subscription.sol';
  */
 contract Subscribable {
 
-	Subscription public subscription;
+	TokenSubscription public tokenSubscription;
 
-	function Subscribable(Subscription _subscription) {
-		subscription = _subscription;
+	function Subscribable(TokenSubscription _tokenSubscription) {
+		tokenSubscription = _tokenSubscription;
 	}
 
   function isSubscribed(address _subscriber) returns(bool) {
-  	return subscription.checkStatus(_subscriber);
+  	return tokenSubscription.checkStatus(_subscriber);
   }
 }
