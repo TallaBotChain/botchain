@@ -1,11 +1,13 @@
 pragma solidity ^0.4.18;
 
 import 'zeppelin-solidity/contracts/lifecycle/Pausable.sol';
+import 'zeppelin-solidity/contracts/math/SafeMath.sol';
 import './ERC721.sol';
 
 /// @dev Non-Fungible token (ERC-721) that handles ownership and transfer
 ///  of Bots. Bots can be transferred to and from approved developers.
 contract BotOwnershipManager is Pausable, ERC721 {
+  using SafeMath for uint256;
 
   event BotCreated(uint256 botId, address botOwner, address botAddress, bytes32 data);
   event BotUpdated(uint256 botId, address botAddress, bytes32 data);
@@ -70,6 +72,8 @@ contract BotOwnershipManager is Pausable, ERC721 {
     uint256 _newBotId = bots.push(_bot) - 1;
     botIdToOwner[_newBotId] = _botOwner;
     botAddressToId[_botAddress] = _newBotId;
+
+    ownershipCount[_botOwner] = ownershipCount[_botOwner].add(1);
 
     BotCreated(_newBotId, _botOwner, _botAddress, _data);
   }

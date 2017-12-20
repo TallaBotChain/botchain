@@ -11,6 +11,7 @@ const { accounts } = web3.eth
 const zero = '0x0000000000000000000000000000000000000000'
 const botAddr1 = '0x63e230f3b57ec9d180b9403c0d8783ddc135f664'
 const botAddr2 = '0x319f2c0d4e7583dff11a37ec4f2c907c8e76593a'
+const botAddr3 = '0x70d9f81dca9102acda0b894e64a7c683924355df'
 const devAddr = '0x72c2ba659460151cdfbb3cd8005ae7fbe68191b1'
 const devAddr2 = '0x85626d4d9a5603a049f600d9cfef23d28ecb7b8b'
 const nonOwnerAddr = accounts[1]
@@ -171,6 +172,16 @@ contract('BotOwnershipManager', () => {
       it('should throw', async () => {
         await expectRevert(bom.updateBot(1, botAddr2, zero))
       })
+    })
+  })
+
+  describe('balanceOf()', () => {
+    it('should return number of bots owned by an address', async () => {
+      await bom.createBot(devAddr, botAddr1, dataHash)
+      await bom.createBot(devAddr, botAddr2, dataHash)
+      await bom.createBot(devAddr, botAddr3, dataHash)
+      let numBots = (await bom.balanceOf(devAddr)).toNumber()
+      expect(numBots).to.equal(3)
     })
   })
 })
