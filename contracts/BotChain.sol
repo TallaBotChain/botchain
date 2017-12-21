@@ -78,9 +78,9 @@ contract BotChain is Ownable {
   ///  to be an approved developer.
   /// @param _botPublicKey The public key of the new Bot
   /// @param _botData A hash of the data associated with this Bot
-  function createBot(address _botPublicKey, bytes _botData) external {
-    // require(isApprovedDeveloper(msg.sender));
-    // botOwnershipManager.createBot(msg.sender, _botPublicKey, _botData);
+  function createBot(address _botPublicKey, bytes32 _botData) external {
+    require(isApprovedDeveloper(msg.sender));
+    botOwnershipManager.createBot(msg.sender, _botPublicKey, _botData);
   }
   
   /// @dev Updates an existing bot.
