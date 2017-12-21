@@ -53,31 +53,31 @@ contract('BotOwnershipManager', () => {
     })
 
     describe('when executed by non-owner', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await expectRevert(bom.createBot(devAddr, botAddr1, dataHash, { from: nonOwnerAddr }))
       })
     })
 
     describe('when given invalid owner address', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await expectRevert(bom.createBot(zero, botAddr1, dataHash))
       })
     })
 
     describe('when given invalid bot address', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await expectRevert(bom.createBot(devAddr, zero, dataHash))
       })
     })
 
     describe('when given invalid data', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await expectRevert(bom.createBot(devAddr, botAddr1, zero))
       })
     })
 
     describe('when bot address already exists', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await bom.createBot(devAddr, botAddr1, dataHash)
         await expectRevert(bom.createBot(devAddr, botAddr1, dataHash))
       })
@@ -145,31 +145,31 @@ contract('BotOwnershipManager', () => {
     })
 
     describe('when executed by non-owner', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await expectRevert(bom.updateBot(1, botAddr2, dataHash2, { from: nonOwnerAddr }))
       })
     })
 
     describe('when given a bot ID that does not exist', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await expectRevert(bom.updateBot(123, botAddr2, dataHash2))
       })
     })
 
     describe('when given bot ID of `0`, which is an invalid empty bot', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await expectRevert(bom.updateBot(0, botAddr2, dataHash2))
       })
     })
 
     describe('when given an invalid bot address', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await expectRevert(bom.updateBot(1, zero, dataHash2))
       })
     })
 
     describe('when given an invalid data hash', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await expectRevert(bom.updateBot(1, botAddr2, zero))
       })
     })
@@ -221,32 +221,32 @@ contract('BotOwnershipManager', () => {
     })
 
     describe('when given a zero address', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await expectRevert(bom.transfer(zero, 1, { from: senderAddr }))
       })
     })
 
     describe('when given the address of the BotOwnershipManager contract', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await bc.addDeveloper(bom.address, dataHash)
         await expectRevert(bom.transfer(bom.address, 1, { from: senderAddr }))
       })
     })
 
     describe('when given a botId that the sender does not own', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await expectRevert(bom.transfer(recipientAddr, 1, { from: accounts[5] }))
       })
     })
 
     describe('when given an address that is not an approved developer', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await expectRevert(bom.transfer(devAddr2, 1, { from: senderAddr }))
       })
     })
 
     describe('when contract is paused', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await bom.pause()
         await expectRevert(bom.transfer(recipientAddr, 1, { from: senderAddr }))
       })
@@ -275,25 +275,25 @@ contract('BotOwnershipManager', () => {
     })
 
     describe('when given a zero address', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await expectRevert(bom.approve(zero, 1, { from: approverAddr }))
       })
     })
 
     describe('when given the BotOwnershipManager contract address', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await expectRevert(bom.approve(bom.address, 1, { from: approverAddr }))
       })
     })
 
     describe('when transaction is executed by an address other than the bot owner', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await expectRevert(bom.approve(senderAddr, 1, { from: accounts[9] }))
       })
     })
 
     describe('when contract is paused', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await bom.pause()
         await expectRevert(bom.approve(senderAddr, 1, { from: approverAddr }))
       })
@@ -337,34 +337,34 @@ contract('BotOwnershipManager', () => {
     })
 
     describe('when recipient address is zero', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await bom.approve(senderAddr, 1, { from: approverAddr })
         await expectRevert(bom.transferFrom(approverAddr, zero, 1, { from: senderAddr }))
       })
     })
 
     describe('when recipient address is BotOwnershipManager contract address', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await bom.approve(senderAddr, 1, { from: approverAddr })
         await expectRevert(bom.transferFrom(approverAddr, bom.address, 1, { from: senderAddr }))
       })
     })
 
     describe('when sender address is not approved', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await expectRevert(bom.transferFrom(approverAddr, recipientAddr, 1, { from: senderAddr }))
       })
     })
 
     describe('when from address does not own the bot', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await bom.approve(senderAddr, 1, { from: approverAddr })
         await expectRevert(bom.transferFrom(accounts[9], recipientAddr, 1, { from: senderAddr }))
       })
     })
 
     describe('when contract is paused', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await bom.approve(senderAddr, 1, { from: approverAddr })
         await bom.pause()
         await expectRevert(bom.transferFrom(approverAddr, recipientAddr, 1, { from: senderAddr }))

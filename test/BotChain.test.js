@@ -64,19 +64,19 @@ contract('BotChain', () => {
     })
 
     describe('when given a 0x0 hash', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await expectRevert(bc.addDeveloper(devAddr, zeroHash))
       })
     })
 
     describe('when called by non-owner', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await expectRevert(bc.addDeveloper(devAddr, dataHash, { from: nonOwnerAddr }))
       })
     })
 
     describe('when given a 0x0 address', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await expectRevert(bc.addDeveloper(zeroAddr, dataHash))
       })
     })
@@ -103,19 +103,19 @@ contract('BotChain', () => {
     })
 
     describe('when given a 0x0 hash', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await expectRevert(bc.updateDeveloper(devAddr, zeroHash))
       })
     })
 
     describe('when called by non-owner', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await expectRevert(bc.updateDeveloper(devAddr, updatedDataHash, { from: nonOwnerAddr }))
       })
     })
 
     describe('when given a 0x0 developer address', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await expectRevert(bc.updateDeveloper(zeroAddr, updatedDataHash))
       })
     })
@@ -142,13 +142,13 @@ contract('BotChain', () => {
     })
 
     describe('when called by non-owner', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await expectRevert(bc.revokeDeveloperApproval(devAddr, { from: nonOwnerAddr }))
       })
     })
 
     describe('when given an address that is not an approved developer', () => {
-      it('should throw', async () => {
+      it('should revert', async () => {
         await expectRevert(bc.revokeDeveloperApproval(devAddr2))
       })
     })
