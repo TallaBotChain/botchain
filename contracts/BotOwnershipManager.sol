@@ -200,6 +200,7 @@ contract BotOwnershipManager is Pausable, ERC721 {
   function _owns(address _claimant, uint256 _botId) internal view returns (bool) {
       return botIdToOwner[_botId] == _claimant;
   }
+
   /// @dev Checks if a given address has transfer approval for a Bot
   /// @param _claimant Address to check for transfer approval
   /// @param _botId ID of the bot to check
