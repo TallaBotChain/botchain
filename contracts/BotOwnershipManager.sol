@@ -158,6 +158,7 @@ contract BotOwnershipManager is Pausable, ERC721 {
     require(_to != address(this));
     require(_approvedFor(msg.sender, _botId));
     require(_owns(_from, _botId));
+    require(botChain.isApprovedDeveloper(_to));
 
     _transfer(_from, _to, _botId);
   }

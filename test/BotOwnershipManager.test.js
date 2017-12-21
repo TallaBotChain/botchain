@@ -370,6 +370,13 @@ contract('BotOwnershipManager', () => {
         await expectRevert(bom.transferFrom(approverAddr, recipientAddr, 1, { from: senderAddr }))
       })
     })
+
+    describe('when recipient is not an approved developer', () => {
+      it('should revert', async () => {
+        await bom.approve(senderAddr, 1, { from: approverAddr })
+        await expectRevert(bom.transferFrom(approverAddr, accounts[9], 1, { from: senderAddr }))
+      })
+    })
   })
 })
 
