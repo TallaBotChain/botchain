@@ -320,7 +320,7 @@ contract('BotOwnershipManager', () => {
       })
 
       it('should transfer bot ownership to the recipient', async () => {
-        expect((await bom.getBot(1))[0]).to.equal(recipientAddr)
+        expect(await bom.ownerOf(1)).to.equal(recipientAddr)
       })
 
       it('should decrement ownership count for approver', async () => {
