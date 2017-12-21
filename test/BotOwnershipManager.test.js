@@ -256,15 +256,12 @@ contract('BotOwnershipManager', () => {
   })
 
   describe('approve()', () => {
-    let approverAddr, senderAddr, recipientAddr
+    let approverAddr, senderAddr
 
     beforeEach(async () => {
       approverAddr = accounts[6]
       senderAddr = accounts[7]
-      recipientAddr = accounts[8]
       await bc.addDeveloper(approverAddr, dataHash)
-      await bc.addDeveloper(recipientAddr, dataHash)
-      await bc.addDeveloper(senderAddr, dataHash)
       await bom.createBot(approverAddr, botAddr1, dataHash)
     })
 
@@ -301,6 +298,78 @@ contract('BotOwnershipManager', () => {
       it('should throw', async () => {
         await bom.pause()
         await expectRevert(bom.approve(senderAddr, 1, { from: approverAddr }))
+      })
+    })
+  })
+
+  describe('transferFrom()', () => {
+    let approverAddr, senderAddr, recipientAddr
+
+    beforeEach(async () => {
+      approverAddr = accounts[6]
+      senderAddr = accounts[7]
+      recipientAddr = accounts[8]
+      await bc.addDeveloper(approverAddr, dataHash)
+      await bc.addDeveloper(recipientAddr, dataHash)
+      await bom.createBot(approverAddr, botAddr1, dataHash)
+    })
+
+    describe('when transaction is valid', () => {
+      let tx
+      beforeEach(async () => {
+        await bom.approve(senderAddr, 1, { from: approverAddr })
+        tx = await bom.transferFrom(approverAddr, recipientAddr, 1, { from: senderAddr })
+      })
+
+      it('should transfer bot ownership to the recipient', async () => {
+        expect((await bom.getBot(1))[0]).to.equal(recipientAddr)
+      })
+
+      it('should decrement ownership count for approver', async () => {
+        expect((await bom.balanceOf(approverAddr)).toNumber()).to.equal(0)
+      })
+
+      it('should increment ownership count for recipient', async () => {
+        expect((await bom.balanceOf(recipientAddr)).toNumber()).to.equal(1)
+      })
+
+      it('should log Transfer event', () => {
+        expect(hasEvent(tx, 'Transfer')).to.equal(true)
+      })
+    })
+
+    describe('when recipient address is zero', () => {
+      it('should throw', async () => {
+        await bom.approve(senderAddr, 1, { from: approverAddr })
+        await expectRevert(bom.transferFrom(approverAddr, zero, 1, { from: senderAddr }))
+      })
+    })
+
+    describe('when recipient address is BotOwnershipManager contract address', () => {
+      it('should throw', async () => {
+        await bom.approve(senderAddr, 1, { from: approverAddr })
+        await expectRevert(bom.transferFrom(approverAddr, bom.address, 1, { from: senderAddr }))
+      })
+    })
+
+    describe('when sender address is not approved', () => {
+      it('should throw', async () => {
+        await expectRevert(bom.transferFrom(approverAddr, recipientAddr, 1, { from: senderAddr }))
+      })
+    })
+
+    describe('when from address does not own the bot', () => {
+      it('should throw', async () => {
+        await bom.approve(senderAddr, 1, { from: approverAddr })
+        await expectRevert(bom.transferFrom(accounts[9], recipientAddr, 1, { from: senderAddr }))
+      })
+    })
+
+    describe('when contract is paused', () => {
+      it('should throw', async () => {
+        await bom.approve(senderAddr, 1, { from: approverAddr })
+        await bom.pause()
+        await expectRevert(bom.transferFrom(approverAddr, recipientAddr, 1, { from: senderAddr }))
       })
     })
   })
