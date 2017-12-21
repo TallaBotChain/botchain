@@ -251,6 +251,13 @@ contract('BotOwnershipManager', () => {
         await expectRevert(bom.transfer(recipientAddr, 1, { from: senderAddr }))
       })
     })
+
+    describe('when bot is disabled', () => {
+      it('should revert', async () => {
+        await bom.disableBot(1)
+        await expectRevert(bom.transfer(recipientAddr, 1, { from: senderAddr }))
+      })
+    })
   })
 
   describe('approve()', () => {
@@ -375,6 +382,109 @@ contract('BotOwnershipManager', () => {
       it('should revert', async () => {
         await bom.approve(senderAddr, 1, { from: approverAddr })
         await expectRevert(bom.transferFrom(approverAddr, accounts[9], 1, { from: senderAddr }))
+      })
+    })
+
+    describe('when bot is disabled', () => {
+      it('should revert', async () => {
+        await bom.approve(senderAddr, 1, { from: approverAddr })
+        await bom.disableBot(1)
+        await expectRevert(bom.transferFrom(approverAddr, recipientAddr, 1, { from: senderAddr }))
+      })
+    })
+  })
+
+  describe('disableBot()', () => {
+    beforeEach(async () => {
+      await bc.addDeveloper(devAddr, dataHash)
+      await bom.createBot(devAddr, botAddr1, dataHash)
+    })
+
+    describe('when transaction is valid', () => {
+      let tx
+      beforeEach(async () => {
+        tx = await bom.disableBot(1)
+      })
+
+      it('should set bot to disabled', async () => {
+        expect(await bom.botIsEnabled(1)).to.equal(false)
+      })
+
+      it('should log BotDisabled event', () => {
+        expect(hasEvent(tx, 'BotDisabled'))
+      })
+    })
+
+    describe('when send by an address that is not the contract owner', () => {
+      it('should revert', async () => {
+        await expectRevert(bom.disableBot(1, { from: nonOwnerAddr }))
+      })
+    })
+
+    describe('when botId is 0', () => {
+      it('should revert', async () => {
+        await expectRevert(bom.disableBot(0))
+      })
+    })
+
+    describe('when bot does not exist', () => {
+      it('should revert', async () => {
+        await expectRevert(bom.disableBot(3))
+      })
+    })
+
+    describe('when bot is already disabled', () => {
+      it('should revert', async () => {
+        await bom.disableBot(1)
+        await expectRevert(bom.disableBot(1))
+      })
+    })
+  })
+
+  describe('enableBot()', () => {
+    beforeEach(async () => {
+      await bc.addDeveloper(devAddr, dataHash)
+      await bom.createBot(devAddr, botAddr1, dataHash)
+      await bom.disableBot(1)
+    })
+
+    describe('when transaction is valid', () => {
+      let tx
+      beforeEach(async () => {
+        tx = await bom.enableBot(1)
+      })
+
+      it('should set bot to enabled', async () => {
+        expect(await bom.botIsEnabled(1)).to.equal(true)
+      })
+
+      it('should log BotEnabled event', () => {
+        expect(hasEvent(tx, 'BotEnabled'))
+      })
+    })
+
+    describe('when send by an address that is not the contract owner', () => {
+      it('should revert', async () => {
+        await expectRevert(bom.enableBot(1, { from: nonOwnerAddr }))
+      })
+    })
+
+    describe('when botId is 0', () => {
+      it('should revert', async () => {
+        await expectRevert(bom.enableBot(0))
+      })
+    })
+
+    describe('when bot does not exist', () => {
+      it('should revert', async () => {
+        await expectRevert(bom.enableBot(3))
+      })
+    })
+
+    describe('when bot is already enabled', () => {
+      it('should revert', async () => {
+        await bom.enableBot(1)
+        await expectRevert(bom.enableBot(1))
       })
     })
   })

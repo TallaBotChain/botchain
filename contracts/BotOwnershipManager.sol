@@ -12,6 +12,8 @@ contract BotOwnershipManager is Pausable, ERC721 {
 
   event BotCreated(uint256 botId, address botOwner, address botAddress, bytes32 data);
   event BotUpdated(uint256 botId, address botAddress, bytes32 data);
+  event BotDisabled(uint256 botId);
+  event BotEnabled(uint256 botId);
 
   /// @dev A mapping from owner address to count of tokens that address owns.
   ///  Used internally inside balanceOf() to resolve ownership count.
@@ -25,6 +27,9 @@ contract BotOwnershipManager is Pausable, ERC721 {
 
   /// @dev A mapping from Bot ID to an address approved for transfer.
   mapping(uint256 => address) botIdToApproved;
+
+  /// @dev A mapping from Bot ID to a boolean indicating if the bot is disabled
+  mapping(uint256 => bool) botIdToDisabled;
 
   Bot[] bots;
 
@@ -101,6 +106,29 @@ contract BotOwnershipManager is Pausable, ERC721 {
     BotUpdated(_botId, _botAddress, _data);
   }
 
+  /// @dev Disables a bot. Disabled bots cannot be transferred.
+  ///      When a bot is created, it is enabled by default.
+  /// @param _botId The ID of the bot to disable.
+  function disableBot(uint256 _botId) onlyOwner external {
+    require(botIdToOwner[_botId] != 0x0);
+    require(botIsEnabled(_botId));
+
+    botIdToDisabled[_botId] = true;
+
+    BotDisabled(_botId);
+  }
+
+  /// @dev Enables a bot.
+  /// @param _botId The ID of the bot to enable.
+  function enableBot(uint256 _botId) onlyOwner external {
+    require(botIdToOwner[_botId] != 0x0);
+    require(!botIsEnabled(_botId));
+
+    botIdToDisabled[_botId] = false;
+
+    BotEnabled(_botId);
+  }
+
   /// @dev Returns the ID of a bot, given the bot's address.
   /// @param _botAddress The address of the bot.
   function getBotId(address _botAddress) external view returns (uint256) {
@@ -132,6 +160,7 @@ contract BotOwnershipManager is Pausable, ERC721 {
     require(_to != address(this));
     require(_owns(msg.sender, _botId));
     require(botChain.isApprovedDeveloper(_to));
+    require(botIsEnabled(_botId));
 
     _transfer(msg.sender, _to, _botId);
   }
@@ -159,6 +188,7 @@ contract BotOwnershipManager is Pausable, ERC721 {
     require(_approvedFor(msg.sender, _botId));
     require(_owns(_from, _botId));
     require(botChain.isApprovedDeveloper(_to));
+    require(botIsEnabled(_botId));
 
     _transfer(_from, _to, _botId);
   }
@@ -166,6 +196,14 @@ contract BotOwnershipManager is Pausable, ERC721 {
   /// @dev Returns the total number of Bots in existence.
   function totalSupply() public view returns (uint) {
       return bots.length - 1;
+  }
+
+  /// @dev Returns true if the given bot is enabled
+  /// @param _botId The ID of the bot to check
+  function botIsEnabled(uint256 _botId) public view returns (bool) {
+    require(_botId > 0);
+    require(botIdToOwner[_botId] != 0x0);
+    return botIdToDisabled[_botId] == false;
   }
 
   /// @dev Returns the address that owns a given Bot
