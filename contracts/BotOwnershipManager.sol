@@ -140,6 +140,8 @@ contract BotOwnershipManager is Pausable, ERC721 {
   /// @param _to The address to be granted transfer approval.
   /// @param _botId The ID of the Bot to approve for transfer.
   function approve(address _to, uint256 _botId) external whenNotPaused {
+    require(_to != address(0));
+    require(_to != address(this));
     require(_owns(msg.sender, _botId));
 
     botIdToApproved[_botId] = _to;

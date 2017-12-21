@@ -254,6 +254,56 @@ contract('BotOwnershipManager', () => {
       })
     })
   })
+
+  describe('approve()', () => {
+    let approverAddr, senderAddr, recipientAddr
+
+    beforeEach(async () => {
+      approverAddr = accounts[6]
+      senderAddr = accounts[7]
+      recipientAddr = accounts[8]
+      await bc.addDeveloper(approverAddr, dataHash)
+      await bc.addDeveloper(recipientAddr, dataHash)
+      await bc.addDeveloper(senderAddr, dataHash)
+      await bom.createBot(approverAddr, botAddr1, dataHash)
+    })
+
+    describe('when transaction is valid', () => {
+      let tx
+      beforeEach(async () => {
+        tx = await bom.approve(senderAddr, 1, { from: approverAddr })
+      })
+
+      it('should log Approval event', () => {
+        expect(hasEvent(tx, 'Approval')).to.equal(true)
+      })
+    })
+
+    describe('when given a zero address', () => {
+      it('should throw', async () => {
+        await expectRevert(bom.approve(zero, 1, { from: approverAddr }))
+      })
+    })
+
+    describe('when given the BotOwnershipManager contract address', () => {
+      it('should throw', async () => {
+        await expectRevert(bom.approve(bom.address, 1, { from: approverAddr }))
+      })
+    })
+
+    describe('when transaction is executed by an address other than the bot owner', () => {
+      it('should throw', async () => {
+        await expectRevert(bom.approve(senderAddr, 1, { from: accounts[9] }))
+      })
+    })
+
+    describe('when contract is paused', () => {
+      it('should throw', async () => {
+        await bom.pause()
+        await expectRevert(bom.approve(senderAddr, 1, { from: approverAddr }))
+      })
+    })
+  })
 })
 
 async function newBotChain () {
