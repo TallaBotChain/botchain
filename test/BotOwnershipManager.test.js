@@ -186,14 +186,53 @@ contract('BotOwnershipManager', () => {
   })
 
   describe('transfer()', () => {
+    let senderAddr
+
     beforeEach(async () => {
-      await bom.createBot(accounts[7], botAddr1, dataHash)
-      await bom.transfer(devAddr, 1, { from: accounts[7] })
+      senderAddr = accounts[7]
+      await bom.createBot(senderAddr, botAddr1, dataHash)
     })
 
-    it('should update bot owner in mapping', async () => {
-      const botOwnerAddr = await bom.ownerOf(1)
-      expect(botOwnerAddr).to.equal(devAddr)
+    describe('when transfer is valid', () => {
+      let tx
+      beforeEach(async () => {
+        tx = await bom.transfer(devAddr, 1, { from: senderAddr })
+      })
+
+      it('should update bot owner in mapping', async () => {
+        const botOwnerAddr = await bom.ownerOf(1)
+        expect(botOwnerAddr).to.equal(devAddr)
+      })
+
+      it('should decrement ownership count for sender', async () => {
+        expect((await bom.balanceOf(senderAddr)).toNumber()).to.equal(0)
+      })
+
+      it('should increment ownership count for recipient', async () => {
+        expect((await bom.balanceOf(devAddr)).toNumber()).to.equal(1)
+      })
+
+      it('should log Transfer event', () => {
+        expect(hasEvent(tx, 'Transfer')).to.equal(true)
+      })
+    })
+
+    describe('when given a zero address', () => {
+      it('should throw', async () => {
+        await expectRevert(bom.transfer(zero, 1, { from: senderAddr }))
+      })
+    })
+
+    describe('when given the address of the BotOwnershipManager contract', () => {
+      it('should throw', async () => {
+        await expectRevert(bom.transfer(bom.address, 1, { from: senderAddr }))
+      })
+    })
+
+    describe('when given a botId that the sender does not own', () => {
+      it('should throw', async () => {
+        await expectRevert(bom.transfer(devAddr, 1, { from: accounts[5] }))
+      })
     })
   })
 })

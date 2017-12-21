@@ -132,7 +132,6 @@ contract BotOwnershipManager is Pausable, ERC721 {
     // TODO: only allow approved developers
     require(_to != address(0));
     require(_to != address(this));
-    // TODO: dissallow transfers to other BotChain contracts?
     require(_owns(msg.sender, _botId));
 
     _transfer(msg.sender, _to, _botId);
