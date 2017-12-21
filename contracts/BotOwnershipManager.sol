@@ -156,11 +156,7 @@ contract BotOwnershipManager is Pausable, ERC721 {
   /// @param _to The address of the recipient, can be a user or contract.
   /// @param _botId The ID of the Bot to transfer.
   function transfer(address _to, uint256 _botId) external whenNotPaused {
-    require(_to != address(0));
-    require(_to != address(this));
     require(_owns(msg.sender, _botId));
-    require(botChain.isApprovedDeveloper(_to));
-    require(botIsEnabled(_botId));
 
     _transfer(msg.sender, _to, _botId);
   }
@@ -183,12 +179,8 @@ contract BotOwnershipManager is Pausable, ERC721 {
   /// @param _to The address that should take ownership of the Bot
   /// @param _botId The ID of the Bot to transfer.
   function transferFrom(address _from, address _to, uint256 _botId) external whenNotPaused {
-    require(_to != address(0));
-    require(_to != address(this));
     require(_approvedFor(msg.sender, _botId));
     require(_owns(_from, _botId));
-    require(botChain.isApprovedDeveloper(_to));
-    require(botIsEnabled(_botId));
 
     _transfer(_from, _to, _botId);
   }
@@ -225,6 +217,11 @@ contract BotOwnershipManager is Pausable, ERC721 {
   /// @param _from Developer address to transfer from
   /// @param _to Developer address to transfer to
   function _transfer(address _from, address _to, uint256 _botId) internal {
+    require(_to != address(0));
+    require(_to != address(this));
+    require(botChain.isApprovedDeveloper(_to));
+    require(botIsEnabled(_botId));
+
     ownershipCount[_to]++;
     botIdToOwner[_botId] = _to;
     if (_from != address(0)) {
