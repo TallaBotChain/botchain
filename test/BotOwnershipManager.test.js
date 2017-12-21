@@ -246,6 +246,13 @@ contract('BotOwnershipManager', () => {
         await expectRevert(bom.transfer(devAddr2, 1, { from: senderAddr }))
       })
     })
+
+    describe('when contract is paused', () => {
+      it('should throw', async () => {
+        await bom.pause()
+        await expectRevert(bom.transfer(recipientAddr, 1, { from: senderAddr }))
+      })
+    })
   })
 })
 
