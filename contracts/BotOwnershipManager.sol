@@ -2,6 +2,7 @@ pragma solidity ^0.4.18;
 
 import 'zeppelin-solidity/contracts/lifecycle/Pausable.sol';
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
+import './BotChain.sol';
 import './ERC721.sol';
 
 /// @dev Non-Fungible token (ERC-721) that handles ownership and transfer
@@ -27,6 +28,8 @@ contract BotOwnershipManager is Pausable, ERC721 {
 
   Bot[] bots;
 
+  BotChain public botChain;
+
   struct Bot {
     /// @dev Address (public key hash) of the bot. Used for off-chain verification.
     address botAddress;
@@ -35,7 +38,9 @@ contract BotOwnershipManager is Pausable, ERC721 {
     bytes32 botData;
   }
 
-  function BotOwnershipManager() public {
+  function BotOwnershipManager(BotChain _botChain) public {
+    botChain = _botChain;
+
     // Create `0` ID bot. The first valid bot ID will be `1`.
     bots.push(Bot(0x0, bytes32(0)));
   }
@@ -122,17 +127,11 @@ contract BotOwnershipManager is Pausable, ERC721 {
   /// @dev Transfers a Bot to another address.
   /// @param _to The address of the recipient, can be a user or contract.
   /// @param _botId The ID of the Bot to transfer.
-  function transfer(
-    address _to,
-    uint256 _botId
-  )
-    external
-    whenNotPaused
-  {
-    // TODO: only allow approved developers
+  function transfer(address _to, uint256 _botId) external whenNotPaused {
     require(_to != address(0));
     require(_to != address(this));
     require(_owns(msg.sender, _botId));
+    require(botChain.isApprovedDeveloper(_to));
 
     _transfer(msg.sender, _to, _botId);
   }

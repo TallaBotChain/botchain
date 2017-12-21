@@ -19,13 +19,15 @@ const dataHash = web3.sha3('some data to hash')
 const dataHash2 = web3.sha3('other data to hash')
 const updatedDataHash = web3.sha3('some modified data to hash')
 
+const BotChain = artifacts.require('./BotChain.sol')
 const BotOwnershipManager = artifacts.require('./BotOwnershipManager.sol')
 
 contract('BotOwnershipManager', () => {
-  let bom
+  let bc, bom
 
   beforeEach(async () => {
-    bom = await newBotOwnershipManager()
+    bc = await newBotChain()
+    bom = await newBotOwnershipManager(bc.address)
   })
 
   describe('createBot()', () => {
@@ -186,22 +188,25 @@ contract('BotOwnershipManager', () => {
   })
 
   describe('transfer()', () => {
-    let senderAddr
+    let senderAddr, recipientAddr
 
     beforeEach(async () => {
       senderAddr = accounts[7]
+      recipientAddr = devAddr
+      await bc.addDeveloper(recipientAddr, dataHash)
+      await bc.addDeveloper(senderAddr, dataHash)
       await bom.createBot(senderAddr, botAddr1, dataHash)
     })
 
     describe('when transfer is valid', () => {
       let tx
       beforeEach(async () => {
-        tx = await bom.transfer(devAddr, 1, { from: senderAddr })
+        tx = await bom.transfer(recipientAddr, 1, { from: senderAddr })
       })
 
       it('should update bot owner in mapping', async () => {
         const botOwnerAddr = await bom.ownerOf(1)
-        expect(botOwnerAddr).to.equal(devAddr)
+        expect(botOwnerAddr).to.equal(recipientAddr)
       })
 
       it('should decrement ownership count for sender', async () => {
@@ -209,7 +214,7 @@ contract('BotOwnershipManager', () => {
       })
 
       it('should increment ownership count for recipient', async () => {
-        expect((await bom.balanceOf(devAddr)).toNumber()).to.equal(1)
+        expect((await bom.balanceOf(recipientAddr)).toNumber()).to.equal(1)
       })
 
       it('should log Transfer event', () => {
@@ -225,19 +230,31 @@ contract('BotOwnershipManager', () => {
 
     describe('when given the address of the BotOwnershipManager contract', () => {
       it('should throw', async () => {
+        await bc.addDeveloper(bom.address, dataHash)
         await expectRevert(bom.transfer(bom.address, 1, { from: senderAddr }))
       })
     })
 
     describe('when given a botId that the sender does not own', () => {
       it('should throw', async () => {
-        await expectRevert(bom.transfer(devAddr, 1, { from: accounts[5] }))
+        await expectRevert(bom.transfer(recipientAddr, 1, { from: accounts[5] }))
+      })
+    })
+
+    describe('when given an address that is not an approved developer', () => {
+      it('should throw', async () => {
+        await expectRevert(bom.transfer(devAddr2, 1, { from: senderAddr }))
       })
     })
   })
 })
 
-async function newBotOwnershipManager () {
-  const bc = await tryAsync(BotOwnershipManager.new())
+async function newBotChain () {
+  const bc = await tryAsync(BotChain.new())
   return bc
+}
+
+async function newBotOwnershipManager (botChainAddress) {
+  const bom = await tryAsync(BotOwnershipManager.new(botChainAddress))
+  return bom
 }
