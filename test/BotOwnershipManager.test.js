@@ -295,7 +295,7 @@ contract('BotOwnershipManager', () => {
 
     describe('when transaction is executed by an address other than the bot owner', () => {
       it('should revert', async () => {
-        await expectRevert(bom.approve(senderAddr, 1, { from: accounts[9] }))
+        await expectRevert(bom.approve(senderAddr, 1, { from: nonOwnerAddr }))
       })
     })
 
@@ -366,7 +366,7 @@ contract('BotOwnershipManager', () => {
     describe('when from address does not own the bot', () => {
       it('should revert', async () => {
         await bom.approve(senderAddr, 1, { from: approverAddr })
-        await expectRevert(bom.transferFrom(accounts[9], recipientAddr, 1, { from: senderAddr }))
+        await expectRevert(bom.transferFrom(nonOwnerAddr, recipientAddr, 1, { from: senderAddr }))
       })
     })
 
@@ -381,7 +381,7 @@ contract('BotOwnershipManager', () => {
     describe('when recipient is not an approved developer', () => {
       it('should revert', async () => {
         await bom.approve(senderAddr, 1, { from: approverAddr })
-        await expectRevert(bom.transferFrom(approverAddr, accounts[9], 1, { from: senderAddr }))
+        await expectRevert(bom.transferFrom(approverAddr, nonOwnerAddr, 1, { from: senderAddr }))
       })
     })
 
