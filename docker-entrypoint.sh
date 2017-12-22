@@ -3,8 +3,7 @@
 # fail fast
 set -e
 
-export RACK_ENV=$APP_ENV
-export RAILS_ENV=$APP_ENV
+export NODE_ENV=$APP_ENV
 
 function wait_for_host_port {
   if [[ $# != 2 ]]; then echo "usage: $FUNCNAME host port"; return 1; fi
@@ -47,7 +46,7 @@ case $action in
     wait_for_services
     app_init
 
-    npm run deploy
+    npm run deploy #--network $PARITY_CHAIN
     if [[ -n $ABI_BUCKET ]]; then
       echo "Copying ABI to $ABI_BUCKET"
       aws s3 cp -r build/ s3://$ABI_BUCKET/

@@ -8,8 +8,11 @@ RUN apt-get update -qq && \
         vim \
         less \
         curl \
+        python-pip \
         && \
     rm -rf /var/lib/apt/lists/*
+
+RUN pip install awscli
 
 RUN mkdir -p $APP_DIR
 WORKDIR $APP_DIR
