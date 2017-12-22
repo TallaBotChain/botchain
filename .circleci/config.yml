@@ -1,0 +1,42 @@
+version: 2
+jobs:
+  build:
+    machine: true
+    working_directory: ~/repo
+
+    environment:
+      - SERVICE_NAME: "botchain-contract"
+      - ENV: "dev"
+      - AWS_ACCOUNT: "500651484941"
+      - AWS_DEFAULT_REGION: "us-east-1"
+      - ECS_CLUSTER: "main"
+      - NAME_PREFIX: "dev-botchain-"
+
+    steps:
+      - checkout
+
+      - run: echo 'export MOUNTS="-v /var/run/docker.sock:/var/run/docker.sock -v $PWD:/app"' >> $BASH_ENV
+      - run: echo 'export DOCKER_OPTS="-e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_DEFAULT_REGION $MOUNTS"' >> $BASH_ENV
+
+      # run tests!
+      - run:
+          name: run tests
+          command: |
+            docker-compose run test test
+
+      # deploy
+      - run:
+          name: deploy
+          command: |
+            if [[ $CIRCLE_BRANCH == "master" ]]; then
+              docker run $DOCKER_OPTS simplygenius/aws-ecs-deploy deploy \
+                  -a $AWS_ACCOUNT \
+                  -c $NAME_PREFIX$ECS_CLUSTER \
+                  -d $ENV-deployer \
+                  -v ${CIRCLE_SHA1::7} \
+                  -t \
+                  $NAME_PREFIX$SERVICE_NAME
+              docker run $DOCKER_OPTS simplygenius/aws-ecs-deploy aws-ecs-run-task \
+                  $NAME_PREFIX$ECS_CLUSTER \
+                  $NAME_PREFIX$SERVICE_NAME
+            fi

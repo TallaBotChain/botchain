@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+
+  truffle: &base
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: exec /bin/true
+    environment:
+      APP_ENV: 'development'
+      RPC_HOST: 'testrpc'
+      RPC_PORT: '8545'
+      SERVICES: 'RPC_HOST:RPC_PORT'
+    volumes:
+      - .:/srv/app
+    links:
+      - testrpc
+
+  test:
+    <<: *base
+    # don't want this to start with a "docker-compose up", but want to be able to
+    # run tests with "docker-compose run test test"
+    command: exec /bin/true
+
+  testrpc:
+    image: harshjv/testrpc
+    ports:
+      - 8545:8545
+
+#  parity:
+#    image: parity/parity:beta
+#    command: --chain dev --unsafe-expose
+#    ports:
+#      - 8545:8545
+#      - 8180:8180
+#      - 8546:8546
+#      - 30303:30303
+#      - 30303:30303/udp

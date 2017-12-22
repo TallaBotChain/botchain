@@ -25,8 +25,8 @@ module.exports = {
       gas: 4600000
     },
     development: {
-      host: 'localhost',
-      port: 8546,
+      host: process.env.RPC_HOST || 'localhost',
+      port: process.env.RPC_PORT || 8546,
       network_id: '*', // Match any network id
       gas: 4600000
     },
