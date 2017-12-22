@@ -28,7 +28,7 @@ contract BotChain is Ownable {
   /// @dev Constructor for BotChain contracts. Creates a new BotOwnershipManager contract,
   ///  which it owns by default.
   function BotChain() public {
-    botOwnershipManager = new BotOwnershipManager();
+    botOwnershipManager = new BotOwnershipManager(this);
     developers.push(0x0);
   }
 
