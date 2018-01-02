@@ -67,7 +67,7 @@ case $action in
     wait_for_services
     app_init
 
-    ./node_modules/.bin/truffle console
+    truffle console
   ;;
 
   test)
