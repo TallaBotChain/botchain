@@ -33,17 +33,17 @@
     "truffle-ext": "0.1.8"
   },
   "scripts": {
-    "build": "node scripts/build.js",
-    "cleanup": "rm -rf build/ && mkdir build && rm -rf lib/ && mkdir lib",
-    "compile": "npm run cleanup && truffle compile --all && npm run build",
-    "deploy:development": "npm run cleanup && truffle migrate --reset && npm run build",
-    "deploy:mainnet": "npm run cleanup && truffle migrate --reset --network mainnet && npm run build",
-    "deploy:kovan": "npm run cleanup && truffle migrate --reset --network kovan && npm run build",
-    "deploy:rinkeby-infura": "npm run cleanup && truffle migrate --reset --network rinkeby_infura && npm run build",
-    "deploy:kovan-infura": "npm run cleanup && truffle migrate --reset --network kovan_infura && npm run build",
-    "test": "npm run build && scripts/test.sh",
+    "post_deploy": "node scripts/post_deploy.js",
+    "cleanup": "rm -rf build/ && mkdir build",
+    "compile": "npm run cleanup && truffle compile --all",
+    "deploy:development": "npm run cleanup && truffle migrate --reset --network development && npm run post_deploy",
+    "deploy:mainnet": "npm run cleanup && truffle migrate --reset --network mainnet && npm run post_deploy",
+    "deploy:kovan": "npm run cleanup && truffle migrate --reset --network kovan && npm run post_deploy",
+    "deploy:rinkeby-infura": "npm run cleanup && truffle migrate --reset --network rinkeby_infura && npm run post_deploy",
+    "deploy:kovan-infura": "npm run cleanup && truffle migrate --reset --network kovan_infura && npm run post_deploy",
+    "test": "scripts/test.sh",
     "test:truffle": "truffle test",
-    "test:coverage": "npm run build && npm run solidity-coverage",
+    "test:coverage": "npm run solidity-coverage",
     "testrpc": "scripts/runTestrpc.sh",
     "lint": "standard --verbose | snazzy"
   }

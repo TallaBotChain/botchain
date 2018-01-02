@@ -44,22 +44,24 @@ case $action in
     npm run compile
   ;;
 
-  migrate)
-    wait_for_services
-    app_init
-
-    truffle migrate
-  ;;
-
   deploy)
     wait_for_services
     app_init
 
-    npm run deploy #--network $PARITY_CHAIN
+    if [[ "$PARITY_CHAIN" == "mainnet" ]]; then
+      echo "Deploying to mainnet"
+      npm run deploy:mainnet
+    elif [[ "$PARITY_CHAIN" == "kovan" ]]; then
+      echo "Deploying to kovan"
+      npm run deploy:kovan
+    else
+      echo "Deploying to development"
+      npm run deploy:development
+    fi
+
     if [[ -n $ABI_BUCKET ]]; then
       echo "Copying ABI to $ABI_BUCKET"
       aws s3 cp -r build/ s3://$ABI_BUCKET/
-      # TODO: put deployed addresses as contracts.json as well
     fi
   ;;
 

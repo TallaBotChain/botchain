@@ -6,29 +6,29 @@ module.exports = {
     mainnet: {
       // * run parity on mainnet: `parity`
       // * update host/port to point at parity RPC
-      host: 'localhost',
-      port: 8546,
-      network_id: 1,
-      gas: 4600000,
+      host: process.env.RPC_HOST || 'localhost',
+      port: process.env.RPC_PORT || 8546,
+      network_id: process.env.NETWORK_ID || 1,
+      gas: process.env.GAS || 4600000,
       // `gasPrice: 5` is relatively low price and could result in long transaction times (> 30 minutes)
       // If network activity is spiking and gas prices are very high, a transaction at `gasPrice: 5`
       // may not be mined at all until prices drop, which in some cases could take days. Increase this
       // to incentivize miners to mine the tx!
-      gasPrice: 5
+      gasPrice: process.env.GAS_PRICE || 5
     },
     kovan: {
       // * run parity on kovan testnet: `parity --chain kovan`
       // * update host/port to point at parity RPC
-      host: 'localhost',
-      port: 8546,
-      network_id: 42,
-      gas: 4600000
+      host: process.env.RPC_HOST || 'localhost',
+      port: process.env.RPC_PORT || 8546,
+      network_id: process.env.NETWORK_ID || 42,
+      gas: process.env.GAS || 4600000
     },
     development: {
       host: process.env.RPC_HOST || 'localhost',
       port: process.env.RPC_PORT || 8546,
-      network_id: '*', // Match any network id
-      gas: 4600000
+      network_id: process.env.NETWORK_ID || '*',
+      gas: process.env.GAS || 4600000
     },
     coverage: {
       host: 'localhost',

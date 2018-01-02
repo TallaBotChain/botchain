@@ -9,7 +9,6 @@ services:
     command: exec /bin/true
     environment:
       APP_ENV: 'development'
-      PARITY_CHAIN: 'dev'
       RPC_HOST: 'testrpc'
       RPC_PORT: '8545'
       SERVICES: 'RPC_HOST:RPC_PORT'
