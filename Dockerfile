@@ -8,6 +8,7 @@ RUN apt-get update -qq && \
         vim \
         less \
         curl \
+        python-dev \
         python-pip \
         && \
     rm -rf /var/lib/apt/lists/*
