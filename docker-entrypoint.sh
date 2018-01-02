@@ -33,6 +33,8 @@ export -f app_init
 
 action=$1; shift
 
+export PATH=$APP_DIR/node_modules/.bin:$PATH
+
 case $action in
 
   compile)
@@ -40,6 +42,13 @@ case $action in
     app_init
 
     npm run compile
+  ;;
+
+  migrate)
+    wait_for_services
+    app_init
+
+    truffle migrate
   ;;
 
   deploy)
@@ -58,7 +67,7 @@ case $action in
     wait_for_services
     app_init
 
-    ./node_modules/.bin/truffle develop
+    ./node_modules/.bin/truffle console
   ;;
 
   test)
