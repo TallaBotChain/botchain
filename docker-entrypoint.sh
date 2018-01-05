@@ -61,7 +61,8 @@ case $action in
 
     if [[ -n $ABI_BUCKET ]]; then
       echo "Copying ABI to $ABI_BUCKET"
-      aws s3 cp -r build/ s3://$ABI_BUCKET/
+      aws cp --acl bucket-owner-full-control --recursive \
+        build/ s3://$ABI_BUCKET/
     fi
   ;;
 
