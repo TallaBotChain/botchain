@@ -36,7 +36,10 @@ jobs:
                   -v ${CIRCLE_SHA1::7} \
                   -t \
                   $NAME_PREFIX$SERVICE_NAME
-              docker run $DOCKER_OPTS simplygenius/aws-ecs-deploy aws-ecs-run-task \
+              docker run $DOCKER_OPTS simplygenius/aws-ecs-deploy aws-assume-role \
+                  $AWS_ACCOUNT \
+                  $ENV-deployer \
+                  aws-ecs-run-task \
                   $NAME_PREFIX$ECS_CLUSTER \
                   $NAME_PREFIX$SERVICE_NAME
             fi
