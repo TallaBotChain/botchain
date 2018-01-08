@@ -12,14 +12,19 @@ const zeroAddr = '0x0000000000000000000000000000000000000000'
 const zeroHash = '0x0000000000000000000000000000000000000000000000000000000000000000'
 const devAddr = '0x72c2ba659460151cdfbb3cd8005ae7fbe68191b1'
 const devAddr2 = '0x85626d4d9a5603a049f600d9cfef23d28ecb7b8b'
-const nonOwnerAddr = accounts[1]
+const devAddr3 = accounts[1]
+const devAddr4 = accounts[2]
+const nonOwnerAddr = accounts[3]
+const botAddr = accounts[4]
 const dataHash = web3.sha3('some data to hash')
 const updatedDataHash = web3.sha3('some modified data to hash')
 
 const BotChain = artifacts.require('./BotChain.sol')
+const BotOwnershipManager = artifacts.require('./BotOwnershipManager.sol')
 
 contract('BotChain', () => {
   let bc
+  let bom
 
   beforeEach(async () => {
     bc = await newBotChain()
@@ -150,6 +155,69 @@ contract('BotChain', () => {
     describe('when given an address that is not an approved developer', () => {
       it('should revert', async () => {
         await expectRevert(bc.revokeDeveloperApproval(devAddr2))
+      })
+    })
+  })
+
+  describe('createBot()', () => {
+    let bot
+    let bomAddress
+    let bom
+    let txResult
+    
+    beforeEach(async () => {
+      bomAddress = await bc.botOwnershipManager()
+      bom = await BotOwnershipManager.at(bomAddress)
+      await bc.addDeveloper(devAddr3, dataHash)
+      txResult = await bc.createBot(botAddr, dataHash, { from: devAddr3 })
+    })
+
+    describe('when an approved developer creates a bot with valid parameters', () => {
+      it('should successfully create bot', async () => {
+        // Load bot ownership manager and check for presence of bot
+        bot = await bom.getBot.call(1)
+        expect(bot[0]).to.equal(devAddr3)
+        expect(bot[1]).to.equal(botAddr)
+        expect(bot[2]).to.equal(dataHash)
+      })
+    })
+
+    describe('when an unapproved developer attempts to create a bot with valid parameters', () => {
+      it('should throw', async () => {
+        await expectRevert(bc.createBot(botAddr, dataHash, { from: devAddr4}))
+      })
+    })
+  })
+
+  describe('updateBot()', () => {
+    let bot
+    let bomAddress
+    let bom
+    let botID
+    let txResult
+
+    beforeEach(async () => {
+      bomAddress = await bc.botOwnershipManager()
+      bom = await BotOwnershipManager.at(bomAddress)
+      await bc.addDeveloper(devAddr3, dataHash)
+      await bc.createBot(botAddr, dataHash, { from: devAddr3 })
+      botID = await bom.getBotId(botAddr)
+      txResult = await bc.updateBot(botID, botAddr, updatedDataHash, { from: devAddr3 })
+    })
+    
+    describe('when an approved developer updates a bot with valid parameters', () => {
+      it('should successfully update bot', async () => {
+        // Load bot ownership manager and check for updated information
+        bot = await bom.getBot.call(1)
+        expect(bot[0]).to.equal(devAddr3)
+        expect(bot[1]).to.equal(botAddr)
+        expect(bot[2]).to.equal(updatedDataHash)
+      })
+    })
+    
+    describe('when an unapproved developer attempts to update a bot with valid parameters', () => {
+      it('should throw', async () => {
+        await expectRevert(bc.updateBot(botAddr, dataHash, updatedDataHash, { from: devAddr4}))
       })
     })
   })
