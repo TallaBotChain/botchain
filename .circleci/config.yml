@@ -35,6 +35,7 @@ jobs:
                   -d $ENV-deployer \
                   -v ${CIRCLE_SHA1::7} \
                   -t \
+                  -p \
                   $NAME_PREFIX$SERVICE_NAME
               docker run $DOCKER_OPTS simplygenius/aws-ecs-deploy aws-assume-role \
                   $AWS_ACCOUNT \
