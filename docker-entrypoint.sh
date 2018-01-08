@@ -3,8 +3,6 @@
 # fail fast
 set -e
 
-export NODE_ENV=$APP_ENV
-
 function wait_for_host_port {
   if [[ $# != 2 ]]; then echo "usage: $FUNCNAME host port"; return 1; fi
 
@@ -24,16 +22,15 @@ function wait_for_services {
 }
 
 function app_init {
-  # Run bundler if needed - useful in dev
-  if [[ "$APP_ENV" == "development" ]]; then
-    npm install
-  fi
+#  # Run bundler if needed - useful in dev
+#  if [[ "$APP_ENV" == "development" ]]; then
+#    npm install
+#  fi
+  :
 }
 export -f app_init
 
 action=$1; shift
-
-export PATH=$APP_DIR/node_modules/.bin:$PATH
 
 case $action in
 
