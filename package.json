@@ -35,12 +35,20 @@
   "scripts": {
     "post_deploy": "node scripts/post_deploy.js",
     "cleanup": "rm -rf build/ && mkdir build",
-    "compile": "npm run cleanup && truffle compile --all",
-    "deploy:development": "npm run cleanup && truffle migrate --reset --network development && npm run post_deploy",
-    "deploy:mainnet": "npm run cleanup && truffle migrate --reset --network mainnet && npm run post_deploy",
-    "deploy:kovan": "npm run cleanup && truffle migrate --reset --network kovan && npm run post_deploy",
-    "deploy:rinkeby-infura": "npm run cleanup && truffle migrate --reset --network rinkeby_infura && npm run post_deploy",
-    "deploy:kovan-infura": "npm run cleanup && truffle migrate --reset --network kovan_infura && npm run post_deploy",
+    "compile": "truffle compile --all",
+
+    "deploy:development": "truffle migrate --network development && npm run post_deploy",
+    "deploy:mainnet": "truffle migrate --network mainnet && npm run post_deploy",
+    "deploy:kovan": "truffle migrate --network kovan && npm run post_deploy",
+    "deploy:rinkeby-infura": "truffle migrate --network rinkeby_infura && npm run post_deploy",
+    "deploy:kovan-infura": "truffle migrate --network kovan_infura && npm run post_deploy",
+
+    "deploy-reset:development": "npm run cleanup && truffle migrate --reset --network development && npm run post_deploy",
+    "deploy-reset:mainnet": "npm run cleanup && truffle migrate --reset --network mainnet && npm run post_deploy",
+    "deploy-reset:kovan": "npm run cleanup && truffle migrate --reset --network kovan && npm run post_deploy",
+    "deploy-reset:rinkeby-infura": "npm run cleanup && truffle migrate --reset --network rinkeby_infura && npm run post_deploy",
+    "deploy-reset:kovan-infura": "npm run cleanup && truffle migrate --reset --network kovan_infura && npm run post_deploy",
+
     "test": "scripts/test.sh",
     "test:truffle": "truffle test",
     "test:coverage": "npm run solidity-coverage",
