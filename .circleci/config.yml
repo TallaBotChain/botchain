@@ -22,7 +22,7 @@ jobs:
       - run:
           name: run tests
           command: |
-            docker-compose run truffle test
+            docker-compose run test test
 
       # deploy
       - run:
