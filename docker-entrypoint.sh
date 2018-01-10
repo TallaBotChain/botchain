@@ -45,6 +45,16 @@ case $action in
     wait_for_services
     app_init
 
+    if [[ -n $ABI_BUCKET ]]; then
+      # Truffle migrations store state in a contract, but need to read
+      # Migration.json to find the contract, so pull in most recent json files
+      # from abi bucket as they only get written there if the deploy was
+      # successful
+      echo "Importing $ABI_BUCKET contents to allow incremental migrations"
+      aws s3 cp --recursive \
+        s3://$ABI_BUCKET/ build/
+    fi
+
     if [[ "$PARITY_CHAIN" == "mainnet" ]]; then
       echo "Deploying to mainnet"
       npm run deploy:mainnet
