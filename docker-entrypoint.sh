@@ -73,7 +73,7 @@ case $action in
   test)
     wait_for_services
     npm run compile
-    npm test
+    npm run test:truffle
   ;;
 
   bash)
