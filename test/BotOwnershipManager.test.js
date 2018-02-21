@@ -5,6 +5,7 @@ import { web3 } from './helpers/w3'
 import tryAsync from './helpers/tryAsync'
 import expectRevert from './helpers/expectRevert'
 import { hasEvent } from './helpers/event'
+import newBotChain from './helpers/newBotChain'
 
 const { accounts } = web3.eth
 const zero = '0x0000000000000000000000000000000000000000'
@@ -17,7 +18,6 @@ const nonOwnerAddr = accounts[1]
 const dataHash = web3.sha3('some data to hash')
 const dataHash2 = web3.sha3('other data to hash')
 
-const BotChain = artifacts.require('./BotChain.sol')
 const BotOwnershipManager = artifacts.require('./BotOwnershipManager.sol')
 
 contract('BotOwnershipManager', () => {
@@ -489,11 +489,6 @@ contract('BotOwnershipManager', () => {
     })
   })
 })
-
-async function newBotChain () {
-  const bc = await tryAsync(BotChain.new())
-  return bc
-}
 
 async function newBotOwnershipManager (botChainAddress) {
   const bom = await tryAsync(BotOwnershipManager.new(botChainAddress))

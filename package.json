@@ -9,6 +9,7 @@
     "src"
   ],
   "dependencies": {
+    "levelk-upgradability-contracts": "^0.1.1",
     "moment": "^2.18.1",
     "truffle-blockchain-utils": "^0.0.3",
     "truffle-hdwallet-provider": "^0.0.3",
@@ -25,6 +26,7 @@
     "chai": "^4.1.2",
     "cross-env": "^5.0.4",
     "lk-test-helpers": "^0.1.3",
+    "lodash": "^4.17.5",
     "snazzy": "^7.0.0",
     "solidity-coverage": "sc-forks/solidity-coverage#6a13575e3597e491299a9dd1474c64c9066faa69",
     "standard": "^10.0.3",
@@ -36,19 +38,16 @@
     "post_deploy": "node scripts/post_deploy.js",
     "cleanup": "rm -rf build/ && mkdir build",
     "compile": "truffle compile --all",
-
     "deploy:development": "truffle migrate --network development && npm run post_deploy",
     "deploy:mainnet": "truffle migrate --network mainnet && npm run post_deploy",
     "deploy:kovan": "truffle migrate --network kovan && npm run post_deploy",
     "deploy:rinkeby-infura": "truffle migrate --network rinkeby_infura && npm run post_deploy",
     "deploy:kovan-infura": "truffle migrate --network kovan_infura && npm run post_deploy",
-
     "deploy-reset:development": "npm run cleanup && truffle migrate --reset --network development && npm run post_deploy",
     "deploy-reset:mainnet": "npm run cleanup && truffle migrate --reset --network mainnet && npm run post_deploy",
     "deploy-reset:kovan": "npm run cleanup && truffle migrate --reset --network kovan && npm run post_deploy",
     "deploy-reset:rinkeby-infura": "npm run cleanup && truffle migrate --reset --network rinkeby_infura && npm run post_deploy",
     "deploy-reset:kovan-infura": "npm run cleanup && truffle migrate --reset --network kovan_infura && npm run post_deploy",
-
     "test": "scripts/test.sh",
     "test:truffle": "truffle test",
     "test:coverage": "npm run solidity-coverage",

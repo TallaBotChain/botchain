@@ -2,7 +2,7 @@ pragma solidity ^0.4.18;
 
 import 'zeppelin-solidity/contracts/lifecycle/Pausable.sol';
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
-import './BotChain.sol';
+import './Delegates/BotChainDelegate.sol';
 import './ERC721.sol';
 
 /// @dev Non-Fungible token (ERC-721) that handles ownership and transfer
@@ -33,7 +33,7 @@ contract BotOwnershipManager is Pausable, ERC721 {
 
   Bot[] bots;
 
-  BotChain public botChain;
+  BotChainDelegate public botChain;
 
   struct Bot {
     /// @dev Address (public key hash) of the bot. Used for off-chain verification.
@@ -43,7 +43,7 @@ contract BotOwnershipManager is Pausable, ERC721 {
     bytes32 botData;
   }
 
-  function BotOwnershipManager(BotChain _botChain) public {
+  function BotOwnershipManager(BotChainDelegate _botChain) public {
     botChain = _botChain;
 
     // Create `0` ID bot. The first valid bot ID will be `1`.
