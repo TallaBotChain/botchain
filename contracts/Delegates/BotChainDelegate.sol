@@ -87,7 +87,6 @@ contract BotChainDelegate is OwnableDelegate {
   /// @dev Revokes approval for an existing developer. Only callable by owner.
   /// @param _developer The address of the developer to revoke approval for.
   function revokeDeveloperApproval(address _developer) onlyOwner external {
-    // require(developerToApproved[_developer]);
     require(getDeveloperApprovalStatus(_developer));
 
     setDeveloperApprovalStatus(_developer, false);
