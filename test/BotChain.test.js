@@ -34,11 +34,6 @@ contract('BotChain', () => {
       const addr = await bc.getBotOwnershipManager()
       expect(isNonZeroAddress(addr)).to.equal(true)
     })
-
-    it('should add 0x0 address as first developer in array', async () => {
-      const addr = await bc.getDeveloper(0)
-      expect(addr).to.equal(zeroAddr)
-    })
   })
 
   describe('addDeveloper()', () => {
@@ -59,7 +54,7 @@ contract('BotChain', () => {
       })
 
       it('should add developer to array', async () => {
-        expect(await bc.getDeveloper(1)).to.equal(devAddr)
+        expect(await bc.getDeveloper(0)).to.equal(devAddr)
       })
 
       it('should log DeveloperAdded event', () => {

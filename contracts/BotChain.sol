@@ -15,8 +15,6 @@ contract BotChain is StorageConsumer, OwnableProxy {
   {
     storage_.setAddress("owner", msg.sender);
     storage_.setAddress("botOwnershipManager", new BotOwnershipManager(BotChainDelegate(this)));
-    storage_.setAddress(keccak256("developers", 0), 0x0);
-    storage_.setUint("developerCount", 1);
   }
 
 }
