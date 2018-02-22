@@ -1,15 +1,17 @@
 pragma solidity ^0.4.18;
 
-import './OwnableDelegate.sol';
+import "levelk-upgradability-contracts/contracts/Ownership/OwnableConsumer.sol";
 import '../BotOwnershipManager.sol';
 
 /// @title BotChainDelegate
 /// @dev Delegate contract for BotChain functionality
-contract BotChainDelegate is OwnableDelegate {
+contract BotChainDelegate is OwnableConsumer {
 
   event DeveloperAdded(address developer, bytes32 data);
   event DeveloperUpdated(address developer, bytes32 data);
   event DeveloperApprovalRevoked(address developer);
+
+  function BotChainDelegate(BaseStorage storage_) public OwnableConsumer(storage_) { }
 
   function getBotOwnershipManager() public view returns (BotOwnershipManager) {
     return BotOwnershipManager(_storage.getAddress("botOwnershipManager"));
