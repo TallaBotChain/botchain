@@ -7,11 +7,19 @@ import "./BotOwnershipManager.sol";
 
 contract BotChain is OwnableProxy {
 
-  function BotChain(PublicStorage storage_, address delegate)
+  function BotChain(
+    PublicStorage storage_,
+    address botChainDelegateAddress,
+    address botOwnershipManagerDelegateAddress
+  )
     public
-    OwnableProxy(storage_, delegate)
+    OwnableProxy(storage_, botChainDelegateAddress)
   {
-    storage_.setAddress("botOwnershipManager", new BotOwnershipManager(BotChainDelegate(this)));
+    storage_.setAddress("botOwnershipManager", new BotOwnershipManager(
+      BotChainDelegate(this),
+      storage_,
+      botOwnershipManagerDelegateAddress
+    ));
   }
 
 }

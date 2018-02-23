@@ -20,7 +20,7 @@ const botAddr = accounts[4]
 const dataHash = web3.sha3('some data to hash')
 const updatedDataHash = web3.sha3('some modified data to hash')
 
-const BotOwnershipManager = artifacts.require('./BotOwnershipManager.sol')
+const BotOwnershipManagerDelegate = artifacts.require('./BotOwnershipManagerDelegate.sol')
 
 contract('BotChain', () => {
   let bc
@@ -160,7 +160,7 @@ contract('BotChain', () => {
 
     beforeEach(async () => {
       bomAddress = await bc.getBotOwnershipManager()
-      bom = await BotOwnershipManager.at(bomAddress)
+      bom = await BotOwnershipManagerDelegate.at(bomAddress)
       await bc.addDeveloper(devAddr3, dataHash)
       await bc.createBot(botAddr, dataHash, { from: devAddr3 })
     })
@@ -190,7 +190,7 @@ contract('BotChain', () => {
 
     beforeEach(async () => {
       bomAddress = await bc.getBotOwnershipManager()
-      bom = await BotOwnershipManager.at(bomAddress)
+      bom = await BotOwnershipManagerDelegate.at(bomAddress)
       await bc.addDeveloper(devAddr3, dataHash)
       await bc.createBot(botAddr, dataHash, { from: devAddr3 })
       botID = await bom.getBotId(botAddr)

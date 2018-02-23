@@ -1,8 +1,8 @@
 /* global describe it beforeEach artifacts contract */
 
+import _ from 'lodash'
 import { expect } from 'chai'
 import { web3 } from './helpers/w3'
-import tryAsync from './helpers/tryAsync'
 import expectRevert from './helpers/expectRevert'
 import { hasEvent } from './helpers/event'
 import newBotChain from './helpers/newBotChain'
@@ -18,7 +18,9 @@ const nonOwnerAddr = accounts[1]
 const dataHash = web3.sha3('some data to hash')
 const dataHash2 = web3.sha3('other data to hash')
 
+const PublicStorage = artifacts.require('./PublicStorage.sol')
 const BotOwnershipManager = artifacts.require('./BotOwnershipManager.sol')
+const BotOwnershipManagerDelegate = artifacts.require('./BotOwnershipManagerDelegate.sol')
 
 contract('BotOwnershipManager', () => {
   let bc, bom
@@ -491,6 +493,12 @@ contract('BotOwnershipManager', () => {
 })
 
 async function newBotOwnershipManager (botChainAddress) {
-  const bom = await tryAsync(BotOwnershipManager.new(botChainAddress))
-  return bom
+  const publicStorage = await PublicStorage.new()
+  const botOwnershipManagerDelegate = await BotOwnershipManagerDelegate.new()
+  const bom = await BotOwnershipManager.new(
+    botChainAddress,
+    publicStorage.address,
+    botOwnershipManagerDelegate.address
+)
+  return _.extend(bom, await BotOwnershipManagerDelegate.at(bom.address))
 }
