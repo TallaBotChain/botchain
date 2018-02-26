@@ -124,6 +124,7 @@ contract BotOwnershipManagerDelegate is PausableDelegate, ERC721 {
     setBotIdForAddress(botAddress, newBotId);
 
     BotCreated(newBotId, botOwner, botAddress, dataHash);
+    Transfer(0x0, botOwner, newBotId);
   }
 
   function updateBot(uint256 botId, address newBotAddress, bytes32 newDataHash) onlyOwner external {

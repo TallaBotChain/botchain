@@ -52,6 +52,10 @@ contract('BotOwnershipManager', () => {
       it('should log BotCreated event', () => {
         expect(hasEvent(txResult, 'BotCreated')).to.equal(true)
       })
+
+      it('should log Transfer event', () => {
+        expect(hasEvent(txResult, 'Transfer')).to.equal(true)
+      })
     })
 
     describe('when executed by non-owner', () => {
