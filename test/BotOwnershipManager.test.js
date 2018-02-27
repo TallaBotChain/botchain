@@ -199,7 +199,7 @@ contract('BotOwnershipManager', () => {
       senderAddr = accounts[7]
       recipientAddr = devAddr
       await bc.addDeveloper(recipientAddr, dataHash, devUrl)
-      await bc.addDeveloper(senderAddr, dataHash. devUrl)
+      await bc.addDeveloper(senderAddr, dataHash, devUrl)
       await bom.createBot(senderAddr, botAddr1, dataHash)
     })
 
