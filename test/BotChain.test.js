@@ -18,6 +18,8 @@ const devAddr4 = accounts[2]
 const nonOwnerAddr = accounts[3]
 const botAddr = accounts[4]
 const dataHash = web3.sha3('some data to hash')
+const url = web3.sha3('www.google.com')
+const updatedUrl = web3.sha3('www.notgoogle.com')
 const updatedDataHash = web3.sha3('some modified data to hash')
 
 const BotOwnershipManagerDelegate = artifacts.require('./BotOwnershipManagerDelegate.sol')
@@ -40,12 +42,17 @@ contract('BotChain', () => {
     describe('when given a valid address and valid hash', () => {
       let txResult
       beforeEach(async () => {
-        txResult = await bc.addDeveloper(devAddr, dataHash)
+        txResult = await bc.addDeveloper(devAddr, dataHash, url)
       })
 
       it('should add developer to data mapping', async () => {
         const data = await bc.getDeveloperDataHash(devAddr)
         expect(data).to.equal(dataHash)
+      })
+
+      it('should add developer to url mapping', async () => {
+        const devUrl = await bc.getDeveloperUrl(devAddr)
+        expect(devUrl).to.equal(url)
       })
 
       it('should add developer to approved mapping', async () => {
@@ -64,36 +71,40 @@ contract('BotChain', () => {
 
     describe('when given a 0x0 hash', () => {
       it('should revert', async () => {
-        await expectRevert(bc.addDeveloper(devAddr, zeroHash))
+        await expectRevert(bc.addDeveloper(devAddr, zeroHash, url))
       })
     })
 
     describe('when called by non-owner', () => {
       it('should revert', async () => {
-        await expectRevert(bc.addDeveloper(devAddr, dataHash, { from: nonOwnerAddr }))
+        await expectRevert(bc.addDeveloper(devAddr, dataHash, url, { from: nonOwnerAddr }))
       })
     })
 
     describe('when given a 0x0 address', () => {
       it('should revert', async () => {
-        await expectRevert(bc.addDeveloper(zeroAddr, dataHash))
+        await expectRevert(bc.addDeveloper(zeroAddr, dataHash, url))
       })
     })
   })
 
   describe('updateDeveloper()', () => {
     beforeEach(async () => {
-      await bc.addDeveloper(devAddr, dataHash)
+      await bc.addDeveloper(devAddr, dataHash, url)
     })
 
     describe('when given a valid address and valid hash', () => {
       let txResult
       beforeEach(async () => {
-        txResult = await bc.updateDeveloper(devAddr, updatedDataHash)
+        txResult = await bc.updateDeveloper(devAddr, updatedDataHash, updatedUrl)
       })
 
       it('should update hash value in mapping', async () => {
         expect(await bc.getDeveloperDataHash(devAddr)).to.equal(updatedDataHash)
+      })
+
+      it('should update url in mapping', async () => {
+        expect(await bc.getDeveloperUrl(devAddr)).to.equal(updatedUrl)
       })
 
       it('should log DeveloperUpdated event', async () => {
@@ -103,26 +114,26 @@ contract('BotChain', () => {
 
     describe('when given a 0x0 hash', () => {
       it('should revert', async () => {
-        await expectRevert(bc.updateDeveloper(devAddr, zeroHash))
+        await expectRevert(bc.updateDeveloper(devAddr, zeroHash, updatedUrl))
       })
     })
 
     describe('when called by non-owner', () => {
       it('should revert', async () => {
-        await expectRevert(bc.updateDeveloper(devAddr, updatedDataHash, { from: nonOwnerAddr }))
+        await expectRevert(bc.updateDeveloper(devAddr, updatedDataHash, updatedUrl, { from: nonOwnerAddr }))
       })
     })
 
     describe('when given a 0x0 developer address', () => {
       it('should revert', async () => {
-        await expectRevert(bc.updateDeveloper(zeroAddr, updatedDataHash))
+        await expectRevert(bc.updateDeveloper(zeroAddr, updatedDataHash, updatedUrl))
       })
     })
   })
 
   describe('revokeDeveloperApproval()', () => {
     beforeEach(async () => {
-      await bc.addDeveloper(devAddr, dataHash)
+      await bc.addDeveloper(devAddr, dataHash, url)
     })
 
     describe('when given a valid developer address that is approved', () => {
@@ -161,7 +172,7 @@ contract('BotChain', () => {
     beforeEach(async () => {
       bomAddress = await bc.getBotOwnershipManager()
       bom = await BotOwnershipManagerDelegate.at(bomAddress)
-      await bc.addDeveloper(devAddr3, dataHash)
+      await bc.addDeveloper(devAddr3, dataHash, url)
       await bc.createBot(botAddr, dataHash, { from: devAddr3 })
     })
 
@@ -191,7 +202,7 @@ contract('BotChain', () => {
     beforeEach(async () => {
       bomAddress = await bc.getBotOwnershipManager()
       bom = await BotOwnershipManagerDelegate.at(bomAddress)
-      await bc.addDeveloper(devAddr3, dataHash)
+      await bc.addDeveloper(devAddr3, dataHash, url)
       await bc.createBot(botAddr, dataHash, { from: devAddr3 })
       botID = await bom.getBotId(botAddr)
       await bc.updateBot(botID, botAddr, updatedDataHash, { from: devAddr3 })

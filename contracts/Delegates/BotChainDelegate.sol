@@ -7,8 +7,8 @@ import './BotOwnershipManagerDelegate.sol';
 /// @dev Delegate contract for BotChain functionality
 contract BotChainDelegate is OwnableDelegate {
 
-  event DeveloperAdded(address developer, bytes32 data);
-  event DeveloperUpdated(address developer, bytes32 data);
+  event DeveloperAdded(address developer, bytes32 data, bytes32 url);
+  event DeveloperUpdated(address developer, bytes32 data, bytes32 url);
   event DeveloperApprovalRevoked(address developer);
 
   function BotChainDelegate(BaseStorage storage_) public OwnableDelegate(storage_) { }
@@ -37,6 +37,14 @@ contract BotChainDelegate is OwnableDelegate {
     return _storage.getBytes32(keccak256("developerDataHash", developer));
   }
 
+  function setDeveloperUrl(address developer, bytes32 url) internal {
+    _storage.setBytes32(keccak256("developerUrl", developer), url);
+  }
+
+  function getDeveloperUrl(address developer) public view returns (bytes32) {
+    return _storage.getBytes32(keccak256("developerUrl", developer));
+  }
+
   function getDeveloperCount() public view returns (uint) {
     return _storage.getUint("developerCount");
   }
@@ -63,27 +71,33 @@ contract BotChainDelegate is OwnableDelegate {
   /// @dev Adds a new developer. Only callable by owner.
   /// @param _developer The address of the developer to add
   /// @param _data A hash of the data associated with this developer
-  function addDeveloper(address _developer, bytes32 _data) onlyOwner external {
+  /// @param _url A url associated with this developer
+  function addDeveloper(address _developer, bytes32 _data, bytes32 _url) onlyOwner external {
     require(_developer != 0x0);
     require(_data != 0x0);
+    require(_url != 0x0);
 
     setDeveloperApprovalStatus(_developer, true);
     setDeveloperDataHash(_developer, _data);
+    setDeveloperUrl(_developer, _url);
     pushDeveloper(_developer);
 
-    DeveloperAdded(_developer, _data);
+    DeveloperAdded(_developer, _data, _url);
   }
 
   /// @dev Updates an existing developer. Only callable by owner.
   /// @param _developer The address of the developer to update
   /// @param _data A hash of the data associated with this developer
-  function updateDeveloper(address _developer, bytes32 _data) onlyOwner external {
+  /// @param _url A url associated with this developer
+  function updateDeveloper(address _developer, bytes32 _data, bytes32 _url) onlyOwner external {
     require(_developer != 0x0);
     require(_data != 0x0);
+    require(_url != 0x0);
 
     setDeveloperDataHash(_developer, _data);
+    setDeveloperUrl(_developer, _url);
 
-    DeveloperUpdated(_developer, _data);
+    DeveloperUpdated(_developer, _data, _url);
   }
 
   /// @dev Revokes approval for an existing developer. Only callable by owner.
