@@ -7,6 +7,7 @@ import './BotOwnershipManagerDelegate.sol';
 /// @dev Delegate contract for BotChain functionality
 contract BotChainDelegate is OwnableDelegate {
 
+  //use bytes32 for url and offload conversion chores to front-ends
   event DeveloperAdded(address developer, bytes32 data, bytes32 url);
   event DeveloperUpdated(address developer, bytes32 data, bytes32 url);
   event DeveloperApprovalRevoked(address developer);

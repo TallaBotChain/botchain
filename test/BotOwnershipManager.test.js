@@ -17,7 +17,7 @@ const devAddr2 = '0x85626d4d9a5603a049f600d9cfef23d28ecb7b8b'
 const nonOwnerAddr = accounts[1]
 const dataHash = web3.sha3('some data to hash')
 const dataHash2 = web3.sha3('other data to hash')
-const devUrl = web3.sha3('some url to hash')
+const devUrl = web3.fromAscii('some url to hash')
 
 const PublicStorage = artifacts.require('./PublicStorage.sol')
 const BotOwnershipManager = artifacts.require('./BotOwnershipManager.sol')

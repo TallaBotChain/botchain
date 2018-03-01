@@ -18,8 +18,8 @@ const devAddr4 = accounts[2]
 const nonOwnerAddr = accounts[3]
 const botAddr = accounts[4]
 const dataHash = web3.sha3('some data to hash')
-const url = web3.sha3('www.google.com')
-const updatedUrl = web3.sha3('www.notgoogle.com')
+const url = web3.fromAscii('www.google.com')
+const updatedUrl = web3.fromAscii('www.notgoogle.com')
 const updatedDataHash = web3.sha3('some modified data to hash')
 
 const BotOwnershipManagerDelegate = artifacts.require('./BotOwnershipManagerDelegate.sol')
@@ -41,6 +41,7 @@ contract('BotChain', () => {
   describe('addDeveloper()', () => {
     describe('when given a valid address and valid hash', () => {
       let txResult
+
       beforeEach(async () => {
         txResult = await bc.addDeveloper(devAddr, dataHash, url)
       })
@@ -52,7 +53,7 @@ contract('BotChain', () => {
 
       it('should add developer to url mapping', async () => {
         const devUrl = await bc.getDeveloperUrl(devAddr)
-        expect(devUrl).to.equal(url)
+        expect(devUrl).to.contain(url)
       })
 
       it('should add developer to approved mapping', async () => {
@@ -104,7 +105,7 @@ contract('BotChain', () => {
       })
 
       it('should update url in mapping', async () => {
-        expect(await bc.getDeveloperUrl(devAddr)).to.equal(updatedUrl)
+        expect(await bc.getDeveloperUrl(devAddr)).to.contain(updatedUrl)
       })
 
       it('should log DeveloperUpdated event', async () => {
