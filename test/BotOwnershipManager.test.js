@@ -17,6 +17,7 @@ const devAddr2 = '0x85626d4d9a5603a049f600d9cfef23d28ecb7b8b'
 const nonOwnerAddr = accounts[1]
 const dataHash = web3.sha3('some data to hash')
 const dataHash2 = web3.sha3('other data to hash')
+const devUrl = web3.fromAscii('some url to hash')
 
 const PublicStorage = artifacts.require('./PublicStorage.sol')
 const BotOwnershipManager = artifacts.require('./BotOwnershipManager.sol')
@@ -197,8 +198,8 @@ contract('BotOwnershipManager', () => {
     beforeEach(async () => {
       senderAddr = accounts[7]
       recipientAddr = devAddr
-      await bc.addDeveloper(recipientAddr, dataHash)
-      await bc.addDeveloper(senderAddr, dataHash)
+      await bc.addDeveloper(recipientAddr, dataHash, devUrl)
+      await bc.addDeveloper(senderAddr, dataHash, devUrl)
       await bom.createBot(senderAddr, botAddr1, dataHash)
     })
 
@@ -234,7 +235,7 @@ contract('BotOwnershipManager', () => {
 
     describe('when given the address of the BotOwnershipManager contract', () => {
       it('should revert', async () => {
-        await bc.addDeveloper(bom.address, dataHash)
+        await bc.addDeveloper(bom.address, dataHash, devUrl)
         await expectRevert(bom.transfer(bom.address, 1, { from: senderAddr }))
       })
     })
@@ -272,7 +273,7 @@ contract('BotOwnershipManager', () => {
     beforeEach(async () => {
       approverAddr = accounts[6]
       senderAddr = accounts[7]
-      await bc.addDeveloper(approverAddr, dataHash)
+      await bc.addDeveloper(approverAddr, dataHash, devUrl)
       await bom.createBot(approverAddr, botAddr1, dataHash)
     })
 
@@ -320,8 +321,8 @@ contract('BotOwnershipManager', () => {
       approverAddr = accounts[6]
       senderAddr = accounts[7]
       recipientAddr = accounts[8]
-      await bc.addDeveloper(approverAddr, dataHash)
-      await bc.addDeveloper(recipientAddr, dataHash)
+      await bc.addDeveloper(approverAddr, dataHash, devUrl)
+      await bc.addDeveloper(recipientAddr, dataHash, devUrl)
       await bom.createBot(approverAddr, botAddr1, dataHash)
     })
 
@@ -402,7 +403,7 @@ contract('BotOwnershipManager', () => {
 
   describe('disableBot()', () => {
     beforeEach(async () => {
-      await bc.addDeveloper(devAddr, dataHash)
+      await bc.addDeveloper(devAddr, dataHash, devUrl)
       await bom.createBot(devAddr, botAddr1, dataHash)
     })
 
@@ -449,7 +450,7 @@ contract('BotOwnershipManager', () => {
 
   describe('enableBot()', () => {
     beforeEach(async () => {
-      await bc.addDeveloper(devAddr, dataHash)
+      await bc.addDeveloper(devAddr, dataHash, devUrl)
       await bom.createBot(devAddr, botAddr1, dataHash)
       await bom.disableBot(1)
     })
