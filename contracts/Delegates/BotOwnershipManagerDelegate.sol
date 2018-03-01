@@ -3,7 +3,7 @@ pragma solidity ^0.4.18;
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
 import "levelk-upgradability-contracts/contracts/Implementations/lifecycle/PausableKeyed.sol";
 import '../ERC721.sol';
-import './BotChainDelegate.sol';
+import './DeveloperRegistryDelegate.sol';
 
 /// @dev Non-Fungible token (ERC-721) that handles ownership and transfer
 ///  of Bots. Bots can be transferred to and from approved developers.
@@ -71,8 +71,8 @@ contract BotOwnershipManagerDelegate is PausableKeyed, ERC721 {
     _storage.setBool(keccak256("botDisabledStatuses", botId), disabled);
   }
 
-  function getBotChain() public view returns (BotChainDelegate) {
-    return BotChainDelegate(_storage.getAddress("botChainAddress"));
+  function getDeveloperRegistry() public view returns (DeveloperRegistryDelegate) {
+    return DeveloperRegistryDelegate(_storage.getAddress("developerRegistryAddress"));
   }
 
   function getBotCount() public view returns (uint) {
@@ -87,9 +87,12 @@ contract BotOwnershipManagerDelegate is PausableKeyed, ERC721 {
     return _storage.getBytes32(keccak256("botDataHashes", botId));
   }
 
-  function BotOwnershipManagerDelegate(BotChainDelegate botChain, BaseStorage storage_)
-    public
+  function BotOwnershipManagerDelegate(
+    DeveloperRegistryDelegate developerRegistry,
+    BaseStorage storage_
+  )
     PausableKeyed(storage_)
+    public
   {}
 
   /// @dev Returns the number of Bots owned by a specific address.
@@ -249,7 +252,7 @@ contract BotOwnershipManagerDelegate is PausableKeyed, ERC721 {
   function _transfer(address from, address to, uint256 botId) internal {
     require(to != address(0));
     require(to != address(this));
-    require(getBotChain().isApprovedDeveloper(to));
+    require(getDeveloperRegistry().isApprovedDeveloper(to));
     require(botIsEnabled(botId));
 
     incrementOwnershipCount(to);

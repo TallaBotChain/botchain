@@ -1,4 +1,4 @@
-# BotChain
+# DeveloperRegistry
 
 Truffle project for the botchain smart contracts (solidity)
 

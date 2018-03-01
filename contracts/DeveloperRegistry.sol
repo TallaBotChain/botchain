@@ -2,21 +2,21 @@ pragma solidity ^0.4.18;
 
 import "levelk-upgradability-contracts/contracts/Proxy/OwnableProxy.sol";
 import "levelk-upgradability-contracts/contracts/Storage/PublicStorage.sol";
-import "./Delegates/BotChainDelegate.sol";
+import "./Delegates/DeveloperRegistryDelegate.sol";
 import "./BotOwnershipManager.sol";
 
-contract BotChain is OwnableProxy {
+contract DeveloperRegistry is OwnableProxy {
 
-  function BotChain(
+  function DeveloperRegistry(
     PublicStorage storage_,
-    address botChainDelegateAddress,
+    address developerRegistryDelegateAddress,
     address botOwnershipManagerDelegateAddress
   )
     public
-    OwnableProxy(storage_, botChainDelegateAddress)
+    OwnableProxy(storage_, developerRegistryDelegateAddress)
   {
     storage_.setAddress("botOwnershipManager", new BotOwnershipManager(
-      BotChainDelegate(this),
+      DeveloperRegistryDelegate(this),
       storage_,
       botOwnershipManagerDelegateAddress
     ));

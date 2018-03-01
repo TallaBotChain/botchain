@@ -3,7 +3,7 @@ const fs = require('fs')
 const contractsPath = 'build/contracts'
 const contractsOutputFile = 'build/contracts.json'
 const contractFiles = [
-  'BotChain.json',
+  'DeveloperRegistry.json',
   'BotCoin.json',
   'TokenSubscription.json'
 ]

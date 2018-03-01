@@ -6,7 +6,7 @@ import { web3 } from './helpers/w3'
 import expectRevert from './helpers/expectRevert'
 import { hasEvent } from './helpers/event'
 import isNonZeroAddress from './helpers/isNonZeroAddress'
-import newBotChain from './helpers/newBotChain'
+import newDeveloperRegistry from './helpers/newDeveloperRegistry'
 
 const { accounts } = web3.eth
 const zeroAddr = '0x0000000000000000000000000000000000000000'
@@ -24,11 +24,11 @@ const updatedDataHash = web3.sha3('some modified data to hash')
 
 const BotOwnershipManagerDelegate = artifacts.require('./BotOwnershipManagerDelegate.sol')
 
-contract('BotChain', () => {
+contract('DeveloperRegistry', () => {
   let bc
 
   beforeEach(async () => {
-    bc = await newBotChain()
+    bc = await newDeveloperRegistry()
   })
 
   describe('when deployed', () => {

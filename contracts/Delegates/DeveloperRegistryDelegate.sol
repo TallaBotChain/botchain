@@ -3,16 +3,16 @@ pragma solidity ^0.4.18;
 import "levelk-upgradability-contracts/contracts/Implementations/ownership/OwnableKeyed.sol";
 import './BotOwnershipManagerDelegate.sol';
 
-/// @title BotChainDelegate
-/// @dev Delegate contract for BotChain functionality
-contract BotChainDelegate is OwnableKeyed {
+/// @title DeveloperRegistryDelegate
+/// @dev Delegate contract for DeveloperRegistry functionality
+contract DeveloperRegistryDelegate is OwnableKeyed {
 
   //use bytes32 for url and offload conversion chores to front-ends
   event DeveloperAdded(address developer, bytes32 data, bytes32 url);
   event DeveloperUpdated(address developer, bytes32 data, bytes32 url);
   event DeveloperApprovalRevoked(address developer);
 
-  function BotChainDelegate(BaseStorage storage_) public OwnableKeyed(storage_) { }
+  function DeveloperRegistryDelegate(BaseStorage storage_) public OwnableKeyed(storage_) { }
 
   function getBotOwnershipManager() public view returns (BotOwnershipManagerDelegate) {
     return BotOwnershipManagerDelegate(_storage.getAddress("botOwnershipManager"));

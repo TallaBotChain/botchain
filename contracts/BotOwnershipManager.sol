@@ -5,11 +5,15 @@ import "levelk-upgradability-contracts/contracts/Storage/PublicStorage.sol";
 
 contract BotOwnershipManager is OwnableProxy {
 
-  function BotOwnershipManager(address botChainAddress, PublicStorage storage_, address delegate)
-    public
+  function BotOwnershipManager(
+    address developerRegistryAddress,
+    PublicStorage storage_,
+    address delegate
+  )
     OwnableProxy(storage_, delegate)
+    public
   {
-    storage_.setAddress("botChainAddress", botChainAddress);
+    storage_.setAddress("developerRegistryAddress", developerRegistryAddress);
 
     // Increment botCount so that the first valid bot ID will be `1`.
     _storage.setUint("botCount", 1);

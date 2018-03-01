@@ -1,4 +1,4 @@
-"BotChain" is the main contract
+"DeveloperRegistry" is the main contract
 
 "developerRecord" is a contract that contains all the information of a developer record. A new one gets created whenever an address wants a new developer record.
 
@@ -9,7 +9,7 @@
 "Approved Developers" are addresses that are allowed to have a developer record.
 
 ————————————————————————
-BotChain Data Functions:
+DeveloperRegistry Data Functions:
 ————————————————————————
 
 isOwner(address) - returns true if address is an owner
@@ -21,7 +21,7 @@ botDeveloperRecords(address) - returns the address of the developer record for t
 botOwners(address) - returns the address of the developer record associated with the bot of the address passed in.
 
 ————————————————
-BotChain Arrays:
+DeveloperRegistry Arrays:
 ————————————————
 
 owners - list of all owners
@@ -31,10 +31,10 @@ approvedDevs - list of all approved developers
 bots - list of all bots
 
 ———————————————————
-BotChain Functions:
+DeveloperRegistry Functions:
 ———————————————————
 
-BotChain() - Makes the contract, sets address creating contract as an owner
+DeveloperRegistry() - Makes the contract, sets address creating contract as an owner
 
 addOwner(address newOwner) - adds the address passed in to the owner list
 

@@ -5,7 +5,7 @@ import { expect } from 'chai'
 import { web3 } from './helpers/w3'
 import expectRevert from './helpers/expectRevert'
 import { hasEvent } from './helpers/event'
-import newBotChain from './helpers/newBotChain'
+import newDeveloperRegistry from './helpers/newDeveloperRegistry'
 
 const { accounts } = web3.eth
 const zero = '0x0000000000000000000000000000000000000000'
@@ -27,7 +27,7 @@ contract('BotOwnershipManager', () => {
   let bc, bom
 
   beforeEach(async () => {
-    bc = await newBotChain()
+    bc = await newDeveloperRegistry()
     bom = await newBotOwnershipManager(bc.address)
   })
 
@@ -497,11 +497,11 @@ contract('BotOwnershipManager', () => {
   })
 })
 
-async function newBotOwnershipManager (botChainAddress) {
+async function newBotOwnershipManager (developerRegistryAddress) {
   const publicStorage = await PublicStorage.new()
   const botOwnershipManagerDelegate = await BotOwnershipManagerDelegate.new()
   const bom = await BotOwnershipManager.new(
-    botChainAddress,
+    developerRegistryAddress,
     publicStorage.address,
     botOwnershipManagerDelegate.address
 )
