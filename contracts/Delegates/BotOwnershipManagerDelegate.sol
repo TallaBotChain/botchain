@@ -1,13 +1,13 @@
 pragma solidity ^0.4.18;
 
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
-import "levelk-upgradability-contracts/contracts/Delegates/lifecycle/PausableDelegate.sol";
+import "levelk-upgradability-contracts/contracts/Implementations/lifecycle/PausableKeyed.sol";
 import '../ERC721.sol';
 import './BotChainDelegate.sol';
 
 /// @dev Non-Fungible token (ERC-721) that handles ownership and transfer
 ///  of Bots. Bots can be transferred to and from approved developers.
-contract BotOwnershipManagerDelegate is PausableDelegate, ERC721 {
+contract BotOwnershipManagerDelegate is PausableKeyed, ERC721 {
   using SafeMath for uint256;
 
   event BotCreated(uint256 botId, address botOwner, address botAddress, bytes32 data);
@@ -89,7 +89,7 @@ contract BotOwnershipManagerDelegate is PausableDelegate, ERC721 {
 
   function BotOwnershipManagerDelegate(BotChainDelegate botChain, BaseStorage storage_)
     public
-    PausableDelegate(storage_)
+    PausableKeyed(storage_)
   {}
 
   /// @dev Returns the number of Bots owned by a specific address.
