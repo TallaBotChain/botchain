@@ -1,7 +1,7 @@
 pragma solidity ^0.4.18;
 
 import "levelk-upgradability-contracts/contracts/Implementations/ownership/OwnableKeyed.sol";
-import './BotOwnershipManagerDelegate.sol';
+import './BotProductRegistryDelegate.sol';
 
 /// @title DeveloperRegistryDelegate
 /// @dev Delegate contract for DeveloperRegistry functionality
@@ -14,12 +14,12 @@ contract DeveloperRegistryDelegate is OwnableKeyed {
 
   function DeveloperRegistryDelegate(BaseStorage storage_) public OwnableKeyed(storage_) { }
 
-  function getBotOwnershipManager() public view returns (BotOwnershipManagerDelegate) {
-    return BotOwnershipManagerDelegate(_storage.getAddress("botOwnershipManager"));
+  function getBotProductProductRegistry() public view returns (BotProductRegistryDelegate) {
+    return BotProductRegistryDelegate(_storage.getAddress("botProductRegistry"));
   }
 
-  function setBotOwnershipManager(BotOwnershipManagerDelegate botOwnershipManager) internal {
-    _storage.setAddress("botOwnershipManager", botOwnershipManager);
+  function setBotProductRegistry(BotProductRegistryDelegate botProductRegistry) internal {
+    _storage.setAddress("botProductRegistry", botProductRegistry);
   }
 
   function setDeveloperApprovalStatus(address developer, bool approvalStatus) internal {
@@ -115,19 +115,19 @@ contract DeveloperRegistryDelegate is OwnableKeyed {
   ///  to be an approved developer.
   /// @param _botPublicKey The public key of the new Bot
   /// @param _botData A hash of the data associated with this Bot
-  function createBot(address _botPublicKey, bytes32 _botData) external {
+  function createBotProduct(address _botPublicKey, bytes32 _botData) external {
     require(isApprovedDeveloper(msg.sender));
     
-    getBotOwnershipManager().createBot(msg.sender, _botPublicKey, _botData);
+    getBotProductProductRegistry().createBotProduct(msg.sender, _botPublicKey, _botData);
   }
   
   /// @dev Updates an existing bot.
   /// @param _botPublicKey The public key of the new Bot
   /// @param _botData A hash of the data associated with this Bot
-  function updateBot(uint256 _botId, address _botPublicKey, bytes32 _botData) external {
+  function updateBotProduct(uint256 _botProductId, address _botPublicKey, bytes32 _botData) external {
     require(isApprovedDeveloper(msg.sender));
     
-    getBotOwnershipManager().updateBot(_botId, _botPublicKey, _botData);
+    getBotProductProductRegistry().updateBotProduct(_botProductId, _botPublicKey, _botData);
   }
 
 }

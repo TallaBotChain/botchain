@@ -18,7 +18,7 @@ isApprovedDev(address) - returns true if address is an approved dev
 
 botDeveloperRecords(address) - returns the address of the developer record for the address, 0x0 if none exists.
 
-botOwners(address) - returns the address of the developer record associated with the bot of the address passed in.
+botProductOwners(address) - returns the address of the developer record associated with the bot of the address passed in.
 
 ————————————————
 DeveloperRegistry Arrays:
@@ -50,7 +50,7 @@ updateDeveloperRecord(string name, string organization, string street1, string s
 
 addBot(string name, string description, string tags) - creates a bot for address that sent the request.
 
-updateBot(address id, string name, string description, string tags) - updates bot with id.
+updateBotProduct(address id, string name, string description, string tags) - updates bot with id.
 
 ———————————————————————————————
 developerRecord Data Functions:

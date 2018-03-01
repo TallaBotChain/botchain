@@ -22,7 +22,7 @@ const url = web3.fromAscii('www.google.com')
 const updatedUrl = web3.fromAscii('www.notgoogle.com')
 const updatedDataHash = web3.sha3('some modified data to hash')
 
-const BotOwnershipManagerDelegate = artifacts.require('./BotOwnershipManagerDelegate.sol')
+const BotProductRegistryDelegate = artifacts.require('./BotProductRegistryDelegate.sol')
 
 contract('DeveloperRegistry', () => {
   let bc
@@ -33,7 +33,7 @@ contract('DeveloperRegistry', () => {
 
   describe('when deployed', () => {
     it('should create a new BotManagerOwernship contract', async () => {
-      const addr = await bc.getBotOwnershipManager()
+      const addr = await bc.getBotProductProductRegistry()
       expect(isNonZeroAddress(addr)).to.equal(true)
     })
   })
@@ -165,22 +165,22 @@ contract('DeveloperRegistry', () => {
     })
   })
 
-  describe('createBot()', () => {
+  describe('createBotProduct()', () => {
     let bot
     let bomAddress
     let bom
 
     beforeEach(async () => {
-      bomAddress = await bc.getBotOwnershipManager()
-      bom = await BotOwnershipManagerDelegate.at(bomAddress)
+      bomAddress = await bc.getBotProductProductRegistry()
+      bom = await BotProductRegistryDelegate.at(bomAddress)
       await bc.addDeveloper(devAddr3, dataHash, url)
-      await bc.createBot(botAddr, dataHash, { from: devAddr3 })
+      await bc.createBotProduct(botAddr, dataHash, { from: devAddr3 })
     })
 
     describe('when an approved developer creates a bot with valid parameters', () => {
       it('should successfully create bot', async () => {
         // Load bot ownership manager and check for presence of bot
-        bot = await bom.getBot.call(1)
+        bot = await bom.getBotProduct.call(1)
         expect(bot[0]).to.equal(devAddr3)
         expect(bot[1]).to.equal(botAddr)
         expect(bot[2]).to.equal(dataHash)
@@ -189,30 +189,30 @@ contract('DeveloperRegistry', () => {
 
     describe('when an unapproved developer attempts to create a bot with valid parameters', () => {
       it('should throw', async () => {
-        await expectRevert(bc.createBot(botAddr, dataHash, { from: devAddr4 }))
+        await expectRevert(bc.createBotProduct(botAddr, dataHash, { from: devAddr4 }))
       })
     })
   })
 
-  describe('updateBot()', () => {
+  describe('updateBotProduct()', () => {
     let bot
     let bomAddress
     let bom
     let botID
 
     beforeEach(async () => {
-      bomAddress = await bc.getBotOwnershipManager()
-      bom = await BotOwnershipManagerDelegate.at(bomAddress)
+      bomAddress = await bc.getBotProductProductRegistry()
+      bom = await BotProductRegistryDelegate.at(bomAddress)
       await bc.addDeveloper(devAddr3, dataHash, url)
-      await bc.createBot(botAddr, dataHash, { from: devAddr3 })
-      botID = await bom.getBotId(botAddr)
-      await bc.updateBot(botID, botAddr, updatedDataHash, { from: devAddr3 })
+      await bc.createBotProduct(botAddr, dataHash, { from: devAddr3 })
+      botID = await bom.getBotProductId(botAddr)
+      await bc.updateBotProduct(botID, botAddr, updatedDataHash, { from: devAddr3 })
     })
 
     describe('when an approved developer updates a bot with valid parameters', () => {
       it('should successfully update bot', async () => {
         // Load bot ownership manager and check for updated information
-        bot = await bom.getBot.call(1)
+        bot = await bom.getBotProduct.call(1)
         expect(bot[0]).to.equal(devAddr3)
         expect(bot[1]).to.equal(botAddr)
         expect(bot[2]).to.equal(updatedDataHash)
@@ -221,7 +221,7 @@ contract('DeveloperRegistry', () => {
 
     describe('when an unapproved developer attempts to update a bot with valid parameters', () => {
       it('should throw', async () => {
-        await expectRevert(bc.updateBot(botAddr, dataHash, updatedDataHash, { from: devAddr4 }))
+        await expectRevert(bc.updateBotProduct(botAddr, dataHash, updatedDataHash, { from: devAddr4 }))
       })
     })
   })
