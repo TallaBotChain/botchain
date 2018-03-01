@@ -11,10 +11,10 @@ import newDeveloperRegistry from './helpers/newDeveloperRegistry'
 const { accounts } = web3.eth
 const zeroAddr = '0x0000000000000000000000000000000000000000'
 const zeroHash = '0x0000000000000000000000000000000000000000000000000000000000000000'
-const devAddr = '0x72c2ba659460151cdfbb3cd8005ae7fbe68191b1'
-const devAddr2 = '0x85626d4d9a5603a049f600d9cfef23d28ecb7b8b'
-const devAddr3 = accounts[1]
-const devAddr4 = accounts[2]
+const addr = '0x72c2ba659460151cdfbb3cd8005ae7fbe68191b1'
+const addr2 = '0x85626d4d9a5603a049f600d9cfef23d28ecb7b8b'
+const addr3 = accounts[1]
+const addr4 = accounts[2]
 const nonOwnerAddr = accounts[3]
 const botAddr = accounts[4]
 const dataHash = web3.sha3('some data to hash')
@@ -31,7 +31,7 @@ contract('DeveloperRegistry', () => {
     bc = await newDeveloperRegistry()
   })
 
-  describe('when deployed', () => {
+  describe.only('when deployed', () => {
     it('should create a new BotManagerOwernship contract', async () => {
       const addr = await bc.getBotProductProductRegistry()
       expect(isNonZeroAddress(addr)).to.equal(true)
@@ -39,30 +39,30 @@ contract('DeveloperRegistry', () => {
   })
 
   describe('addDeveloper()', () => {
-    describe('when given a valid address and valid hash', () => {
+    describe.only('when given a valid address and valid hash', () => {
       let txResult
 
       beforeEach(async () => {
-        txResult = await bc.addDeveloper(devAddr, dataHash, url)
+        txResult = await bc.addDeveloper(addr, dataHash, url)
       })
 
       it('should add developer to data mapping', async () => {
-        const data = await bc.getDeveloperDataHash(devAddr)
+        const data = await bc.getDeveloperDataHash(0)
         expect(data).to.equal(dataHash)
       })
 
       it('should add developer to url mapping', async () => {
-        const devUrl = await bc.getDeveloperUrl(devAddr)
+        const devUrl = await bc.getDeveloperUrl(0)
         expect(devUrl).to.contain(url)
       })
 
       it('should add developer to approved mapping', async () => {
-        const approved = await bc.getDeveloperApprovalStatus(devAddr)
+        const approved = await bc.getDeveloperApprovalStatus(0)
         expect(approved).to.equal(true)
       })
 
-      it('should add developer to array', async () => {
-        expect(await bc.getDeveloper(0)).to.equal(devAddr)
+      it('should set the owner address of the new developer', async () => {
+        expect(await bc.ownerOf(0)).to.equal(addr)
       })
 
       it('should log DeveloperAdded event', () => {
@@ -70,81 +70,38 @@ contract('DeveloperRegistry', () => {
       })
     })
 
-    describe('when given a 0x0 hash', () => {
+    describe.only('when given a 0x0 hash', () => {
       it('should revert', async () => {
-        await expectRevert(bc.addDeveloper(devAddr, zeroHash, url))
+        await expectRevert(bc.addDeveloper(addr, zeroHash, url))
       })
     })
 
-    describe('when called by non-owner', () => {
+    describe.only('when called by non-owner', () => {
       it('should revert', async () => {
-        await expectRevert(bc.addDeveloper(devAddr, dataHash, url, { from: nonOwnerAddr }))
+        await expectRevert(bc.addDeveloper(addr, dataHash, url, { from: nonOwnerAddr }))
       })
     })
 
-    describe('when given a 0x0 address', () => {
+    describe.only('when given a 0x0 address', () => {
       it('should revert', async () => {
         await expectRevert(bc.addDeveloper(zeroAddr, dataHash, url))
       })
     })
   })
 
-  describe('updateDeveloper()', () => {
+  describe.only('revokeDeveloperApproval()', () => {
     beforeEach(async () => {
-      await bc.addDeveloper(devAddr, dataHash, url)
-    })
-
-    describe('when given a valid address and valid hash', () => {
-      let txResult
-      beforeEach(async () => {
-        txResult = await bc.updateDeveloper(devAddr, updatedDataHash, updatedUrl)
-      })
-
-      it('should update hash value in mapping', async () => {
-        expect(await bc.getDeveloperDataHash(devAddr)).to.equal(updatedDataHash)
-      })
-
-      it('should update url in mapping', async () => {
-        expect(await bc.getDeveloperUrl(devAddr)).to.contain(updatedUrl)
-      })
-
-      it('should log DeveloperUpdated event', async () => {
-        expect(hasEvent(txResult, 'DeveloperUpdated')).to.equal(true)
-      })
-    })
-
-    describe('when given a 0x0 hash', () => {
-      it('should revert', async () => {
-        await expectRevert(bc.updateDeveloper(devAddr, zeroHash, updatedUrl))
-      })
-    })
-
-    describe('when called by non-owner', () => {
-      it('should revert', async () => {
-        await expectRevert(bc.updateDeveloper(devAddr, updatedDataHash, updatedUrl, { from: nonOwnerAddr }))
-      })
-    })
-
-    describe('when given a 0x0 developer address', () => {
-      it('should revert', async () => {
-        await expectRevert(bc.updateDeveloper(zeroAddr, updatedDataHash, updatedUrl))
-      })
-    })
-  })
-
-  describe('revokeDeveloperApproval()', () => {
-    beforeEach(async () => {
-      await bc.addDeveloper(devAddr, dataHash, url)
+      await bc.addDeveloper(addr, dataHash, url)
     })
 
     describe('when given a valid developer address that is approved', () => {
       let txResult
       beforeEach(async () => {
-        txResult = await bc.revokeDeveloperApproval(devAddr)
+        txResult = await bc.revokeDeveloperApproval(0)
       })
 
       it('should set approved to false', async () => {
-        expect(await bc.getDeveloperApprovalStatus(devAddr)).to.equal(false)
+        expect(await bc.getDeveloperApprovalStatus(0)).to.equal(false)
       })
 
       it('should log DeveloperApprovalRevoked event', () => {
@@ -154,74 +111,13 @@ contract('DeveloperRegistry', () => {
 
     describe('when called by non-owner', () => {
       it('should revert', async () => {
-        await expectRevert(bc.revokeDeveloperApproval(devAddr, { from: nonOwnerAddr }))
+        await expectRevert(bc.revokeDeveloperApproval(0, { from: nonOwnerAddr }))
       })
     })
 
     describe('when given an address that is not an approved developer', () => {
       it('should revert', async () => {
-        await expectRevert(bc.revokeDeveloperApproval(devAddr2))
-      })
-    })
-  })
-
-  describe('createBotProduct()', () => {
-    let bot
-    let bomAddress
-    let bom
-
-    beforeEach(async () => {
-      bomAddress = await bc.getBotProductProductRegistry()
-      bom = await BotProductRegistryDelegate.at(bomAddress)
-      await bc.addDeveloper(devAddr3, dataHash, url)
-      await bc.createBotProduct(botAddr, dataHash, { from: devAddr3 })
-    })
-
-    describe('when an approved developer creates a bot with valid parameters', () => {
-      it('should successfully create bot', async () => {
-        // Load bot ownership manager and check for presence of bot
-        bot = await bom.getBotProduct.call(1)
-        expect(bot[0]).to.equal(devAddr3)
-        expect(bot[1]).to.equal(botAddr)
-        expect(bot[2]).to.equal(dataHash)
-      })
-    })
-
-    describe('when an unapproved developer attempts to create a bot with valid parameters', () => {
-      it('should throw', async () => {
-        await expectRevert(bc.createBotProduct(botAddr, dataHash, { from: devAddr4 }))
-      })
-    })
-  })
-
-  describe('updateBotProduct()', () => {
-    let bot
-    let bomAddress
-    let bom
-    let botID
-
-    beforeEach(async () => {
-      bomAddress = await bc.getBotProductProductRegistry()
-      bom = await BotProductRegistryDelegate.at(bomAddress)
-      await bc.addDeveloper(devAddr3, dataHash, url)
-      await bc.createBotProduct(botAddr, dataHash, { from: devAddr3 })
-      botID = await bom.getBotProductId(botAddr)
-      await bc.updateBotProduct(botID, botAddr, updatedDataHash, { from: devAddr3 })
-    })
-
-    describe('when an approved developer updates a bot with valid parameters', () => {
-      it('should successfully update bot', async () => {
-        // Load bot ownership manager and check for updated information
-        bot = await bom.getBotProduct.call(1)
-        expect(bot[0]).to.equal(devAddr3)
-        expect(bot[1]).to.equal(botAddr)
-        expect(bot[2]).to.equal(updatedDataHash)
-      })
-    })
-
-    describe('when an unapproved developer attempts to update a bot with valid parameters', () => {
-      it('should throw', async () => {
-        await expectRevert(bc.updateBotProduct(botAddr, dataHash, updatedDataHash, { from: devAddr4 }))
+        await expectRevert(bc.revokeDeveloperApproval(3))
       })
     })
   })

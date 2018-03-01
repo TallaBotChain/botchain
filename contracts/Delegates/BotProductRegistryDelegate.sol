@@ -2,18 +2,29 @@ pragma solidity ^0.4.18;
 
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
 import "levelk-upgradability-contracts/contracts/Implementations/lifecycle/PausableKeyed.sol";
-import '../ERC721.sol';
+import "levelk-upgradability-contracts/contracts/Implementations/token/ERC721/ERC721TokenKeyed.sol";
 import './DeveloperRegistryDelegate.sol';
 
 /// @dev Non-Fungible token (ERC-721) that handles ownership and transfer
 ///  of Bots. Bots can be transferred to and from approved developers.
-contract BotProductRegistryDelegate is PausableKeyed, ERC721 {
+contract BotProductRegistryDelegate is PausableKeyed, ERC721TokenKeyed {
   using SafeMath for uint256;
 
   event BotProductCreated(uint256 botProductId, address botProductOwner, address botProductAddress, bytes32 data);
   event BotProductUpdated(uint256 botProductId, address botProductAddress, bytes32 data);
   event BotProductDisabled(uint256 botProductId);
   event BotProductEnabled(uint256 botProductId);
+
+  function BotProductRegistryDelegate(
+    DeveloperRegistryDelegate developerRegistry,
+    BaseStorage storage_
+  )
+    PausableKeyed(storage_)
+    ERC721TokenKeyed(storage_)
+    public
+  {}
+
+  /*
 
   /// @dev A mapping from owner address to count of tokens that address owns.
   ///  Used internally inside balanceOf() to resolve ownership count.
@@ -86,14 +97,6 @@ contract BotProductRegistryDelegate is PausableKeyed, ERC721 {
   function getBotDataHash(uint botProductId) public view returns (bytes32) {
     return _storage.getBytes32(keccak256("botProductDataHashes", botProductId));
   }
-
-  function BotProductRegistryDelegate(
-    DeveloperRegistryDelegate developerRegistry,
-    BaseStorage storage_
-  )
-    PausableKeyed(storage_)
-    public
-  {}
 
   /// @dev Returns the number of bot products owned by a specific address.
   /// @param owner The owner address to check.
@@ -287,5 +290,5 @@ contract BotProductRegistryDelegate is PausableKeyed, ERC721 {
 
   function incrementBotProductCount() internal {
     _storage.setUint("botProductCount", getBotProductCount() + 1);
-  }
+  } */
 }
