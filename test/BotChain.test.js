@@ -19,6 +19,7 @@ const nonOwnerAddr = accounts[3]
 const botAddr = accounts[4]
 const dataHash = web3.sha3('some data to hash')
 const url = web3.fromAscii('www.google.com')
+const longUrl = web3.fromAscii('www.reallyreallyreallyreallyreallyreallyreallyreallylongurl.com')
 const updatedUrl = web3.fromAscii('www.notgoogle.com')
 const updatedDataHash = web3.sha3('some modified data to hash')
 
@@ -67,6 +68,22 @@ contract('BotChain', () => {
 
       it('should log DeveloperAdded event', () => {
         expect(hasEvent(txResult, 'DeveloperAdded')).to.equal(true)
+      })
+    })
+
+    describe('when given a url is longer than 32 bytes', () => {
+
+      let txResult
+
+      beforeEach(async () => {
+        txResult = await bc.addDeveloper(devAddr, dataHash, longUrl)
+      })
+
+      it('should revert', async () => {  
+        expect(longUrl).to.have.lengthOf.above(32);
+        
+        const devUrl = await bc.getDeveloperUrl(devAddr)
+        expect(devUrl).not.to.contain(url)
       })
     })
 
