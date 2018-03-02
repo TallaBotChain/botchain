@@ -10,6 +10,7 @@ contract DeveloperRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
 
   event DeveloperAdded(address owner, uint256 developerId, bytes32 dataHash, bytes32 url);
   event DeveloperApprovalRevoked(uint256 developerId);
+  event DeveloperApprovalGranted(uint256 developerId);
 
   function DeveloperRegistryDelegate(BaseStorage storage_) public ERC721TokenKeyed(storage_) OwnableKeyed(storage_) { }
 
@@ -33,14 +34,13 @@ contract DeveloperRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
   /// @param _owner The address that will own the new developer
   /// @param _data A hash of the data associated with the new developer
   /// @param _url A url associated with this developer
-  function addDeveloper(address _owner, bytes32 _data, bytes32 _url) onlyOwner public {
+  function addDeveloper(address _owner, bytes32 _data, bytes32 _url) public {
     require(_owner != 0x0);
     require(_data != 0x0);
     require(_url != 0x0);
 
     uint256 _developerId = super.totalSupply().add(1);
 
-    setDeveloperApprovalStatus(_developerId, true);
     setDeveloperDataHash(_developerId, _data);
     setDeveloperUrl(_developerId, _url);
     super._mint(_owner, _developerId);
@@ -48,9 +48,21 @@ contract DeveloperRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
     DeveloperAdded(_owner, _developerId, _data, _url);
   }
 
+  /// @dev Grants approval for an existing developer. Only callable by owner.
+  /// @param _developerId The ID of the developer to grant approval for.
+  function grantDeveloperApproval(uint256 _developerId) onlyOwner public {
+    require(ownerOf(_developerId) != 0x0);
+    require(!developerApprovalStatus(_developerId));
+
+    setDeveloperApprovalStatus(_developerId, true);
+
+    DeveloperApprovalGranted(_developerId);
+  }
+
   /// @dev Revokes approval for an existing developer. Only callable by owner.
   /// @param _developerId The ID of the developer to revoke approval for.
   function revokeDeveloperApproval(uint256 _developerId) onlyOwner public {
+    require(ownerOf(_developerId) != 0x0);
     require(developerApprovalStatus(_developerId));
 
     setDeveloperApprovalStatus(_developerId, false);
