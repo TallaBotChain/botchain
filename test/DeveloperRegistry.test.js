@@ -31,15 +31,8 @@ contract('DeveloperRegistry', () => {
     bc = await newDeveloperRegistry()
   })
 
-  describe.only('when deployed', () => {
-    it('should create a new BotManagerOwernship contract', async () => {
-      const addr = await bc.getBotProductProductRegistry()
-      expect(isNonZeroAddress(addr)).to.equal(true)
-    })
-  })
-
   describe('addDeveloper()', () => {
-    describe.only('when given a valid address and valid hash', () => {
+    describe('when given a valid address and valid hash', () => {
       let txResult
 
       beforeEach(async () => {
@@ -70,26 +63,26 @@ contract('DeveloperRegistry', () => {
       })
     })
 
-    describe.only('when given a 0x0 hash', () => {
+    describe('when given a 0x0 hash', () => {
       it('should revert', async () => {
         await expectRevert(bc.addDeveloper(addr, zeroHash, url))
       })
     })
 
-    describe.only('when called by non-owner', () => {
+    describe('when called by non-owner', () => {
       it('should revert', async () => {
         await expectRevert(bc.addDeveloper(addr, dataHash, url, { from: nonOwnerAddr }))
       })
     })
 
-    describe.only('when given a 0x0 address', () => {
+    describe('when given a 0x0 address', () => {
       it('should revert', async () => {
         await expectRevert(bc.addDeveloper(zeroAddr, dataHash, url))
       })
     })
   })
 
-  describe.only('revokeDeveloperApproval()', () => {
+  describe('revokeDeveloperApproval()', () => {
     beforeEach(async () => {
       await bc.addDeveloper(addr, dataHash, url)
     })

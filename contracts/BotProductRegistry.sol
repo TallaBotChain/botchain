@@ -14,9 +14,6 @@ contract BotProductRegistry is OwnableProxy {
     public
   {
     storage_.setAddress("developerRegistryAddress", developerRegistryAddress);
-
-    // Increment botProductCount so that the first valid bot ID will be `1`.
-    _storage.setUint("botProductCount", 1);
   }
 
 }
