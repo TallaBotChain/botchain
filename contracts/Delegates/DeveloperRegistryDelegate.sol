@@ -13,19 +13,19 @@ contract DeveloperRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
 
   function DeveloperRegistryDelegate(BaseStorage storage_) public ERC721TokenKeyed(storage_) OwnableKeyed(storage_) { }
 
-  function getBotProductProductRegistry() public view returns (BotProductRegistryDelegate) {
+  function botProductProductRegistry() public view returns (BotProductRegistryDelegate) {
     return BotProductRegistryDelegate(_storage.getAddress("botProductRegistry"));
   }
 
-  function getDeveloperApprovalStatus(uint256 developerId) public view returns (bool) {
+  function developerApprovalStatus(uint256 developerId) public view returns (bool) {
     return _storage.getBool(keccak256("developerApprovalStatus", developerId));
   }
 
-  function getDeveloperDataHash(uint256 developerId) public view returns (bytes32) {
+  function developerDataHash(uint256 developerId) public view returns (bytes32) {
     return _storage.getBytes32(keccak256("developerDataHash", developerId));
   }
 
-  function getDeveloperUrl(uint256 developerId) public view returns (bytes32) {
+  function developerUrl(uint256 developerId) public view returns (bytes32) {
     return _storage.getBytes32(keccak256("developerUrl", developerId));
   }
 
@@ -51,7 +51,7 @@ contract DeveloperRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
   /// @dev Revokes approval for an existing developer. Only callable by owner.
   /// @param _developerId The ID of the developer to revoke approval for.
   function revokeDeveloperApproval(uint256 _developerId) onlyOwner public {
-    require(getDeveloperApprovalStatus(_developerId));
+    require(developerApprovalStatus(_developerId));
 
     setDeveloperApprovalStatus(_developerId, false);
 

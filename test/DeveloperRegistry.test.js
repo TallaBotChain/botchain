@@ -30,17 +30,17 @@ contract('DeveloperRegistry', () => {
       })
 
       it('should add developer to data mapping', async () => {
-        const data = await bc.getDeveloperDataHash(0)
+        const data = await bc.developerDataHash(0)
         expect(data).to.equal(dataHash)
       })
 
       it('should add developer to url mapping', async () => {
-        const devUrl = await bc.getDeveloperUrl(0)
+        const devUrl = await bc.developerUrl(0)
         expect(devUrl).to.contain(url)
       })
 
       it('should add developer to approved mapping', async () => {
-        const approved = await bc.getDeveloperApprovalStatus(0)
+        const approved = await bc.developerApprovalStatus(0)
         expect(approved).to.equal(true)
       })
 
@@ -84,7 +84,7 @@ contract('DeveloperRegistry', () => {
       })
 
       it('should set approved to false', async () => {
-        expect(await bc.getDeveloperApprovalStatus(0)).to.equal(false)
+        expect(await bc.developerApprovalStatus(0)).to.equal(false)
       })
 
       it('should log DeveloperApprovalRevoked event', () => {
