@@ -142,7 +142,7 @@ contract('BotProductRegistry', () => {
         tx = await bom.transfer(recipientAddr, 1, { from: senderAddr })
       })
 
-      it('should update bot owner in mapping', async () => {
+      it('should change bot owner to the new owner', async () => {
         const botProductOwnerAddr = await bom.ownerOf(1)
         expect(botProductOwnerAddr).to.equal(recipientAddr)
       })

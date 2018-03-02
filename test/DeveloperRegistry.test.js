@@ -1,28 +1,18 @@
-/* global describe it beforeEach artifacts contract */
+/* global describe it beforeEach contract */
 
-import _ from 'lodash'
 import { expect } from 'chai'
 import { web3 } from './helpers/w3'
 import expectRevert from './helpers/expectRevert'
 import { hasEvent } from './helpers/event'
-import isNonZeroAddress from './helpers/isNonZeroAddress'
 import newDeveloperRegistry from './helpers/newDeveloperRegistry'
 
 const { accounts } = web3.eth
 const zeroAddr = '0x0000000000000000000000000000000000000000'
 const zeroHash = '0x0000000000000000000000000000000000000000000000000000000000000000'
 const addr = '0x72c2ba659460151cdfbb3cd8005ae7fbe68191b1'
-const addr2 = '0x85626d4d9a5603a049f600d9cfef23d28ecb7b8b'
-const addr3 = accounts[1]
-const addr4 = accounts[2]
 const nonOwnerAddr = accounts[3]
-const botAddr = accounts[4]
 const dataHash = web3.sha3('some data to hash')
 const url = web3.fromAscii('www.google.com')
-const updatedUrl = web3.fromAscii('www.notgoogle.com')
-const updatedDataHash = web3.sha3('some modified data to hash')
-
-const BotProductRegistryDelegate = artifacts.require('./BotProductRegistryDelegate.sol')
 
 contract('DeveloperRegistry', () => {
   let bc

@@ -11,7 +11,6 @@ contract BotProductRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
   using SafeMath for uint256;
 
   event BotProductCreated(uint256 botProductId, address botProductOwner, address botProductAddress, bytes32 data);
-  event BotProductUpdated(uint256 botProductId, address botProductAddress, bytes32 data);
   event BotProductDisabled(uint256 botProductId);
   event BotProductEnabled(uint256 botProductId);
 
