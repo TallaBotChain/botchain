@@ -317,6 +317,6 @@ async function newBotProductRegistry (developerRegistryAddress) {
     developerRegistryAddress,
     publicStorage.address,
     botProductRegistryDelegate.address
-)
+  )
   return _.extend(bom, await BotProductRegistryDelegate.at(bom.address))
 }

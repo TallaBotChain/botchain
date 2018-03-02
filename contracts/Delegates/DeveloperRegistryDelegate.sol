@@ -1,25 +1,18 @@
 pragma solidity ^0.4.18;
 
-import "levelk-upgradability-contracts/contracts/Implementations/ownership/OwnableKeyed.sol";
-import "levelk-upgradability-contracts/contracts/Implementations/token/ERC721/ERC721TokenKeyed.sol";
+import "./ApprovableRegistryDelegate.sol";
 import './BotProductRegistryDelegate.sol';
 
 /// @title DeveloperRegistryDelegate
 /// @dev Delegate contract for DeveloperRegistry functionality
-contract DeveloperRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
+contract DeveloperRegistryDelegate is ApprovableRegistryDelegate {
 
   event DeveloperAdded(address owner, uint256 developerId, bytes32 dataHash, bytes32 url);
-  event DeveloperApprovalRevoked(uint256 developerId);
-  event DeveloperApprovalGranted(uint256 developerId);
 
-  function DeveloperRegistryDelegate(BaseStorage storage_) public ERC721TokenKeyed(storage_) OwnableKeyed(storage_) { }
+  function DeveloperRegistryDelegate(BaseStorage storage_) public ApprovableRegistryDelegate(storage_) { }
 
   function botProductProductRegistry() public view returns (BotProductRegistryDelegate) {
     return BotProductRegistryDelegate(_storage.getAddress("botProductRegistry"));
-  }
-
-  function developerApprovalStatus(uint256 developerId) public view returns (bool) {
-    return _storage.getBool(keccak256("developerApprovalStatus", developerId));
   }
 
   function developerDataHash(uint256 developerId) public view returns (bytes32) {
@@ -46,32 +39,6 @@ contract DeveloperRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
     super._mint(_owner, _developerId);
 
     DeveloperAdded(_owner, _developerId, _data, _url);
-  }
-
-  /// @dev Grants approval for an existing developer. Only callable by owner.
-  /// @param _developerId The ID of the developer to grant approval for.
-  function grantDeveloperApproval(uint256 _developerId) onlyOwner public {
-    require(ownerOf(_developerId) != 0x0);
-    require(!developerApprovalStatus(_developerId));
-
-    setDeveloperApprovalStatus(_developerId, true);
-
-    DeveloperApprovalGranted(_developerId);
-  }
-
-  /// @dev Revokes approval for an existing developer. Only callable by owner.
-  /// @param _developerId The ID of the developer to revoke approval for.
-  function revokeDeveloperApproval(uint256 _developerId) onlyOwner public {
-    require(ownerOf(_developerId) != 0x0);
-    require(developerApprovalStatus(_developerId));
-
-    setDeveloperApprovalStatus(_developerId, false);
-
-    DeveloperApprovalRevoked(_developerId);
-  }
-
-  function setDeveloperApprovalStatus(uint256 developerId, bool approvalStatus) private {
-    _storage.setBool(keccak256("developerApprovalStatus", developerId), approvalStatus);
   }
 
   function setDeveloperDataHash(uint256 developerId, bytes32 dataHash) private {
