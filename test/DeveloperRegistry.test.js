@@ -30,22 +30,22 @@ contract('DeveloperRegistry', () => {
       })
 
       it('should add developer to data mapping', async () => {
-        const data = await bc.developerDataHash(0)
+        const data = await bc.developerDataHash(1)
         expect(data).to.equal(dataHash)
       })
 
       it('should add developer to url mapping', async () => {
-        const devUrl = await bc.developerUrl(0)
+        const devUrl = await bc.developerUrl(1)
         expect(devUrl).to.contain(url)
       })
 
       it('should add developer to approved mapping', async () => {
-        const approved = await bc.developerApprovalStatus(0)
+        const approved = await bc.developerApprovalStatus(1)
         expect(approved).to.equal(true)
       })
 
       it('should set the owner address of the new developer', async () => {
-        expect(await bc.ownerOf(0)).to.equal(addr)
+        expect(await bc.ownerOf(1)).to.equal(addr)
       })
 
       it('should log DeveloperAdded event', () => {
@@ -80,11 +80,11 @@ contract('DeveloperRegistry', () => {
     describe('when given a valid developer address that is approved', () => {
       let txResult
       beforeEach(async () => {
-        txResult = await bc.revokeDeveloperApproval(0)
+        txResult = await bc.revokeDeveloperApproval(1)
       })
 
       it('should set approved to false', async () => {
-        expect(await bc.developerApprovalStatus(0)).to.equal(false)
+        expect(await bc.developerApprovalStatus(1)).to.equal(false)
       })
 
       it('should log DeveloperApprovalRevoked event', () => {
@@ -94,7 +94,7 @@ contract('DeveloperRegistry', () => {
 
     describe('when called by non-owner', () => {
       it('should revert', async () => {
-        await expectRevert(bc.revokeDeveloperApproval(0, { from: nonOwnerAddr }))
+        await expectRevert(bc.revokeDeveloperApproval(1, { from: nonOwnerAddr }))
       })
     })
 

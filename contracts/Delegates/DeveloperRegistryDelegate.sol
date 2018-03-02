@@ -38,7 +38,7 @@ contract DeveloperRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
     require(_data != 0x0);
     require(_url != 0x0);
 
-    uint256 _developerId = super.totalSupply();
+    uint256 _developerId = super.totalSupply().add(1);
 
     setDeveloperApprovalStatus(_developerId, true);
     setDeveloperDataHash(_developerId, _data);
