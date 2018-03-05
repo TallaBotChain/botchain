@@ -1,6 +1,6 @@
 pragma solidity ^0.4.18;
 
-import 'zeppelin-solidity/contracts/token/StandardToken.sol';
+import 'zeppelin-solidity/contracts/token/ERC20/StandardToken.sol';
 
 // Development stand-in for a ERC20 token till we get the real one delivered by
 // ambisafe
@@ -12,8 +12,8 @@ contract BotCoin is StandardToken {
 	uint public INITIAL_SUPPLY = 1.5 * 10^9;
 
 	function BotCoin() public {
-	  totalSupply = INITIAL_SUPPLY * (10 ** decimals);
-	  balances[msg.sender] = totalSupply;
+	  totalSupply_ = INITIAL_SUPPLY * (10 ** decimals);
+	  balances[msg.sender] = totalSupply_;
 	}
 
 }
