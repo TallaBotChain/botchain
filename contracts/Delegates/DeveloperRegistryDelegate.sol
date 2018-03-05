@@ -23,12 +23,15 @@ contract DeveloperRegistryDelegate is ApprovableRegistryDelegate {
     return _storage.getBytes32(keccak256("developerUrl", developerId));
   }
 
-  /// @dev Adds a new developer. Only callable by owner.
-  /// @param _owner The address that will own the new developer
+  function owns(address owner) public view returns (uint256) {
+    return _storage.getUint(keccak256("ownerToId", owner));
+  }
+
+  /// @dev Adds the sender's address as a new developer. defaults to unapproved.
   /// @param _data A hash of the data associated with the new developer
   /// @param _url A url associated with this developer
-  function addDeveloper(address _owner, bytes32 _data, bytes32 _url) public {
-    require(_owner != 0x0);
+  function addDeveloper(bytes32 _data, bytes32 _url) public {
+    require(owns(msg.sender) == 0);
     require(_data != 0x0);
     require(_url != 0x0);
 
@@ -36,9 +39,10 @@ contract DeveloperRegistryDelegate is ApprovableRegistryDelegate {
 
     setDeveloperDataHash(_developerId, _data);
     setDeveloperUrl(_developerId, _url);
-    super._mint(_owner, _developerId);
+    setOwnerId(msg.sender, _developerId);
+    super._mint(msg.sender, _developerId);
 
-    DeveloperAdded(_owner, _developerId, _data, _url);
+    DeveloperAdded(msg.sender, _developerId, _data, _url);
   }
 
   function setDeveloperDataHash(uint256 developerId, bytes32 dataHash) private {
@@ -47,6 +51,10 @@ contract DeveloperRegistryDelegate is ApprovableRegistryDelegate {
 
   function setDeveloperUrl(uint256 developerId, bytes32 url) private {
     _storage.setBytes32(keccak256("developerUrl", developerId), url);
+  }
+
+  function setOwnerId(address owner, uint256 developerId) private {
+    _storage.setUint(keccak256("ownerToId", owner), developerId);
   }
 
   function setBotProductRegistry(BotProductRegistryDelegate botProductRegistry) private {

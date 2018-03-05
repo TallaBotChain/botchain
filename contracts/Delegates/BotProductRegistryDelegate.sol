@@ -64,21 +64,22 @@ contract BotProductRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
   }
 
   /// @dev Creates a new bot product.
-  /// @param owner Address of the developer who owns the bot
   /// @param botProductAddress Address of the bot
   /// @param dataHash Hash of data associated with the bot
-  function createBotProduct(address owner, address botProductAddress, bytes32 dataHash) onlyOwner public {
-    require(owner != 0x0);
+  function createBotProduct(address botProductAddress, bytes32 dataHash) public {
+    uint256 developerId = developerRegistry().owns(msg.sender);
+    require(developerId > 0);
+    require(developerRegistry().approvalStatus(developerId) == true);
     require(botProductAddress != 0x0);
     require(dataHash != 0x0);
     require(!botProductAddressExists(botProductAddress));
 
     uint256 botProductId = super.totalSupply().add(1);
-    super._mint(owner, botProductId);
+    super._mint(msg.sender, botProductId);
     setBotProductData(botProductId, botProductAddress, dataHash);
     setBotProductIdForAddress(botProductAddress, botProductId);
 
-    BotProductCreated(botProductId, owner, botProductAddress, dataHash);
+    BotProductCreated(botProductId, msg.sender, botProductAddress, dataHash);
   }
 
   /// @dev Disables a bot product. Disabled bot products cannot be transferred.

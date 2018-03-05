@@ -26,7 +26,7 @@ contract('DeveloperRegistry', () => {
       let txResult
 
       beforeEach(async () => {
-        txResult = await bc.addDeveloper(addr, dataHash, url, { from: nonOwnerAddr })
+        txResult = await bc.addDeveloper(dataHash, url, { from: accounts[1] })
       })
 
       it('should add developer to data mapping', async () => {
@@ -40,7 +40,15 @@ contract('DeveloperRegistry', () => {
       })
 
       it('should set the owner address of the new developer', async () => {
-        expect(await bc.ownerOf(1)).to.equal(addr)
+        expect(await bc.ownerOf(1)).to.equal(accounts[1])
+      })
+
+      it('should map the new developer ID to the owner address', async () => {
+        expect((await bc.owns(accounts[1])).toNumber()).to.equal(1)
+      })
+
+      it('should default to unapproved', async () => {
+        expect(await bc.approvalStatus(1)).to.equal(false)
       })
 
       it('should log DeveloperAdded event', () => {
@@ -50,13 +58,14 @@ contract('DeveloperRegistry', () => {
 
     describe('when given a 0x0 hash', () => {
       it('should revert', async () => {
-        await expectRevert(bc.addDeveloper(addr, zeroHash, url, { from: nonOwnerAddr }))
+        await expectRevert(bc.addDeveloper(zeroHash, url, { from: accounts[1] }))
       })
     })
 
-    describe('when given a 0x0 address', () => {
+    describe('when given an owner address that already exists', () => {
       it('should revert', async () => {
-        await expectRevert(bc.addDeveloper(zeroAddr, dataHash, url, { from: nonOwnerAddr }))
+        await bc.addDeveloper(dataHash, url, { from: accounts[1] })
+        await expectRevert(bc.addDeveloper(dataHash, url, { from: accounts[1] }))
       })
     })
   })
@@ -64,7 +73,7 @@ contract('DeveloperRegistry', () => {
   describe('grantApproval()', () => {
     it('should be executable by owner', async () => {
       expect(await bc.approvalStatus(1)).to.equal(false)
-      await bc.addDeveloper(addr, dataHash, url, { from: nonOwnerAddr })
+      await bc.addDeveloper(dataHash, url, { from: accounts[1] })
       await bc.grantApproval(1)
       expect(await bc.approvalStatus(1)).to.equal(true)
     })
