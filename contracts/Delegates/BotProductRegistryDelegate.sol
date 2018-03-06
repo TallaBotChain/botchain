@@ -24,15 +24,15 @@ contract BotProductRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
     return DeveloperRegistryDelegate(_storage.getAddress("developerRegistryAddress"));
   }
   
-  function getBotProductDisabledStatus(uint256 botProductId) public view returns (bool) {
+  function botProductDisabledStatus(uint256 botProductId) public view returns (bool) {
     return _storage.getBool(keccak256("botDisabledStatuses", botProductId));
   }
 
-  function getBotProductAddress(uint botProductId) public view returns (address) {
+  function botProductAddress(uint botProductId) public view returns (address) {
     return _storage.getAddress(keccak256("botProductAddresses", botProductId));
   }
 
-  function getBotProductDataHash(uint botProductId) public view returns (bytes32) {
+  function botProductDataHash(uint botProductId) public view returns (bytes32) {
     return _storage.getBytes32(keccak256("botProductDataHashes", botProductId));
   }
 
@@ -41,26 +41,26 @@ contract BotProductRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
   function botProductIsEnabled(uint256 botProductId) public view returns (bool) {
     require(botProductId > 0);
     require(super.ownerOf(botProductId) != 0x0);
-    return getBotProductDisabledStatus(botProductId) == false;
+    return botProductDisabledStatus(botProductId) == false;
   }
 
-  function getBotProductIdForAddress(address botProductAddress) public view returns (uint256) {
+  function botProductIdForAddress(address botProductAddress) public view returns (uint256) {
     return _storage.getUint(keccak256("botProductIdsByAddress", botProductAddress));
   }
 
   function botProductAddressExists(address botProductAddress) public view returns (bool) {
-    return getBotProductIdForAddress(botProductAddress) > 0;
+    return botProductIdForAddress(botProductAddress) > 0;
   }
 
   function getBotProduct(uint256 botProductId) public view returns
   (
-    address owner,
-    address botProductAddress,
-    bytes32 data
+    address _owner,
+    address _botProductAddress,
+    bytes32 _data
   ) {
-    owner = super.ownerOf(botProductId);
-    botProductAddress = getBotProductAddress(botProductId);
-    data = getBotProductDataHash(botProductId);
+    _owner = super.ownerOf(botProductId);
+    _botProductAddress = botProductAddress(botProductId);
+    _data = botProductDataHash(botProductId);
   }
 
   /// @dev Creates a new bot product.
