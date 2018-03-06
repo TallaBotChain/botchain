@@ -14,6 +14,8 @@ const botAddr2 = '0x319f2c0d4e7583dff11a37ec4f2c907c8e76593a'
 const botAddr3 = '0x70d9f81dca9102acda0b894e64a7c683924355df'
 const tallaWalletAddress = '0x1ae554eea0dcfdd72dcc3fa4034761cf6d041bf3'
 const nonOwnerAddr = accounts[1]
+
+const entryPrice = 100
 const dataHash = web3.sha3('some data to hash')
 const dataHash2 = web3.sha3('other data to hash')
 const devUrl = web3.fromAscii('some url to hash')
@@ -32,11 +34,11 @@ contract('BotProductRegistry', () => {
 
   beforeEach(async () => {
     botCoin = await BotCoin.new()
-    bc = await newDeveloperRegistry(botCoin.address, tallaWalletAddress)
-    await botCoin.transfer(accounts[1], 100)
-    await botCoin.approve(bc.address, 100, { from: accounts[1] })
-    await botCoin.transfer(accounts[2], 100)
-    await botCoin.approve(bc.address, 100, { from: accounts[2] })
+    bc = await newDeveloperRegistry(botCoin.address, tallaWalletAddress, entryPrice)
+    await botCoin.transfer(accounts[1], entryPrice)
+    await botCoin.approve(bc.address, entryPrice, { from: accounts[1] })
+    await botCoin.transfer(accounts[2], entryPrice)
+    await botCoin.approve(bc.address, entryPrice, { from: accounts[2] })
     bom = await newBotProductRegistry(bc.address)
   })
 

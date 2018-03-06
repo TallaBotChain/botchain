@@ -28,8 +28,8 @@ contract DeveloperRegistryDelegate is ApprovableRegistryDelegate {
     return _storage.getAddress("tallaWallet");
   }
 
-  function developerPayment() public view returns (uint256) {
-    return _storage.getUint("developerPayment");
+  function getEntryPrice() public view returns (uint256) {
+    return _storage.getUint("entryPrice");
   }
 
   function botCoin() public view returns (StandardToken) {
@@ -54,7 +54,7 @@ contract DeveloperRegistryDelegate is ApprovableRegistryDelegate {
     setDeveloperUrl(_developerId, _url);
     setOwnerId(msg.sender, _developerId);
 
-    botCoin().transferFrom(msg.sender, tallaWallet(), 100);
+    botCoin().transferFrom(msg.sender, tallaWallet(), getEntryPrice());
 
     super._mint(msg.sender, _developerId);
 
@@ -66,8 +66,8 @@ contract DeveloperRegistryDelegate is ApprovableRegistryDelegate {
     _storage.setAddress("tallaWallet", tallaWallet);
   }
 
-  function setDeveloperPayment(uint256 developerPayment) onlyOwner public {
-    _storage.setUint("developerPayment", developerPayment);
+  function setEntryPrice(uint256 entryPrice) onlyOwner public {
+    _storage.setUint("entryPrice", entryPrice);
   }
 
   function setDeveloperDataHash(uint256 developerId, bytes32 dataHash) private {
