@@ -62,6 +62,10 @@ contract('BotProductRegistry', () => {
         expect(await bom.botProductAddressExists(botAddr1)).to.equal(true)
       })
 
+      it('should default to approved', async () => {
+        expect(await bom.approvalStatus(1)).to.equal(true)
+      })
+
       it('should log BotProductCreated event', () => {
         expect(hasEvent(txResult, 'BotProductCreated')).to.equal(true)
       })

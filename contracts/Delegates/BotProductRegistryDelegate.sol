@@ -1,13 +1,12 @@
 pragma solidity ^0.4.18;
 
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
-import "levelk-upgradability-contracts/contracts/Implementations/ownership/OwnableKeyed.sol";
-import "levelk-upgradability-contracts/contracts/Implementations/token/ERC721/ERC721TokenKeyed.sol";
+import "./ApprovableRegistryDelegate.sol";
 import './DeveloperRegistryDelegate.sol';
 
 /// @dev Non-Fungible token (ERC-721) that handles ownership and transfer
 ///  of Bots. Bots can be transferred to and from approved developers.
-contract BotProductRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
+contract BotProductRegistryDelegate is ApprovableRegistryDelegate {
   using SafeMath for uint256;
 
   event BotProductCreated(uint256 botProductId, address botProductOwner, address botProductAddress, bytes32 data);
@@ -15,8 +14,7 @@ contract BotProductRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
   event BotProductEnabled(uint256 botProductId);
 
   function BotProductRegistryDelegate(BaseStorage storage_)
-    OwnableKeyed(storage_)
-    ERC721TokenKeyed(storage_)
+    ApprovableRegistryDelegate(storage_)
     public
   {}
 
@@ -78,6 +76,7 @@ contract BotProductRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
     super._mint(msg.sender, botProductId);
     setBotProductData(botProductId, botProductAddress, dataHash);
     setBotProductIdForAddress(botProductAddress, botProductId);
+    setApprovalStatus(botProductId, true);
 
     BotProductCreated(botProductId, msg.sender, botProductAddress, dataHash);
   }
