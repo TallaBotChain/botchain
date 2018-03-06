@@ -25,10 +25,6 @@ const BotProductRegistry = artifacts.require('./BotProductRegistry.sol')
 const BotProductRegistryDelegate = artifacts.require('./BotProductRegistryDelegate.sol')
 const BotCoin = artifacts.require('BotCoin')
 
-/*
- * IN PROGRESS ... fix the failing tests...
- * */
-
 contract('BotProductRegistry', () => {
   let bc, bom, botCoin
 
