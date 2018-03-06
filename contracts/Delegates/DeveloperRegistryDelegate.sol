@@ -16,8 +16,6 @@ contract DeveloperRegistryDelegate is ApprovableRegistryDelegate {
     return BotProductRegistryDelegate(_storage.getAddress("botProductRegistry"));
   }
 
-
-
   function developerDataHash(uint256 developerId) public view returns (bytes32) {
     return _storage.getBytes32(keccak256("developerDataHash", developerId));
   }
