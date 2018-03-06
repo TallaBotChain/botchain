@@ -9,13 +9,14 @@ import 'zeppelin-solidity/contracts/token/ERC20/StandardToken.sol';
 contract DeveloperRegistryDelegate is ApprovableRegistryDelegate {
 
   event DeveloperAdded(address owner, uint256 developerId, bytes32 dataHash, bytes32 url);
-  //event TransferFromStandardToken(address sender, address tallaWalletAddress, bytes32 developerPayment);
 
   function DeveloperRegistryDelegate(BaseStorage storage_) public ApprovableRegistryDelegate(storage_) { }
 
   function botProductProductRegistry() public view returns (BotProductRegistryDelegate) {
     return BotProductRegistryDelegate(_storage.getAddress("botProductRegistry"));
   }
+
+
 
   function developerDataHash(uint256 developerId) public view returns (bytes32) {
     return _storage.getBytes32(keccak256("developerDataHash", developerId));
@@ -51,11 +52,12 @@ contract DeveloperRegistryDelegate is ApprovableRegistryDelegate {
 
     uint256 _developerId = super.totalSupply().add(1);
 
-    //botCoin().transferFrom(msg.sender, tallaWallet(), developerPayment());
-
     setDeveloperDataHash(_developerId, _data);
     setDeveloperUrl(_developerId, _url);
     setOwnerId(msg.sender, _developerId);
+
+    botCoin().transferFrom(msg.sender, tallaWallet(), 100);
+
     super._mint(msg.sender, _developerId);
 
     DeveloperAdded(msg.sender, _developerId, _data, _url);
