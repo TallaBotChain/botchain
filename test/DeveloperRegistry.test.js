@@ -5,20 +5,25 @@ import { web3 } from './helpers/w3'
 import expectRevert from './helpers/expectRevert'
 import { hasEvent } from './helpers/event'
 import newDeveloperRegistry from './helpers/newDeveloperRegistry'
+const BotCoin = artifacts.require('BotCoin')
 
 const { accounts } = web3.eth
 const zeroAddr = '0x0000000000000000000000000000000000000000'
 const zeroHash = '0x0000000000000000000000000000000000000000000000000000000000000000'
 const addr = '0x72c2ba659460151cdfbb3cd8005ae7fbe68191b1'
+const tallaWalletAddress = '0x1ae554eea0dcfdd72dcc3fa4034761cf6d041bf3'
 const nonOwnerAddr = accounts[3]
 const dataHash = web3.sha3('some data to hash')
 const url = web3.fromAscii('www.google.com')
 
 contract('DeveloperRegistry', () => {
-  let bc
+  let bc, botCoin
 
   beforeEach(async () => {
-    bc = await newDeveloperRegistry()
+    botCoin = await BotCoin.new()
+    bc = await newDeveloperRegistry(botCoin.address, tallaWalletAddress)
+    await botCoin.transfer(accounts[2], 100)
+    await botCoin.approve(bc.address, 100, { from: accounts[2] })
   })
 
   describe('addDeveloper()', () => {
@@ -26,7 +31,7 @@ contract('DeveloperRegistry', () => {
       let txResult
 
       beforeEach(async () => {
-        txResult = await bc.addDeveloper(dataHash, url, { from: accounts[1] })
+        txResult = await bc.addDeveloper(dataHash, url, { from: accounts[2] })
       })
 
       it('should add developer to data mapping', async () => {
@@ -40,11 +45,11 @@ contract('DeveloperRegistry', () => {
       })
 
       it('should set the owner address of the new developer', async () => {
-        expect(await bc.ownerOf(1)).to.equal(accounts[1])
+        expect(await bc.ownerOf(1)).to.equal(accounts[2])
       })
 
       it('should map the new developer ID to the owner address', async () => {
-        expect((await bc.owns(accounts[1])).toNumber()).to.equal(1)
+        expect((await bc.owns(accounts[2])).toNumber()).to.equal(1)
       })
 
       it('should default to unapproved', async () => {
@@ -64,8 +69,8 @@ contract('DeveloperRegistry', () => {
 
     describe('when given an owner address that already exists', () => {
       it('should revert', async () => {
-        await bc.addDeveloper(dataHash, url, { from: accounts[1] })
-        await expectRevert(bc.addDeveloper(dataHash, url, { from: accounts[1] }))
+        await bc.addDeveloper(dataHash, url, { from: accounts[2] })
+        await expectRevert(bc.addDeveloper(dataHash, url, { from: accounts[2] }))
       })
     })
   })
@@ -73,7 +78,7 @@ contract('DeveloperRegistry', () => {
   describe('grantApproval()', () => {
     it('should be executable by owner', async () => {
       expect(await bc.approvalStatus(1)).to.equal(false)
-      await bc.addDeveloper(dataHash, url, { from: accounts[1] })
+      await bc.addDeveloper(dataHash, url, { from: accounts[2] })
       await bc.grantApproval(1)
       expect(await bc.approvalStatus(1)).to.equal(true)
     })
