@@ -2,12 +2,14 @@ pragma solidity ^0.4.18;
 
 import "./ApprovableRegistryDelegate.sol";
 import './BotProductRegistryDelegate.sol';
+import 'zeppelin-solidity/contracts/token/ERC20/StandardToken.sol';
 
 /// @title DeveloperRegistryDelegate
 /// @dev Delegate contract for DeveloperRegistry functionality
 contract DeveloperRegistryDelegate is ApprovableRegistryDelegate {
 
   event DeveloperAdded(address owner, uint256 developerId, bytes32 dataHash, bytes32 url);
+  //event TransferFromStandardToken(address sender, address tallaWalletAddress, bytes32 developerPayment);
 
   function DeveloperRegistryDelegate(BaseStorage storage_) public ApprovableRegistryDelegate(storage_) { }
 
@@ -21,6 +23,18 @@ contract DeveloperRegistryDelegate is ApprovableRegistryDelegate {
 
   function developerUrl(uint256 developerId) public view returns (bytes32) {
     return _storage.getBytes32(keccak256("developerUrl", developerId));
+  }
+
+  function tallaWallet() public view returns (address) {
+    return _storage.getAddress("tallaWallet");
+  }
+
+  function developerPayment() public view returns (uint256) {
+    return _storage.getUint("developerPayment");
+  }
+
+  function botCoin() public view returns (StandardToken) {
+    return StandardToken(_storage.getAddress("botCoinAddress"));
   }
 
   function owns(address owner) public view returns (uint256) {
@@ -37,12 +51,23 @@ contract DeveloperRegistryDelegate is ApprovableRegistryDelegate {
 
     uint256 _developerId = super.totalSupply().add(1);
 
+    //botCoin().transferFrom(msg.sender, tallaWallet(), developerPayment());
+
     setDeveloperDataHash(_developerId, _data);
     setDeveloperUrl(_developerId, _url);
     setOwnerId(msg.sender, _developerId);
     super._mint(msg.sender, _developerId);
 
     DeveloperAdded(msg.sender, _developerId, _data, _url);
+  }
+
+  function setTallaWallet(address tallaWallet) onlyOwner public {
+    require(tallaWallet != 0x0);
+    _storage.setAddress("tallaWallet", tallaWallet);
+  }
+
+  function setDeveloperPayment(uint256 developerPayment) onlyOwner public {
+    _storage.setUint("developerPayment", developerPayment);
   }
 
   function setDeveloperDataHash(uint256 developerId, bytes32 dataHash) private {
