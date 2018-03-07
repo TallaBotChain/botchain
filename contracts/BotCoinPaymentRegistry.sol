@@ -8,7 +8,7 @@ import "levelk-upgradability-contracts/contracts/StorageConsumer/StorageConsumer
 contract BotCoinPaymentRegistry is StorageConsumer {
 
 	function BotCoinPaymentRegistry(
-		BaseStorage storage_
+		BaseStorage storage_,
 	    address botCoinAddress
 	)
 		StorageConsumer(storage_)
