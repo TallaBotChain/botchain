@@ -12,17 +12,13 @@ contract DeveloperRegistryDelegate is ApprovableRegistryDelegate, BotCoinPayment
   event DeveloperAdded(address owner, uint256 developerId, bytes32 dataHash, bytes32 url);
 
   function DeveloperRegistryDelegate(BaseStorage storage_) 
-    BotCoinPaymentRegistry(storage_) 
+    BotCoinPaymentRegistry(storage_, address) 
     ApprovableRegistryDelegate(storage_) 
     public 
     { }
 
   function botProductProductRegistry() public view returns (BotProductRegistryDelegate) {
     return BotProductRegistryDelegate(_storage.getAddress("botProductRegistry"));
-  }
-
-  function botCoin() public view returns (StandardToken) {
-    return StandardToken(_storage.getAddress("botCoinAddress"));
   }
 
   function developerDataHash(uint256 developerId) public view returns (bytes32) {

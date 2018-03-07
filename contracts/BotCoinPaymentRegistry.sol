@@ -3,11 +3,19 @@ pragma solidity ^0.4.18;
 import 'zeppelin-solidity/contracts/token/ERC20/StandardToken.sol';
 import "levelk-upgradability-contracts/contracts/StorageConsumer/StorageConsumer.sol";
 
-/// @title BotCoinPaymentRegistry for transferring value
-contract BotCoinPaymentRegistry is StorageConsumer{
-    // Required methods
+/// @title BotCoinPaymentRegistry 
+/// @dev Delegate contract for BotCoinPayment functionality
+contract BotCoinPaymentRegistry is StorageConsumer {
 
-    function BotCoinPaymentRegistry(BaseStorage storage_) public StorageConsumer(storage_) { }
+	function BotCoinPaymentRegistry(
+		BaseStorage storage_
+	    address botCoinAddress
+	)
+		StorageConsumer(storage_)
+	    public
+	{
+	  	storage_.setAddress("botCoinAddress", botCoinAddress);
+	}
 
 	function tallaWallet() public view returns (address) {
 		return _storage.getAddress("tallaWallet");
