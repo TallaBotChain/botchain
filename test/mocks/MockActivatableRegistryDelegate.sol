@@ -1,6 +1,6 @@
 pragma solidity ^0.4.18;
 
-import "levelk-upgradability-contracts/contracts/Storage/PublicStorage.sol";
+import "../../contracts/Upgradability/PublicStorage.sol";
 import "../../contracts/Delegates/ActivatableRegistryDelegate.sol";
 
 contract MockActivatableRegistryDelegate is ActivatableRegistryDelegate {
