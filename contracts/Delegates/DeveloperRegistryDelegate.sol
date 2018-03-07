@@ -2,6 +2,7 @@ pragma solidity ^0.4.18;
 
 import "./ApprovableRegistryDelegate.sol";
 import './BotProductRegistryDelegate.sol';
+import '../Payments.sol';
 import 'zeppelin-solidity/contracts/token/ERC20/StandardToken.sol';
 
 /// @title DeveloperRegistryDelegate
@@ -54,7 +55,7 @@ contract DeveloperRegistryDelegate is ApprovableRegistryDelegate {
     setDeveloperUrl(_developerId, _url);
     setOwnerId(msg.sender, _developerId);
 
-    botCoin().transferFrom(msg.sender, tallaWallet(), getEntryPrice());
+    botCoin().transferFrom(msg.sender, Payments.tallaWallet(), getEntryPrice());
 
     super._mint(msg.sender, _developerId);
 
