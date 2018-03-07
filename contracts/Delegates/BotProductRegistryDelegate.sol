@@ -11,8 +11,6 @@ contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRe
   using SafeMath for uint256;
 
   event BotProductCreated(uint256 botProductId, address botProductOwner, address botProductAddress, bytes32 data);
-  event BotProductDisabled(uint256 botProductId);
-  event BotProductEnabled(uint256 botProductId);
 
   function BotProductRegistryDelegate(BaseStorage storage_)
     ActivatableRegistryDelegate(storage_)
@@ -22,10 +20,6 @@ contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRe
 
   function developerRegistry() public view returns (DeveloperRegistryDelegate) {
     return DeveloperRegistryDelegate(_storage.getAddress("developerRegistryAddress"));
-  }
-  
-  function botProductDisabledStatus(uint256 botProductId) public view returns (bool) {
-    return _storage.getBool(keccak256("botDisabledStatuses", botProductId));
   }
 
   function botProductAddress(uint botProductId) public view returns (address) {
