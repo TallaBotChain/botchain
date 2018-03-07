@@ -85,6 +85,10 @@ contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRe
     return developerRegistry().approvalStatus(developerId);
   }
 
+  function checkEntryOwnership(uint256 _entryId) private view returns (bool) {
+    return ownerOf(_entryId) == msg.sender;
+  }
+
   function setBotProductData(uint256 botProductId, address botProductAddress, bytes32 botDataHash) private {
     _storage.setAddress(keccak256("botProductAddresses", botProductId), botProductAddress);
     _storage.setBytes32(keccak256("botProductDataHashes", botProductId), botDataHash);
