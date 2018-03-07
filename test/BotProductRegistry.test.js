@@ -13,8 +13,6 @@ const botAddr1 = '0x63e230f3b57ec9d180b9403c0d8783ddc135f664'
 const botAddr2 = '0x319f2c0d4e7583dff11a37ec4f2c907c8e76593a'
 const botAddr3 = '0x70d9f81dca9102acda0b894e64a7c683924355df'
 const tallaWalletAddress = '0x1ae554eea0dcfdd72dcc3fa4034761cf6d041bf3'
-const nonOwnerAddr = accounts[1]
-
 const entryPrice = 100
 const dataHash = web3.sha3('some data to hash')
 const dataHash2 = web3.sha3('other data to hash')
@@ -25,20 +23,30 @@ const BotProductRegistry = artifacts.require('./BotProductRegistry.sol')
 const BotProductRegistryDelegate = artifacts.require('./BotProductRegistryDelegate.sol')
 const BotCoin = artifacts.require('BotCoin')
 
-/*
- * IN PROGRESS ... fix the failing tests...
- * */
-
 contract('BotProductRegistry', () => {
   let bc, bom, botCoin
 
   beforeEach(async () => {
     botCoin = await BotCoin.new()
-    bc = await newDeveloperRegistry(botCoin.address, tallaWalletAddress, entryPrice)
-    await botCoin.transfer(accounts[1], entryPrice)
-    await botCoin.approve(bc.address, entryPrice, { from: accounts[1] })
-    await botCoin.transfer(accounts[2], entryPrice)
-    await botCoin.approve(bc.address, entryPrice, { from: accounts[2] })
+    bc = await newDeveloperRegistry(
+      botCoin.address,
+      tallaWalletAddress,
+      entryPrice
+    )
+    const botCoinSeededAccounts = [
+      accounts[1],
+      accounts[2],
+      accounts[7],
+      accounts[8]
+    ]
+    for (var i = 0; i < botCoinSeededAccounts.length; i++) {
+      await botCoinTransferApproveSetup(
+        botCoin,
+        bc.address,
+        botCoinSeededAccounts[i],
+        entryPrice
+      )
+    }
     bom = await newBotProductRegistry(bc.address)
   })
 
@@ -64,6 +72,14 @@ contract('BotProductRegistry', () => {
 
       it('should add bot address to bot ID mapping', async () => {
         expect(await bom.botProductAddressExists(botAddr1)).to.equal(true)
+      })
+
+      it('should default to approved', async () => {
+        expect(await bom.approvalStatus(1)).to.equal(true)
+      })
+
+      it('should default to active', async () => {
+        expect(await bom.active(1)).to.equal(true)
       })
 
       it('should log BotProductCreated event', () => {
@@ -153,189 +169,38 @@ contract('BotProductRegistry', () => {
     })
   })
 
-  // TODO: fix bot transfer tests
-  /* describe('transfer()', () => {
+  describe('transfer()', () => {
     let senderAddr, recipientAddr
 
     beforeEach(async () => {
       senderAddr = accounts[7]
-      recipientAddr = devAddr
-      await bc.addDeveloper(recipientAddr, dataHash, devUrl)
-      await bc.addDeveloper(senderAddr, dataHash, devUrl)
-      await bom.createBotProduct(senderAddr, botAddr1, dataHash)
+      recipientAddr = accounts[8]
+      await bc.addDeveloper(dataHash, devUrl, { from: senderAddr })
+      await bc.addDeveloper(dataHash, devUrl, { from: recipientAddr })
+      await bc.grantApproval(1)
+      await bom.createBotProduct(botAddr1, dataHash, { from: senderAddr })
     })
 
-    describe('when transfer is valid', () => {
-      let tx
-      beforeEach(async () => {
-        tx = await bom.transfer(recipientAddr, 1, { from: senderAddr })
-      })
-
+    describe('when given an address that is an approved developer', () => {
       it('should change bot owner to the new owner', async () => {
+        await bc.grantApproval(2)
+        await bom.transfer(recipientAddr, 1, { from: senderAddr })
         const botProductOwnerAddr = await bom.ownerOf(1)
         expect(botProductOwnerAddr).to.equal(recipientAddr)
       })
-
-      it('should decrement ownership count for sender', async () => {
-        expect((await bom.balanceOf(senderAddr)).toNumber()).to.equal(0)
-      })
-
-      it('should increment ownership count for recipient', async () => {
-        expect((await bom.balanceOf(recipientAddr)).toNumber()).to.equal(1)
-      })
-
-      it('should log Transfer event', () => {
-        expect(hasEvent(tx, 'Transfer')).to.equal(true)
-      })
     })
 
-    describe('when given a zero address', () => {
+    describe('when given an address that is not an approved developer', () => {
       it('should revert', async () => {
-        await expectRevert(bom.transfer(zero, 1, { from: senderAddr }))
+        await expectRevert(bom.transfer(recipientAddr, 1, { from: senderAddr }))
       })
     })
 
-    describe('when given a botProductId that the sender does not own', () => {
+    describe('when bot product is not approved', () => {
       it('should revert', async () => {
-        await expectRevert(bom.transfer(recipientAddr, 1, { from: accounts[5] }))
-      })
-    })
-
-    // describe('when given an address that is not an approved developer', () => {
-    //   it('should revert', async () => {
-    //     await expectRevert(bom.transfer(devAddr2, 1, { from: senderAddr }))
-    //   })
-    // })
-
-    // describe('when bot is disabled', () => {
-    //   it('should revert', async () => {
-    //     await bom.disableBotProduct(1)
-    //     await expectRevert(bom.transfer(recipientAddr, 1, { from: senderAddr }))
-    //   })
-    // })
-  })
-
-  describe('approve()', () => {
-    let approverAddr, senderAddr
-
-    beforeEach(async () => {
-      approverAddr = accounts[6]
-      senderAddr = accounts[7]
-      await bc.addDeveloper(approverAddr, dataHash, devUrl)
-      await bom.createBotProduct(approverAddr, botAddr1, dataHash)
-    })
-
-    describe('when transaction is valid', () => {
-      let tx
-      beforeEach(async () => {
-        tx = await bom.approve(senderAddr, 1, { from: approverAddr })
-      })
-
-      it('should log Approval event', () => {
-        expect(hasEvent(tx, 'Approval')).to.equal(true)
-      })
-    })
-
-    describe('when transaction is executed by an address other than the bot owner', () => {
-      it('should revert', async () => {
-        await expectRevert(bom.approve(senderAddr, 1, { from: nonOwnerAddr }))
-      })
-    })
-  }) */
-
-  describe('disableBotProduct()', () => {
-    beforeEach(async () => {
-      await bc.addDeveloper(dataHash, devUrl, { from: accounts[1] })
-      await bc.grantApproval(1)
-      await bom.createBotProduct(botAddr1, dataHash, { from: accounts[1] })
-    })
-
-    describe('when transaction is valid', () => {
-      let tx
-      beforeEach(async () => {
-        tx = await bom.disableBotProduct(1)
-      })
-
-      it('should set bot to disabled', async () => {
-        expect(await bom.botProductIsEnabled(1)).to.equal(false)
-      })
-
-      it('should log BotProductDisabled event', () => {
-        expect(hasEvent(tx, 'BotProductDisabled'))
-      })
-    })
-
-    describe('when send by an address that is not the contract owner', () => {
-      it('should revert', async () => {
-        await expectRevert(bom.disableBotProduct(1, { from: nonOwnerAddr }))
-      })
-    })
-
-    describe('when botProductId is 0', () => {
-      it('should revert', async () => {
-        await expectRevert(bom.disableBotProduct(0))
-      })
-    })
-
-    describe('when bot does not exist', () => {
-      it('should revert', async () => {
-        await expectRevert(bom.disableBotProduct(3))
-      })
-    })
-
-    describe('when bot is already disabled', () => {
-      it('should revert', async () => {
-        await bom.disableBotProduct(1)
-        await expectRevert(bom.disableBotProduct(1))
-      })
-    })
-  })
-
-  describe('enableBotProduct()', () => {
-    beforeEach(async () => {
-      await bc.addDeveloper(dataHash, devUrl, { from: accounts[1] })
-      await bc.grantApproval(1)
-      await bom.createBotProduct(botAddr1, dataHash, { from: accounts[1] })
-      await bom.disableBotProduct(1)
-    })
-
-    describe('when transaction is valid', () => {
-      let tx
-      beforeEach(async () => {
-        tx = await bom.enableBotProduct(1)
-      })
-
-      it('should set bot to enabled', async () => {
-        expect(await bom.botProductIsEnabled(1)).to.equal(true)
-      })
-
-      it('should log BotProductEnabled event', () => {
-        expect(hasEvent(tx, 'BotProductEnabled'))
-      })
-    })
-
-    describe('when send by an address that is not the contract owner', () => {
-      it('should revert', async () => {
-        await expectRevert(bom.enableBotProduct(1, { from: nonOwnerAddr }))
-      })
-    })
-
-    describe('when botProductId is 0', () => {
-      it('should revert', async () => {
-        await expectRevert(bom.enableBotProduct(0))
-      })
-    })
-
-    describe('when bot does not exist', () => {
-      it('should revert', async () => {
-        await expectRevert(bom.enableBotProduct(3))
-      })
-    })
-
-    describe('when bot is already enabled', () => {
-      it('should revert', async () => {
-        await bom.enableBotProduct(1)
-        await expectRevert(bom.enableBotProduct(1))
+        await bc.grantApproval(2)
+        await bom.revokeApproval(1)
+        await expectRevert(bom.transfer(recipientAddr, 1, { from: senderAddr }))
       })
     })
   })
@@ -350,4 +215,14 @@ async function newBotProductRegistry (developerRegistryAddress) {
     botProductRegistryDelegate.address
   )
   return _.extend(bom, await BotProductRegistryDelegate.at(bom.address))
+}
+
+async function botCoinTransferApproveSetup (
+  botCoin,
+  developerRegistryAddress,
+  transferFromAddress,
+  amount
+) {
+  await botCoin.transfer(transferFromAddress, amount)
+  await botCoin.approve(developerRegistryAddress, amount, { from: transferFromAddress })
 }

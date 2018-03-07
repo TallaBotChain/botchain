@@ -40,7 +40,7 @@ contract ApprovableRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
     ApprovalRevoked(_entryId);
   }
 
-  function setApprovalStatus(uint256 _entryId, bool _approvalStatus) private {
+  function setApprovalStatus(uint256 _entryId, bool _approvalStatus) internal {
     _storage.setBool(keccak256("approvalStatus", _entryId), _approvalStatus);
   }
 }

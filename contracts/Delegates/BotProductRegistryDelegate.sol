@@ -1,13 +1,13 @@
 pragma solidity ^0.4.18;
 
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
-import "levelk-upgradability-contracts/contracts/Implementations/ownership/OwnableKeyed.sol";
-import "levelk-upgradability-contracts/contracts/Implementations/token/ERC721/ERC721TokenKeyed.sol";
+import "./ActivatableRegistryDelegate.sol";
+import "./ApprovableRegistryDelegate.sol";
 import './DeveloperRegistryDelegate.sol';
 
 /// @dev Non-Fungible token (ERC-721) that handles ownership and transfer
 ///  of Bots. Bots can be transferred to and from approved developers.
-contract BotProductRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
+contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRegistryDelegate {
   using SafeMath for uint256;
 
   event BotProductCreated(uint256 botProductId, address botProductOwner, address botProductAddress, bytes32 data);
@@ -15,8 +15,8 @@ contract BotProductRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
   event BotProductEnabled(uint256 botProductId);
 
   function BotProductRegistryDelegate(BaseStorage storage_)
-    OwnableKeyed(storage_)
-    ERC721TokenKeyed(storage_)
+    ActivatableRegistryDelegate(storage_)
+    ApprovableRegistryDelegate(storage_)
     public
   {}
 
@@ -24,52 +24,42 @@ contract BotProductRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
     return DeveloperRegistryDelegate(_storage.getAddress("developerRegistryAddress"));
   }
   
-  function getBotProductDisabledStatus(uint256 botProductId) public view returns (bool) {
+  function botProductDisabledStatus(uint256 botProductId) public view returns (bool) {
     return _storage.getBool(keccak256("botDisabledStatuses", botProductId));
   }
 
-  function getBotProductAddress(uint botProductId) public view returns (address) {
+  function botProductAddress(uint botProductId) public view returns (address) {
     return _storage.getAddress(keccak256("botProductAddresses", botProductId));
   }
 
-  function getBotProductDataHash(uint botProductId) public view returns (bytes32) {
+  function botProductDataHash(uint botProductId) public view returns (bytes32) {
     return _storage.getBytes32(keccak256("botProductDataHashes", botProductId));
   }
 
-  /// @dev Returns true if the given bot product is enabled
-  /// @param botProductId The ID of the bot product to check
-  function botProductIsEnabled(uint256 botProductId) public view returns (bool) {
-    require(botProductId > 0);
-    require(super.ownerOf(botProductId) != 0x0);
-    return getBotProductDisabledStatus(botProductId) == false;
-  }
-
-  function getBotProductIdForAddress(address botProductAddress) public view returns (uint256) {
+  function botProductIdForAddress(address botProductAddress) public view returns (uint256) {
     return _storage.getUint(keccak256("botProductIdsByAddress", botProductAddress));
   }
 
   function botProductAddressExists(address botProductAddress) public view returns (bool) {
-    return getBotProductIdForAddress(botProductAddress) > 0;
+    return botProductIdForAddress(botProductAddress) > 0;
   }
 
   function getBotProduct(uint256 botProductId) public view returns
   (
-    address owner,
-    address botProductAddress,
-    bytes32 data
+    address _owner,
+    address _botProductAddress,
+    bytes32 _data
   ) {
-    owner = super.ownerOf(botProductId);
-    botProductAddress = getBotProductAddress(botProductId);
-    data = getBotProductDataHash(botProductId);
+    _owner = super.ownerOf(botProductId);
+    _botProductAddress = botProductAddress(botProductId);
+    _data = botProductDataHash(botProductId);
   }
 
   /// @dev Creates a new bot product.
   /// @param botProductAddress Address of the bot
   /// @param dataHash Hash of data associated with the bot
   function createBotProduct(address botProductAddress, bytes32 dataHash) public {
-    uint256 developerId = developerRegistry().owns(msg.sender);
-    require(developerId > 0);
-    require(developerRegistry().approvalStatus(developerId) == true);
+    require(isApprovedDeveloperAddress(msg.sender));
     require(botProductAddress != 0x0);
     require(dataHash != 0x0);
     require(!botProductAddressExists(botProductAddress));
@@ -78,40 +68,32 @@ contract BotProductRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
     super._mint(msg.sender, botProductId);
     setBotProductData(botProductId, botProductAddress, dataHash);
     setBotProductIdForAddress(botProductAddress, botProductId);
+    setApprovalStatus(botProductId, true);
+    setActiveStatus(botProductId, true);
 
     BotProductCreated(botProductId, msg.sender, botProductAddress, dataHash);
   }
 
-  /// @dev Disables a bot product. Disabled bot products cannot be transferred.
-  ///      When a bot is created, it is enabled by default.
-  /// @param botProductId The ID of the bot to disable.
-  function disableBotProduct(uint256 botProductId) onlyOwner public {
-    require(super.ownerOf(botProductId) != 0x0);
-    require(botProductIsEnabled(botProductId));
-
-    setBotProductDisabledStatus(botProductId, true);
-
-    BotProductDisabled(botProductId);
+  /**
+  * @dev Internal function to clear current approval and transfer the ownership of a given bot product ID
+  * @param _from address which you want to send a bot product from
+  * @param _to address which you want to transfer the bot product to
+  * @param _botProductId uint256 ID of the bot product to be transferred
+  */
+  function clearApprovalAndTransfer(address _from, address _to, uint256 _botProductId) internal {
+    require(approvalStatus(_botProductId) == true);
+    require(isApprovedDeveloperAddress(_to));
+    super.clearApprovalAndTransfer(_from, _to, _botProductId);
   }
 
-  /// @dev Enables a bot product.
-  /// @param botProductId The ID of the bot to enable.
-  function enableBotProduct(uint256 botProductId) onlyOwner public {
-    require(super.ownerOf(botProductId) != 0x0);
-    require(!botProductIsEnabled(botProductId));
-
-    setBotProductDisabledStatus(botProductId, false);
-
-    BotProductEnabled(botProductId);
+  function isApprovedDeveloperAddress(address _developerAddress) private view returns (bool) {
+    uint256 developerId = developerRegistry().owns(_developerAddress);
+    return developerRegistry().approvalStatus(developerId);
   }
 
   function setBotProductData(uint256 botProductId, address botProductAddress, bytes32 botDataHash) private {
     _storage.setAddress(keccak256("botProductAddresses", botProductId), botProductAddress);
     _storage.setBytes32(keccak256("botProductDataHashes", botProductId), botDataHash);
-  }
-
-  function setBotProductDisabledStatus(uint256 botProductId, bool disabled) private {
-    _storage.setBool(keccak256("botDisabledStatuses", botProductId), disabled);
   }
 
   function setBotProductIdForAddress(address botProductAddress, uint256 botProductId) private {
