@@ -20,7 +20,7 @@ contract DeveloperRegistryDelegate is ApprovableRegistryDelegate, BotCoinPayment
   function botProductProductRegistry() public view returns (BotProductRegistryDelegate) {
     return BotProductRegistryDelegate(_storage.getAddress("botProductRegistry"));
   }
-  
+
   function botCoin() public view returns (StandardToken) {
     return StandardToken(_storage.getAddress("botCoinAddress"));
   }
@@ -51,8 +51,7 @@ contract DeveloperRegistryDelegate is ApprovableRegistryDelegate, BotCoinPayment
     setDeveloperUrl(_developerId, _url);
     setOwnerId(msg.sender, _developerId);
 
-    //transferBotCoin();
-    botCoin().transferFrom(msg.sender, tallaWallet(), getEntryPrice());
+    transferBotCoin();
 
     super._mint(msg.sender, _developerId);
 
