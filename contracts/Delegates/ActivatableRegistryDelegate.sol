@@ -1,7 +1,7 @@
 pragma solidity ^0.4.18;
 
-import "levelk-upgradability-contracts/contracts/Implementations/ownership/OwnableKeyed.sol";
-import "levelk-upgradability-contracts/contracts/Implementations/token/ERC721/ERC721TokenKeyed.sol";
+import "../Upgradability/OwnableKeyed.sol";
+import "../Upgradability/ERC721TokenKeyed.sol";
 
 contract ActivatableRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
 

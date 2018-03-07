@@ -1,7 +1,7 @@
 pragma solidity ^0.4.18;
 
-import "levelk-upgradability-contracts/contracts/Proxy/OwnableProxy.sol";
-import "levelk-upgradability-contracts/contracts/Storage/PublicStorage.sol";
+import "../../contracts/Upgradability/OwnableProxy.sol";
+import "../../contracts/Upgradability/PublicStorage.sol";
 
 contract MockProxyInstance is OwnableProxy {
 

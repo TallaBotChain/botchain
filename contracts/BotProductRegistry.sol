@@ -1,7 +1,7 @@
 pragma solidity ^0.4.18;
 
-import "levelk-upgradability-contracts/contracts/Proxy/OwnableProxy.sol";
-import "levelk-upgradability-contracts/contracts/Storage/PublicStorage.sol";
+import "./Upgradability/OwnableProxy.sol";
+import "./Upgradability/PublicStorage.sol";
 
 contract BotProductRegistry is OwnableProxy {
 
