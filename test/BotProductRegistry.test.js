@@ -28,11 +28,21 @@ contract('BotProductRegistry', () => {
 
   beforeEach(async () => {
     botCoin = await BotCoin.new()
-    bc = await newDeveloperRegistry(botCoin.address, tallaWalletAddress, entryPrice)
-    await botCoin.transfer(accounts[1], entryPrice)
-    await botCoin.approve(bc.address, entryPrice, { from: accounts[1] })
-    await botCoin.transfer(accounts[2], entryPrice)
-    await botCoin.approve(bc.address, entryPrice, { from: accounts[2] })
+    bc = await newDeveloperRegistry(botCoin.address, tallaWalletAddress)
+    const botCoinSeededAccounts = [
+      accounts[1],
+      accounts[2],
+      accounts[7],
+      accounts[8]
+    ]
+    for (var i = 0; i < botCoinSeededAccounts.length; i++) {
+      await botCoinTransferApproveSetup(
+        botCoin,
+        bc.address,
+        botCoinSeededAccounts[i],
+        entryPrice
+      )
+    }
     bom = await newBotProductRegistry(bc.address)
   })
 
@@ -201,4 +211,14 @@ async function newBotProductRegistry (developerRegistryAddress) {
     botProductRegistryDelegate.address
   )
   return _.extend(bom, await BotProductRegistryDelegate.at(bom.address))
+}
+
+async function botCoinTransferApproveSetup (
+  botCoin,
+  developerRegistryAddress,
+  transferFromAddress,
+  amount
+) {
+  await botCoin.transfer(transferFromAddress, amount)
+  await botCoin.approve(developerRegistryAddress, amount, { from: transferFromAddress })
 }
