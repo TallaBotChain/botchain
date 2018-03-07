@@ -13,8 +13,6 @@ const botAddr1 = '0x63e230f3b57ec9d180b9403c0d8783ddc135f664'
 const botAddr2 = '0x319f2c0d4e7583dff11a37ec4f2c907c8e76593a'
 const botAddr3 = '0x70d9f81dca9102acda0b894e64a7c683924355df'
 const tallaWalletAddress = '0x1ae554eea0dcfdd72dcc3fa4034761cf6d041bf3'
-const nonOwnerAddr = accounts[1]
-
 const entryPrice = 100
 const dataHash = web3.sha3('some data to hash')
 const dataHash2 = web3.sha3('other data to hash')
@@ -64,6 +62,10 @@ contract('BotProductRegistry', () => {
 
       it('should default to approved', async () => {
         expect(await bom.approvalStatus(1)).to.equal(true)
+      })
+
+      it('should default to active', async () => {
+        expect(await bom.active(1)).to.equal(true)
       })
 
       it('should log BotProductCreated event', () => {
@@ -242,103 +244,6 @@ contract('BotProductRegistry', () => {
       })
     })
   }) */
-
-  describe('disableBotProduct()', () => {
-    beforeEach(async () => {
-      await bc.addDeveloper(dataHash, devUrl, { from: accounts[1] })
-      await bc.grantApproval(1)
-      await bom.createBotProduct(botAddr1, dataHash, { from: accounts[1] })
-    })
-
-    describe('when transaction is valid', () => {
-      let tx
-      beforeEach(async () => {
-        tx = await bom.disableBotProduct(1)
-      })
-
-      it('should set bot to disabled', async () => {
-        expect(await bom.botProductIsEnabled(1)).to.equal(false)
-      })
-
-      it('should log BotProductDisabled event', () => {
-        expect(hasEvent(tx, 'BotProductDisabled'))
-      })
-    })
-
-    describe('when send by an address that is not the contract owner', () => {
-      it('should revert', async () => {
-        await expectRevert(bom.disableBotProduct(1, { from: nonOwnerAddr }))
-      })
-    })
-
-    describe('when botProductId is 0', () => {
-      it('should revert', async () => {
-        await expectRevert(bom.disableBotProduct(0))
-      })
-    })
-
-    describe('when bot does not exist', () => {
-      it('should revert', async () => {
-        await expectRevert(bom.disableBotProduct(3))
-      })
-    })
-
-    describe('when bot is already disabled', () => {
-      it('should revert', async () => {
-        await bom.disableBotProduct(1)
-        await expectRevert(bom.disableBotProduct(1))
-      })
-    })
-  })
-
-  describe('enableBotProduct()', () => {
-    beforeEach(async () => {
-      await bc.addDeveloper(dataHash, devUrl, { from: accounts[1] })
-      await bc.grantApproval(1)
-      await bom.createBotProduct(botAddr1, dataHash, { from: accounts[1] })
-      await bom.disableBotProduct(1)
-    })
-
-    describe('when transaction is valid', () => {
-      let tx
-      beforeEach(async () => {
-        tx = await bom.enableBotProduct(1)
-      })
-
-      it('should set bot to enabled', async () => {
-        expect(await bom.botProductIsEnabled(1)).to.equal(true)
-      })
-
-      it('should log BotProductEnabled event', () => {
-        expect(hasEvent(tx, 'BotProductEnabled'))
-      })
-    })
-
-    describe('when send by an address that is not the contract owner', () => {
-      it('should revert', async () => {
-        await expectRevert(bom.enableBotProduct(1, { from: nonOwnerAddr }))
-      })
-    })
-
-    describe('when botProductId is 0', () => {
-      it('should revert', async () => {
-        await expectRevert(bom.enableBotProduct(0))
-      })
-    })
-
-    describe('when bot does not exist', () => {
-      it('should revert', async () => {
-        await expectRevert(bom.enableBotProduct(3))
-      })
-    })
-
-    describe('when bot is already enabled', () => {
-      it('should revert', async () => {
-        await bom.enableBotProduct(1)
-        await expectRevert(bom.enableBotProduct(1))
-      })
-    })
-  })
 })
 
 async function newBotProductRegistry (developerRegistryAddress) {

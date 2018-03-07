@@ -1,12 +1,13 @@
 pragma solidity ^0.4.18;
 
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
+import "./ActivatableRegistryDelegate.sol";
 import "./ApprovableRegistryDelegate.sol";
 import './DeveloperRegistryDelegate.sol';
 
 /// @dev Non-Fungible token (ERC-721) that handles ownership and transfer
 ///  of Bots. Bots can be transferred to and from approved developers.
-contract BotProductRegistryDelegate is ApprovableRegistryDelegate {
+contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRegistryDelegate {
   using SafeMath for uint256;
 
   event BotProductCreated(uint256 botProductId, address botProductOwner, address botProductAddress, bytes32 data);
@@ -14,6 +15,7 @@ contract BotProductRegistryDelegate is ApprovableRegistryDelegate {
   event BotProductEnabled(uint256 botProductId);
 
   function BotProductRegistryDelegate(BaseStorage storage_)
+    ActivatableRegistryDelegate(storage_)
     ApprovableRegistryDelegate(storage_)
     public
   {}
@@ -32,14 +34,6 @@ contract BotProductRegistryDelegate is ApprovableRegistryDelegate {
 
   function botProductDataHash(uint botProductId) public view returns (bytes32) {
     return _storage.getBytes32(keccak256("botProductDataHashes", botProductId));
-  }
-
-  /// @dev Returns true if the given bot product is enabled
-  /// @param botProductId The ID of the bot product to check
-  function botProductIsEnabled(uint256 botProductId) public view returns (bool) {
-    require(botProductId > 0);
-    require(super.ownerOf(botProductId) != 0x0);
-    return botProductDisabledStatus(botProductId) == false;
   }
 
   function botProductIdForAddress(address botProductAddress) public view returns (uint256) {
@@ -77,40 +71,14 @@ contract BotProductRegistryDelegate is ApprovableRegistryDelegate {
     setBotProductData(botProductId, botProductAddress, dataHash);
     setBotProductIdForAddress(botProductAddress, botProductId);
     setApprovalStatus(botProductId, true);
+    setActiveStatus(botProductId, true);
 
     BotProductCreated(botProductId, msg.sender, botProductAddress, dataHash);
-  }
-
-  /// @dev Disables a bot product. Disabled bot products cannot be transferred.
-  ///      When a bot is created, it is enabled by default.
-  /// @param botProductId The ID of the bot to disable.
-  function disableBotProduct(uint256 botProductId) onlyOwner public {
-    require(super.ownerOf(botProductId) != 0x0);
-    require(botProductIsEnabled(botProductId));
-
-    setBotProductDisabledStatus(botProductId, true);
-
-    BotProductDisabled(botProductId);
-  }
-
-  /// @dev Enables a bot product.
-  /// @param botProductId The ID of the bot to enable.
-  function enableBotProduct(uint256 botProductId) onlyOwner public {
-    require(super.ownerOf(botProductId) != 0x0);
-    require(!botProductIsEnabled(botProductId));
-
-    setBotProductDisabledStatus(botProductId, false);
-
-    BotProductEnabled(botProductId);
   }
 
   function setBotProductData(uint256 botProductId, address botProductAddress, bytes32 botDataHash) private {
     _storage.setAddress(keccak256("botProductAddresses", botProductId), botProductAddress);
     _storage.setBytes32(keccak256("botProductDataHashes", botProductId), botDataHash);
-  }
-
-  function setBotProductDisabledStatus(uint256 botProductId, bool disabled) private {
-    _storage.setBool(keccak256("botDisabledStatuses", botProductId), disabled);
   }
 
   function setBotProductIdForAddress(address botProductAddress, uint256 botProductId) private {
