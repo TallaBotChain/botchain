@@ -6,7 +6,7 @@ const PublicStorage = artifacts.require('./PublicStorage.sol')
 const DeveloperRegistry = artifacts.require('./DeveloperRegistry.sol')
 const DeveloperRegistryDelegate = artifacts.require('./DeveloperRegistryDelegate.sol')
 
-export default async function newDeveloperRegistry (botCoinAddress, tallaWalletAddress) {
+export default async function newDeveloperRegistry (botCoinAddress, tallaWalletAddress, entryPrice) {
   const publicStorage = await PublicStorage.new()
   const developerRegistryDelegate = await DeveloperRegistryDelegate.new()
 
@@ -22,6 +22,7 @@ export default async function newDeveloperRegistry (botCoinAddress, tallaWalletA
   )
 
   await developerRegistry.setTallaWallet(tallaWalletAddress)
+  await developerRegistry.setEntryPrice(entryPrice)
 
   return developerRegistry
 }

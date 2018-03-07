@@ -12,6 +12,8 @@ const zeroAddr = '0x0000000000000000000000000000000000000000'
 const zeroHash = '0x0000000000000000000000000000000000000000000000000000000000000000'
 const addr = '0x72c2ba659460151cdfbb3cd8005ae7fbe68191b1'
 const tallaWalletAddress = '0x1ae554eea0dcfdd72dcc3fa4034761cf6d041bf3'
+
+const entryPrice = 100
 const nonOwnerAddr = accounts[3]
 const dataHash = web3.sha3('some data to hash')
 const url = web3.fromAscii('www.google.com')
@@ -21,9 +23,9 @@ contract('DeveloperRegistry', () => {
 
   beforeEach(async () => {
     botCoin = await BotCoin.new()
-    bc = await newDeveloperRegistry(botCoin.address, tallaWalletAddress)
-    await botCoin.transfer(accounts[2], 100)
-    await botCoin.approve(bc.address, 100, { from: accounts[2] })
+    bc = await newDeveloperRegistry(botCoin.address, tallaWalletAddress, entryPrice)
+    await botCoin.transfer(accounts[2], entryPrice)
+    await botCoin.approve(bc.address, entryPrice, { from: accounts[2] })
   })
 
   describe('addDeveloper()', () => {
