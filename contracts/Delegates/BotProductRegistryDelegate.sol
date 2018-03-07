@@ -1,13 +1,14 @@
 pragma solidity ^0.4.18;
 
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
+import "../Upgradability/ERC721TokenKeyed.sol";
 import "./ActivatableRegistryDelegate.sol";
 import "./ApprovableRegistryDelegate.sol";
 import './DeveloperRegistryDelegate.sol';
 
 /// @dev Non-Fungible token (ERC-721) that handles ownership and transfer
 ///  of Bots. Bots can be transferred to and from approved developers.
-contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRegistryDelegate {
+contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRegistryDelegate, ERC721TokenKeyed {
   using SafeMath for uint256;
 
   event BotProductCreated(uint256 botProductId, address botProductOwner, address botProductAddress, bytes32 data);
@@ -15,6 +16,7 @@ contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRe
   function BotProductRegistryDelegate(BaseStorage storage_)
     ActivatableRegistryDelegate(storage_)
     ApprovableRegistryDelegate(storage_)
+    ERC721TokenKeyed(storage_)
     public
   {}
 
@@ -44,7 +46,7 @@ contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRe
     address _botProductAddress,
     bytes32 _data
   ) {
-    _owner = super.ownerOf(botProductId);
+    _owner = ownerOf(botProductId);
     _botProductAddress = botProductAddress(botProductId);
     _data = botProductDataHash(botProductId);
   }
@@ -58,8 +60,8 @@ contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRe
     require(dataHash != 0x0);
     require(!botProductAddressExists(botProductAddress));
 
-    uint256 botProductId = super.totalSupply().add(1);
-    super._mint(msg.sender, botProductId);
+    uint256 botProductId = totalSupply().add(1);
+    _mint(msg.sender, botProductId);
     setBotProductData(botProductId, botProductAddress, dataHash);
     setBotProductIdForAddress(botProductAddress, botProductId);
     setApprovalStatus(botProductId, true);
@@ -87,6 +89,10 @@ contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRe
 
   function checkEntryOwnership(uint256 _entryId) private view returns (bool) {
     return ownerOf(_entryId) == msg.sender;
+  }
+
+  function entryExists(uint256 _entryId) private view returns (bool) {
+    return ownerOf(_entryId) != 0x0;
   }
 
   function setBotProductData(uint256 botProductId, address botProductAddress, bytes32 botDataHash) private {

@@ -1,16 +1,14 @@
 pragma solidity ^0.4.18;
 
 import "../Upgradability/OwnableKeyed.sol";
-import "../Upgradability/ERC721TokenKeyed.sol";
 
-contract ApprovableRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
+contract ApprovableRegistryDelegate is OwnableKeyed {
 
   event ApprovalGranted(uint256 entryId);
   event ApprovalRevoked(uint256 entryId);
 
   function ApprovableRegistryDelegate(BaseStorage storage_)
     OwnableKeyed(storage_)
-    ERC721TokenKeyed(storage_)
     public
   {}
 
@@ -21,7 +19,7 @@ contract ApprovableRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
   /// @dev Grants approval for an existing entry. Only callable by owner.
   /// @param _entryId The ID of the entry to grant approval for.
   function grantApproval(uint256 _entryId) onlyOwner public {
-    require(ownerOf(_entryId) != 0x0);
+    require(entryExists(_entryId));
     require(!approvalStatus(_entryId));
 
     setApprovalStatus(_entryId, true);
@@ -32,7 +30,7 @@ contract ApprovableRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
   /// @dev Revokes approval for an existing developer. Only callable by owner.
   /// @param _entryId The ID of the developer to revoke approval for.
   function revokeApproval(uint256 _entryId) onlyOwner public {
-    require(ownerOf(_entryId) != 0x0);
+    require(entryExists(_entryId));
     require(approvalStatus(_entryId));
 
     setApprovalStatus(_entryId, false);
@@ -43,4 +41,6 @@ contract ApprovableRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
   function setApprovalStatus(uint256 _entryId, bool _approvalStatus) internal {
     _storage.setBool(keccak256("approvalStatus", _entryId), _approvalStatus);
   }
+
+  function entryExists(uint256 _entryId) private view returns (bool);
 }

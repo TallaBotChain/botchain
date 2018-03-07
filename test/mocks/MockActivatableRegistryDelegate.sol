@@ -13,8 +13,8 @@ contract MockActivatableRegistryDelegate is ActivatableRegistryDelegate, ERC721T
   { }
   
   function add() public {
-    uint256 _entryId = super.totalSupply().add(1);
-    super._mint(msg.sender, _entryId);
+    uint256 _entryId = totalSupply().add(1);
+    _mint(msg.sender, _entryId);
   }
 
   function checkEntryOwnership(uint256 _entryId) private view returns (bool) {
