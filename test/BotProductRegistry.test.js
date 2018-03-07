@@ -85,10 +85,6 @@ contract('BotProductRegistry', () => {
       it('should log BotProductCreated event', () => {
         expect(hasEvent(txResult, 'BotProductCreated')).to.equal(true)
       })
-
-      it('should log Transfer event', () => {
-        expect(hasEvent(txResult, 'Transfer')).to.equal(true)
-      })
     })
 
     describe('when sender is not the owner of an approved developer entry', () => {
@@ -164,44 +160,8 @@ contract('BotProductRegistry', () => {
       await bom.createBotProduct(botAddr1, dataHash, { from: accounts[1] })
       await bom.createBotProduct(botAddr2, dataHash, { from: accounts[1] })
       await bom.createBotProduct(botAddr3, dataHash, { from: accounts[1] })
-      let numBots = (await bom.balanceOf(accounts[1])).toNumber()
+      let numBots = (await bom.balanceOf(1)).toNumber()
       expect(numBots).to.equal(3)
-    })
-  })
-
-  describe('transfer()', () => {
-    let senderAddr, recipientAddr
-
-    beforeEach(async () => {
-      senderAddr = accounts[7]
-      recipientAddr = accounts[8]
-      await bc.addDeveloper(dataHash, devUrl, { from: senderAddr })
-      await bc.addDeveloper(dataHash, devUrl, { from: recipientAddr })
-      await bc.grantApproval(1)
-      await bom.createBotProduct(botAddr1, dataHash, { from: senderAddr })
-    })
-
-    describe('when given an address that is an approved developer', () => {
-      it('should change bot owner to the new owner', async () => {
-        await bc.grantApproval(2)
-        await bom.transfer(recipientAddr, 1, { from: senderAddr })
-        const botProductOwnerAddr = await bom.ownerOf(1)
-        expect(botProductOwnerAddr).to.equal(recipientAddr)
-      })
-    })
-
-    describe('when given an address that is not an approved developer', () => {
-      it('should revert', async () => {
-        await expectRevert(bom.transfer(recipientAddr, 1, { from: senderAddr }))
-      })
-    })
-
-    describe('when bot product is not approved', () => {
-      it('should revert', async () => {
-        await bc.grantApproval(2)
-        await bom.revokeApproval(1)
-        await expectRevert(bom.transfer(recipientAddr, 1, { from: senderAddr }))
-      })
     })
   })
 })

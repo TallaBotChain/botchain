@@ -1,22 +1,22 @@
 pragma solidity ^0.4.18;
 
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
-import "../Upgradability/ERC721TokenKeyed.sol";
+import "./TokenOwnedRegistry.sol";
 import "./ActivatableRegistryDelegate.sol";
 import "./ApprovableRegistryDelegate.sol";
 import './DeveloperRegistryDelegate.sol';
 
 /// @dev Non-Fungible token (ERC-721) that handles ownership and transfer
 ///  of Bots. Bots can be transferred to and from approved developers.
-contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRegistryDelegate, ERC721TokenKeyed {
+contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRegistryDelegate, TokenOwnedRegistry {
   using SafeMath for uint256;
 
-  event BotProductCreated(uint256 botProductId, address botProductOwner, address botProductAddress, bytes32 data);
+  event BotProductCreated(uint256 botProductId, uint256 developerId, address developerOwnerAddress, address botProductAddress, bytes32 data);
 
   function BotProductRegistryDelegate(BaseStorage storage_)
     ActivatableRegistryDelegate(storage_)
     ApprovableRegistryDelegate(storage_)
-    ERC721TokenKeyed(storage_)
+    TokenOwnedRegistry(storage_)
     public
   {}
 
@@ -46,7 +46,7 @@ contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRe
     address _botProductAddress,
     bytes32 _data
   ) {
-    _owner = ownerOf(botProductId);
+    _owner = ownerOfBotProduct(botProductId); 
     _botProductAddress = botProductAddress(botProductId);
     _data = botProductDataHash(botProductId);
   }
@@ -61,38 +61,39 @@ contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRe
     require(!botProductAddressExists(botProductAddress));
 
     uint256 botProductId = totalSupply().add(1);
-    _mint(msg.sender, botProductId);
+    uint256 developerId = developerIdFor(msg.sender);
+    _mint(developerId, botProductId);
     setBotProductData(botProductId, botProductAddress, dataHash);
     setBotProductIdForAddress(botProductAddress, botProductId);
     setApprovalStatus(botProductId, true);
     setActiveStatus(botProductId, true);
 
-    BotProductCreated(botProductId, msg.sender, botProductAddress, dataHash);
-  }
-
-  /**
-  * @dev Internal function to clear current approval and transfer the ownership of a given bot product ID
-  * @param _from address which you want to send a bot product from
-  * @param _to address which you want to transfer the bot product to
-  * @param _botProductId uint256 ID of the bot product to be transferred
-  */
-  function clearApprovalAndTransfer(address _from, address _to, uint256 _botProductId) internal {
-    require(approvalStatus(_botProductId) == true);
-    require(isApprovedDeveloperAddress(_to));
-    super.clearApprovalAndTransfer(_from, _to, _botProductId);
+    BotProductCreated(botProductId, developerId, msg.sender, botProductAddress, dataHash);
   }
 
   function isApprovedDeveloperAddress(address _developerAddress) private view returns (bool) {
-    uint256 developerId = developerRegistry().owns(_developerAddress);
-    return developerRegistry().approvalStatus(developerId);
+    return isApprovedDeveloperId(developerIdFor(_developerAddress));
   }
 
-  function checkEntryOwnership(uint256 _entryId) private view returns (bool) {
-    return ownerOf(_entryId) == msg.sender;
+  function isApprovedDeveloperId(uint256 _developerId) private view returns (bool) {
+    return developerRegistry().approvalStatus(_developerId);
   }
 
-  function entryExists(uint256 _entryId) private view returns (bool) {
-    return ownerOf(_entryId) != 0x0;
+  function developerIdFor(address _developerAddress) private view returns (uint256) {
+    return developerRegistry().owns(_developerAddress);
+  }
+
+  function ownerOfBotProduct(uint256 _botProductId) private view returns (address) {
+    uint256 developerId = ownerOf(_botProductId);
+    return developerRegistry().ownerOf(developerId);
+  }
+
+  function checkEntryOwnership(uint256 _botProductId) private view returns (bool) {
+    return ownerOfBotProduct(_botProductId) == msg.sender;
+  }
+
+  function entryExists(uint256 _botProductId) private view returns (bool) {
+    return ownerOfBotProduct(_botProductId) != 0x0;
   }
 
   function setBotProductData(uint256 botProductId, address botProductAddress, bytes32 botDataHash) private {
