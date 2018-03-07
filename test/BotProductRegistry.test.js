@@ -28,7 +28,11 @@ contract('BotProductRegistry', () => {
 
   beforeEach(async () => {
     botCoin = await BotCoin.new()
-    bc = await newDeveloperRegistry(botCoin.address, tallaWalletAddress)
+    bc = await newDeveloperRegistry(
+      botCoin.address,
+      tallaWalletAddress,
+      entryPrice
+    )
     const botCoinSeededAccounts = [
       accounts[1],
       accounts[2],
