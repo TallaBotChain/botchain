@@ -59,9 +59,7 @@ contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRe
   /// @param botProductAddress Address of the bot
   /// @param dataHash Hash of data associated with the bot
   function createBotProduct(address botProductAddress, bytes32 dataHash) public {
-    uint256 developerId = developerRegistry().owns(msg.sender);
-    require(developerId > 0);
-    require(developerRegistry().approvalStatus(developerId) == true);
+    require(isApprovedDeveloperAddress(msg.sender));
     require(botProductAddress != 0x0);
     require(dataHash != 0x0);
     require(!botProductAddressExists(botProductAddress));
@@ -74,6 +72,23 @@ contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRe
     setActiveStatus(botProductId, true);
 
     BotProductCreated(botProductId, msg.sender, botProductAddress, dataHash);
+  }
+
+  /**
+  * @dev Internal function to clear current approval and transfer the ownership of a given bot product ID
+  * @param _from address which you want to send a bot product from
+  * @param _to address which you want to transfer the bot product to
+  * @param _botProductId uint256 ID of the bot product to be transferred
+  */
+  function clearApprovalAndTransfer(address _from, address _to, uint256 _botProductId) internal {
+    require(approvalStatus(_botProductId) == true);
+    require(isApprovedDeveloperAddress(_to));
+    super.clearApprovalAndTransfer(_from, _to, _botProductId);
+  }
+
+  function isApprovedDeveloperAddress(address _developerAddress) private view returns (bool) {
+    uint256 developerId = developerRegistry().owns(_developerAddress);
+    return developerRegistry().approvalStatus(developerId);
   }
 
   function setBotProductData(uint256 botProductId, address botProductAddress, bytes32 botDataHash) private {
