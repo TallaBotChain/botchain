@@ -28,11 +28,15 @@ contract('BotProductRegistry', () => {
 
   beforeEach(async () => {
     botCoin = await BotCoin.new()
+<<<<<<< HEAD
     bc = await newDeveloperRegistry(
       botCoin.address,
       tallaWalletAddress,
       entryPrice
     )
+=======
+    bc = await newDeveloperRegistry(botCoin.address, tallaWalletAddress)
+>>>>>>> refactor transfer and approval test setup for botcoin
     const botCoinSeededAccounts = [
       accounts[1],
       accounts[2],
@@ -44,7 +48,11 @@ contract('BotProductRegistry', () => {
         botCoin,
         bc.address,
         botCoinSeededAccounts[i],
+<<<<<<< HEAD
         entryPrice
+=======
+        100
+>>>>>>> refactor transfer and approval test setup for botcoin
       )
     }
     bom = await newBotProductRegistry(bc.address)
