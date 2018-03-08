@@ -1,6 +1,6 @@
 /* globals contract artifacts web3 describe beforeEach it */
 
-import expectRevert from '../../helpers/expectRevert'
+import expectRevert from './helpers/expectRevert'
 const BigNumber = web3.BigNumber
 const PublicStorage = artifacts.require('PublicStorage.sol')
 const ERC721Token = artifacts.require('ERC721TokenKeyedMock.sol')
