@@ -25,7 +25,7 @@ contract BotCoinPayableRegistry is OwnableKeyed {
 	/**
 	* @dev Returns entry price associated with id
 	*/
-	function getEntryPrice() public view returns (uint256) {
+	function entryPrice() public view returns (uint256) {
 		return _storage.getUint("entryPrice");
 	}
 
@@ -57,7 +57,7 @@ contract BotCoinPayableRegistry is OwnableKeyed {
 	* @dev Transfers Botcoin payment from msg.sender to wallet
 	*/
 	function transferBotCoin() internal {
-    	botCoin().transferFrom(msg.sender, tallaWallet(), getEntryPrice());
+    	botCoin().transferFrom(msg.sender, tallaWallet(), entryPrice());
     }
 
 }

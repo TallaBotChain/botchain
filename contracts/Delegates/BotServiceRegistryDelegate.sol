@@ -125,7 +125,9 @@ contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
     address botServiceAddress, 
     bytes32 dataHash, 
     bytes32 url
-  ) public {
+  )
+    public
+  {
     require(ownerRegistry().mintingAllowed(msg.sender, developerId));
     require(botServiceAddress != 0x0);
     require(dataHash != 0x0);
