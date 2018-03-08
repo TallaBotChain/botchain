@@ -2,12 +2,12 @@ pragma solidity ^0.4.18;
 
 import "../../contracts/Upgradability/PublicStorage.sol";
 import "../../contracts/Upgradability/ERC721TokenKeyed.sol";
-import "../../contracts/Delegates/ApprovableRegistryDelegate.sol";
+import "../../contracts/Registry/ApprovableRegistry.sol";
 
-contract MockApprovableRegistryDelegate is ApprovableRegistryDelegate, ERC721TokenKeyed {
+contract MockApprovableRegistryDelegate is ApprovableRegistry, ERC721TokenKeyed {
 
   function MockApprovableRegistryDelegate(PublicStorage storage_)
-    ApprovableRegistryDelegate(storage_)
+    ApprovableRegistry(storage_)
     ERC721TokenKeyed(storage_)
     public
   { }

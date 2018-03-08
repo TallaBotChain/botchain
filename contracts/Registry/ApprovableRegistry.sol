@@ -2,12 +2,12 @@ pragma solidity ^0.4.18;
 
 import "../Upgradability/OwnableKeyed.sol";
 
-contract ApprovableRegistryDelegate is OwnableKeyed {
+contract ApprovableRegistry is OwnableKeyed {
 
   event ApprovalGranted(uint256 entryId);
   event ApprovalRevoked(uint256 entryId);
 
-  function ApprovableRegistryDelegate(BaseStorage storage_)
+  function ApprovableRegistry(BaseStorage storage_)
     OwnableKeyed(storage_)
     public
   {}

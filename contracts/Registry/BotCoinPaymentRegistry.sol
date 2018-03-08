@@ -1,7 +1,7 @@
 pragma solidity ^0.4.18;
 
 import 'zeppelin-solidity/contracts/token/ERC20/StandardToken.sol';
-import "./Upgradability/OwnableKeyed.sol";
+import "../Upgradability/OwnableKeyed.sol";
 
 /// @title BotCoinPaymentRegistry 
 /// @dev Delegate contract for BotCoinPayment functionality

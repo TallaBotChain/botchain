@@ -2,7 +2,7 @@ pragma solidity ^0.4.18;
 
 import "../Upgradability/StorageConsumer.sol";
 
-contract ActivatableRegistryDelegate is StorageConsumer {
+contract ActivatableRegistry is StorageConsumer {
 
   /**
    * @dev Event for when an entry is activated
@@ -18,9 +18,9 @@ contract ActivatableRegistryDelegate is StorageConsumer {
 
   /**
    * @dev Creates a registry of activatable entries
-   * @param storage_ The BaseStorage contract that stores ActivatableRegistryDelegate's state
+   * @param storage_ The BaseStorage contract that stores ActivatableRegistry's state
    */
-  function ActivatableRegistryDelegate(BaseStorage storage_)
+  function ActivatableRegistry(BaseStorage storage_)
     StorageConsumer(storage_)
     public
   {}
