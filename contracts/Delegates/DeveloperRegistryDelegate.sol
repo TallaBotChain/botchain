@@ -78,22 +78,33 @@ contract DeveloperRegistryDelegate is ApprovableRegistryDelegate, OwnerRegistry,
     DeveloperAdded(msg.sender, _developerId, _data, _url);
   }
 
+  /// @dev Sets dataHash of developerId 
+  /// @param developerId An id associated with the developer
+  /// @param dataHash An dataHash associated with the developer
   function setDeveloperDataHash(uint256 developerId, bytes32 dataHash) private {
     _storage.setBytes32(keccak256("developerDataHash", developerId), dataHash);
   }
 
+  /// @dev Sets url of developerId 
+  /// @param developerId An id associated with the developer
+  /// @param url An url associated with the developer
   function setDeveloperUrl(uint256 developerId, bytes32 url) private {
     _storage.setBytes32(keccak256("developerUrl", developerId), url);
   }
 
+  /// @dev Sets the owner id of a developer
+  /// @param owner address of the owner
+  /// @param developerId An id associated with the developer
   function setOwnerId(address owner, uint256 developerId) private {
     _storage.setUint(keccak256("ownerToId", owner), developerId);
   }
 
+  /// @dev Sets the address of a bot product address
   function setBotProductRegistry(BotProductRegistryDelegate botProductRegistry) private {
     _storage.setAddress("botProductRegistry", botProductRegistry);
   }
 
+  /// @dev Checks if entry exists for id
   function entryExists(uint256 _entryId) private view returns (bool) {
     return ownerOf(_entryId) != 0x0;
   }
