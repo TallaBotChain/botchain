@@ -24,7 +24,7 @@ contract BotInstanceRegistryDelegate is ActivatableRegistry, ApprovableRegistry,
   */
   event BotInstanceCreated(uint256 botInstanceId, uint256 botProductId, address ownerAddress, address botInstanceAddress, bytes32 data);
 
-  /* @dev Constructor for BotInstanceRegistryDelegate */)
+  /** @dev Constructor for BotInstanceRegistryDelegate */
   function BotInstanceRegistryDelegate(BaseStorage storage_)
     ActivatableRegistry(storage_)
     ApprovableRegistry(storage_)
