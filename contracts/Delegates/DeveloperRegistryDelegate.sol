@@ -3,19 +3,19 @@ pragma solidity ^0.4.18;
 import 'zeppelin-solidity/contracts/token/ERC20/StandardToken.sol';
 import "../Upgradability/ERC721TokenKeyed.sol";
 import "../Registry/ApprovableRegistry.sol";
-import '../Registry/BotCoinPaymentRegistry.sol';
+import '../Registry/BotCoinPayableRegistry.sol';
 import "../Registry/OwnerRegistry.sol";
 import './BotProductRegistryDelegate.sol';
 
 /// @title DeveloperRegistryDelegate
 /// @dev Delegate contract for DeveloperRegistry functionality
-contract DeveloperRegistryDelegate is ApprovableRegistry, OwnerRegistry, BotCoinPaymentRegistry, ERC721TokenKeyed {
+contract DeveloperRegistryDelegate is ApprovableRegistry, OwnerRegistry, BotCoinPayableRegistry, ERC721TokenKeyed {
 
   event DeveloperAdded(address owner, uint256 developerId, bytes32 dataHash, bytes32 url);
 
   function DeveloperRegistryDelegate(BaseStorage storage_) 
     ApprovableRegistry(storage_)
-    BotCoinPaymentRegistry(storage_)
+    BotCoinPayableRegistry(storage_)
     ERC721TokenKeyed(storage_)
     public 
     { }

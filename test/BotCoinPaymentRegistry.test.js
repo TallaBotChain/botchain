@@ -18,7 +18,7 @@ const nonOwnerAddr = accounts[3]
 const dataHash = web3.sha3('some data to hash')
 const url = web3.fromAscii('www.google.com')
 
-contract('BotCoinPaymentRegistry', () => {
+contract('BotCoinPayableRegistry', () => {
   let bc, botCoin
 
   beforeEach(async () => {
