@@ -3,11 +3,11 @@ pragma solidity ^0.4.18;
 import 'zeppelin-solidity/contracts/token/ERC20/StandardToken.sol';
 import "../Upgradability/OwnableKeyed.sol";
 
-/// @title BotCoinPaymentRegistry 
+/// @title BotCoinPayableRegistry 
 /// @dev Delegate contract for BotCoinPayment functionality
-contract BotCoinPaymentRegistry is OwnableKeyed {
+contract BotCoinPayableRegistry is OwnableKeyed {
 
-	function BotCoinPaymentRegistry(BaseStorage storage_)
+	function BotCoinPayableRegistry(BaseStorage storage_)
 		OwnableKeyed(storage_)
 	    public
 		{}
