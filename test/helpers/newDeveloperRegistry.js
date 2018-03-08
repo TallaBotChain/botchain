@@ -10,10 +10,9 @@ export default async function newDeveloperRegistry (botCoinAddress, tallaWalletA
   const publicStorage = await PublicStorage.new()
   const developerRegistryDelegate = await DeveloperRegistryDelegate.new()
 
-
   let developerRegistry = await DeveloperRegistry.new(
     publicStorage.address,
-    developerRegistryDelegate.address, 
+    developerRegistryDelegate.address,
     botCoinAddress
   )
   developerRegistry = _.extend(
