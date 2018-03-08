@@ -13,8 +13,8 @@ contract DeveloperRegistryDelegate is ApprovableRegistry, OwnerRegistry, BotCoin
   /// @dev Event for when developer is added
   /// @param owner address of the owner
   /// @param developerId An id associated with the developer
-  /// @param dataHash An dataHash associated with the developer
-  /// @param url An url associated with the developer
+  /// @param dataHash A dataHash associated with the developer
+  /// @param url A url associated with the developer
   event DeveloperAdded(address owner, uint256 developerId, bytes32 dataHash, bytes32 url);
 
   /// @dev Constructor for DeveloperRegistryDelegate
