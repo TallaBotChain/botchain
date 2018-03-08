@@ -1,19 +1,19 @@
 pragma solidity ^0.4.18;
 
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
-import "./OwnableRegistry.sol";
-import "./ActivatableRegistryDelegate.sol";
-import "./ApprovableRegistryDelegate.sol";
+import "../Registry/OwnableRegistry.sol";
+import "../Registry/ActivatableRegistry.sol";
+import "../Registry/ApprovableRegistry.sol";
 
 /// @dev handles ownership of bot services
-contract BotServiceRegistryDelegate is ActivatableRegistryDelegate, ApprovableRegistryDelegate, OwnableRegistry {
+contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, OwnableRegistry {
   using SafeMath for uint256;
 
   event BotServiceCreated(uint256 botServiceId, uint256 developerId, address developerOwnerAddress, address botServiceAddress, bytes32 data);
 
   function BotServiceRegistryDelegate(BaseStorage storage_)
-    ActivatableRegistryDelegate(storage_)
-    ApprovableRegistryDelegate(storage_)
+    ActivatableRegistry(storage_)
+    ApprovableRegistry(storage_)
     OwnableRegistry(storage_)
     public
   {}

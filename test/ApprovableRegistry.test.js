@@ -13,7 +13,7 @@ const PublicStorage = artifacts.require('./PublicStorage.sol')
 const MockProxyInstance = artifacts.require('./MockProxyInstance.sol')
 const MockApprovableRegistryDelegate = artifacts.require('./MockApprovableRegistryDelegate.sol')
 
-contract('ApprovableRegistryDelegate', () => {
+contract('ApprovableRegistry', () => {
   let approvableRegistry
 
   beforeEach(async () => {
