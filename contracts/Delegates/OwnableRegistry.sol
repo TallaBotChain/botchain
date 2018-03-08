@@ -2,13 +2,14 @@ pragma solidity ^0.4.18;
 
 import "zeppelin-solidity/contracts/math/SafeMath.sol";
 import "../Upgradability/StorageConsumer.sol";
+import "./Registry.sol";
 import "./OwnerRegistry.sol";
 
 /**
  * @title OwnableRegistry
  * Registry of token ID's that are owned by another token from a different registry
  */
-contract OwnableRegistry is StorageConsumer {
+contract OwnableRegistry is Registry, StorageConsumer {
   using SafeMath for uint256;
 
   function OwnableRegistry(BaseStorage storage_) StorageConsumer(storage_) public {}
