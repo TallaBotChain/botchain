@@ -3,9 +3,9 @@ pragma solidity ^0.4.18;
 import "./Upgradability/OwnableProxy.sol";
 import "./Upgradability/PublicStorage.sol";
 
-contract BotProductRegistry is OwnableProxy {
+contract BotEntryRegistry is OwnableProxy {
 
-  function BotProductRegistry(
+  function BotEntryRegistry(
     address ownerRegistryAddress,
     PublicStorage storage_,
     address delegate

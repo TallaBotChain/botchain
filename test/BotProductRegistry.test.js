@@ -19,7 +19,7 @@ const dataHash2 = web3.sha3('other data to hash')
 const devUrl = web3.fromAscii('some url to hash')
 
 const PublicStorage = artifacts.require('./PublicStorage.sol')
-const BotProductRegistry = artifacts.require('./BotProductRegistry.sol')
+const BotEntryRegistry = artifacts.require('./BotEntryRegistry.sol')
 const BotProductRegistryDelegate = artifacts.require('./BotProductRegistryDelegate.sol')
 const BotCoin = artifacts.require('BotCoin')
 
@@ -169,7 +169,7 @@ contract('BotProductRegistry', () => {
 async function newBotProductRegistry (developerRegistryAddress) {
   const publicStorage = await PublicStorage.new()
   const botProductRegistryDelegate = await BotProductRegistryDelegate.new()
-  const bom = await BotProductRegistry.new(
+  const bom = await BotEntryRegistry.new(
     developerRegistryAddress,
     publicStorage.address,
     botProductRegistryDelegate.address
