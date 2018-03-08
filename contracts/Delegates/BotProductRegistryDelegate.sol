@@ -13,6 +13,12 @@ import '../Registry/BotCoinPayableRegistry.sol';
 contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, BotCoinPayableRegistry, OwnableRegistry, OwnerRegistry {
   using SafeMath for uint256;
 
+  /// @dev Event for when bot product is created
+  /// @param botProductId An id associated with the bot product  
+  /// @param developerId An id associated with the developer
+  /// @param developerOwnerAddress An address associated with the developer owner
+  /// @param botProductAddress An address associated with the bot product
+  /// @param data Data associated with the bot product
   event BotProductCreated(uint256 botProductId, uint256 developerId, address developerOwnerAddress, address botProductAddress, bytes32 data);
 
   /// @dev Constructor for BotProductRegistryDelegate
