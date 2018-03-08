@@ -5,13 +5,13 @@ import "../Upgradability/StorageConsumer.sol";
 import "./OwnerRegistry.sol";
 
 /**
- * @title TokenOwnedRegistry
+ * @title OwnableRegistry
  * Registry of token ID's that are owned by another token from a different registry
  */
-contract TokenOwnedRegistry is StorageConsumer {
+contract OwnableRegistry is StorageConsumer {
   using SafeMath for uint256;
 
-  function TokenOwnedRegistry(BaseStorage storage_) StorageConsumer(storage_) public {}
+  function OwnableRegistry(BaseStorage storage_) StorageConsumer(storage_) public {}
 
   function ownerRegistry() public view returns (OwnerRegistry) {
     return OwnerRegistry(_storage.getAddress("ownerRegistryAddress"));

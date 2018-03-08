@@ -1,13 +1,13 @@
 pragma solidity ^0.4.18;
 
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
-import "./TokenOwnedRegistry.sol";
+import "./OwnableRegistry.sol";
 import "./ActivatableRegistryDelegate.sol";
 import "./ApprovableRegistryDelegate.sol";
 
 /// @dev Non-Fungible token (ERC-721) that handles ownership and transfer
 ///  of Bots. Bots can be transferred to and from approved developers.
-contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRegistryDelegate, TokenOwnedRegistry {
+contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRegistryDelegate, OwnableRegistry {
   using SafeMath for uint256;
 
   event BotProductCreated(uint256 botProductId, uint256 developerId, address developerOwnerAddress, address botProductAddress, bytes32 data);
@@ -15,7 +15,7 @@ contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRe
   function BotProductRegistryDelegate(BaseStorage storage_)
     ActivatableRegistryDelegate(storage_)
     ApprovableRegistryDelegate(storage_)
-    TokenOwnedRegistry(storage_)
+    OwnableRegistry(storage_)
     public
   {}
 
