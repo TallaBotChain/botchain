@@ -6,7 +6,6 @@ import "./ApprovableRegistryDelegate.sol";
 import './BotProductRegistryDelegate.sol';
 import '../BotCoinPaymentRegistry.sol';
 import "./OwnerRegistry.sol";
-import 'zeppelin-solidity/contracts/token/ERC20/StandardToken.sol';
 
 /// @title DeveloperRegistryDelegate
 /// @dev Delegate contract for DeveloperRegistry functionality
