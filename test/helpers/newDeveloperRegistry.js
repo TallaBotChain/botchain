@@ -25,4 +25,3 @@ export default async function newDeveloperRegistry (botCoinAddress, tallaWalletA
 
   return developerRegistry
 }
-

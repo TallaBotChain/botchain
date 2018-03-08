@@ -1,9 +1,8 @@
 pragma solidity ^0.4.18;
 
-import "../Upgradability/OwnableKeyed.sol";
-import "../Upgradability/ERC721TokenKeyed.sol";
+import "../Upgradability/StorageConsumer.sol";
 
-contract ActivatableRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
+contract ActivatableRegistryDelegate is StorageConsumer {
 
   /**
    * @dev Event for when an entry is activated
@@ -22,8 +21,7 @@ contract ActivatableRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
    * @param storage_ The BaseStorage contract that stores ActivatableRegistryDelegate's state
    */
   function ActivatableRegistryDelegate(BaseStorage storage_)
-    OwnableKeyed(storage_)
-    ERC721TokenKeyed(storage_)
+    StorageConsumer(storage_)
     public
   {}
 
@@ -41,7 +39,7 @@ contract ActivatableRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
    * @param _entryId The ID of the entry to grant approval for.
    */
   function activate(uint256 _entryId) public {
-    require(ownerOf(_entryId) == msg.sender);
+    require(checkEntryOwnership(_entryId));
     require(!active(_entryId));
 
     setActiveStatus(_entryId, true);
@@ -54,7 +52,7 @@ contract ActivatableRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
    * @param _entryId The ID of the entry to revoke approval for.
    */
   function deactivate(uint256 _entryId) public {
-    require(ownerOf(_entryId) == msg.sender);
+    require(checkEntryOwnership(_entryId));
     require(active(_entryId));
 
     setActiveStatus(_entryId, false);
@@ -70,4 +68,7 @@ contract ActivatableRegistryDelegate is ERC721TokenKeyed, OwnableKeyed {
   function setActiveStatus(uint256 _entryId, bool _approvalStatus) internal {
     _storage.setBool(keccak256("activeStatus", _entryId), _approvalStatus);
   }
+
+  function checkEntryOwnership(uint256 _entryId) private view returns (bool);
+
 }

@@ -6,14 +6,14 @@ import "./Upgradability/PublicStorage.sol";
 contract BotProductRegistry is OwnableProxy {
 
   function BotProductRegistry(
-    address developerRegistryAddress,
+    address ownerRegistryAddress,
     PublicStorage storage_,
     address delegate
   )
     OwnableProxy(storage_, delegate)
     public
   {
-    storage_.setAddress("developerRegistryAddress", developerRegistryAddress);
+    storage_.setAddress("ownerRegistryAddress", ownerRegistryAddress);
   }
 
 }

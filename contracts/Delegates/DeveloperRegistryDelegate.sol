@@ -1,25 +1,24 @@
 pragma solidity ^0.4.18;
 
+import 'zeppelin-solidity/contracts/token/ERC20/StandardToken.sol';
+import "../Upgradability/ERC721TokenKeyed.sol";
 import "./ApprovableRegistryDelegate.sol";
 import './BotProductRegistryDelegate.sol';
 import '../BotCoinPaymentRegistry.sol';
-import 'zeppelin-solidity/contracts/token/ERC20/StandardToken.sol';
+import "./OwnerRegistry.sol";
 
 /// @title DeveloperRegistryDelegate
 /// @dev Delegate contract for DeveloperRegistry functionality
-contract DeveloperRegistryDelegate is ApprovableRegistryDelegate, BotCoinPaymentRegistry {
+contract DeveloperRegistryDelegate is ApprovableRegistryDelegate, OwnerRegistry, BotCoinPaymentRegistry, ERC721TokenKeyed {
 
   event DeveloperAdded(address owner, uint256 developerId, bytes32 dataHash, bytes32 url);
 
   function DeveloperRegistryDelegate(BaseStorage storage_) 
-    BotCoinPaymentRegistry(storage_) 
-    ApprovableRegistryDelegate(storage_) 
+    ApprovableRegistryDelegate(storage_)
+    BotCoinPaymentRegistry(storage_)
+    ERC721TokenKeyed(storage_)
     public 
     { }
-
-  function botProductProductRegistry() public view returns (BotProductRegistryDelegate) {
-    return BotProductRegistryDelegate(_storage.getAddress("botProductRegistry"));
-  }
 
   function developerDataHash(uint256 developerId) public view returns (bytes32) {
     return _storage.getBytes32(keccak256("developerDataHash", developerId));
@@ -33,6 +32,14 @@ contract DeveloperRegistryDelegate is ApprovableRegistryDelegate, BotCoinPayment
     return _storage.getUint(keccak256("ownerToId", owner));
   }
 
+  function ownerOfEntry(uint256 _developerId) public view returns (address _owner) {
+    return ownerOf(_developerId);
+  }
+
+  function mintingAllowed(address minter, uint256 _developerId) public view returns (bool) {
+    return ownerOf(_developerId) == minter && approvalStatus(_developerId) == true;
+  }
+
   /// @dev Adds the sender's address as a new developer. defaults to unapproved.
   /// @param _data A hash of the data associated with the new developer
   /// @param _url A url associated with this developer
@@ -41,7 +48,7 @@ contract DeveloperRegistryDelegate is ApprovableRegistryDelegate, BotCoinPayment
     require(_data != 0x0);
     require(_url != 0x0);
 
-    uint256 _developerId = super.totalSupply().add(1);
+    uint256 _developerId = totalSupply().add(1);
 
     setDeveloperDataHash(_developerId, _data);
     setDeveloperUrl(_developerId, _url);
@@ -49,7 +56,7 @@ contract DeveloperRegistryDelegate is ApprovableRegistryDelegate, BotCoinPayment
 
     transferBotCoin();
 
-    super._mint(msg.sender, _developerId);
+    _mint(msg.sender, _developerId);
 
     DeveloperAdded(msg.sender, _developerId, _data, _url);
   }
@@ -68,6 +75,10 @@ contract DeveloperRegistryDelegate is ApprovableRegistryDelegate, BotCoinPayment
 
   function setBotProductRegistry(BotProductRegistryDelegate botProductRegistry) private {
     _storage.setAddress("botProductRegistry", botProductRegistry);
+  }
+
+  function entryExists(uint256 _entryId) private view returns (bool) {
+    return ownerOf(_entryId) != 0x0;
   }
 
 }

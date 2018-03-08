@@ -1,32 +1,24 @@
 pragma solidity ^0.4.18;
 
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
+import "./OwnableRegistry.sol";
+import "./OwnerRegistry.sol";
 import "./ActivatableRegistryDelegate.sol";
 import "./ApprovableRegistryDelegate.sol";
-import './DeveloperRegistryDelegate.sol';
 
 /// @dev Non-Fungible token (ERC-721) that handles ownership and transfer
 ///  of Bots. Bots can be transferred to and from approved developers.
-contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRegistryDelegate {
+contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRegistryDelegate, OwnableRegistry, OwnerRegistry {
   using SafeMath for uint256;
 
-  event BotProductCreated(uint256 botProductId, address botProductOwner, address botProductAddress, bytes32 data);
-  event BotProductDisabled(uint256 botProductId);
-  event BotProductEnabled(uint256 botProductId);
+  event BotProductCreated(uint256 botProductId, uint256 developerId, address developerOwnerAddress, address botProductAddress, bytes32 data);
 
   function BotProductRegistryDelegate(BaseStorage storage_)
     ActivatableRegistryDelegate(storage_)
     ApprovableRegistryDelegate(storage_)
+    OwnableRegistry(storage_)
     public
   {}
-
-  function developerRegistry() public view returns (DeveloperRegistryDelegate) {
-    return DeveloperRegistryDelegate(_storage.getAddress("developerRegistryAddress"));
-  }
-  
-  function botProductDisabledStatus(uint256 botProductId) public view returns (bool) {
-    return _storage.getBool(keccak256("botDisabledStatuses", botProductId));
-  }
 
   function botProductAddress(uint botProductId) public view returns (address) {
     return _storage.getAddress(keccak256("botProductAddresses", botProductId));
@@ -50,45 +42,47 @@ contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRe
     address _botProductAddress,
     bytes32 _data
   ) {
-    _owner = super.ownerOf(botProductId);
+    _owner = ownerOfEntry(botProductId); 
     _botProductAddress = botProductAddress(botProductId);
     _data = botProductDataHash(botProductId);
   }
 
+  function mintingAllowed(address _minter, uint256 _botProductId) public view returns (bool) {
+    uint256 developerId = ownerOf(_botProductId);
+    return ownerRegistry().mintingAllowed(_minter, developerId) && ownerOfEntry(_botProductId) == _minter && approvalStatus(_botProductId) == true && active(_botProductId) == true;
+  }
+
+  function ownerOfEntry(uint256 _botProductId) public view returns (address) {
+    uint256 developerId = ownerOf(_botProductId);
+    return ownerRegistry().ownerOfEntry(developerId);
+  }
+
   /// @dev Creates a new bot product.
+  /// @param developerId ID of the developer that will own this bot product
   /// @param botProductAddress Address of the bot
   /// @param dataHash Hash of data associated with the bot
-  function createBotProduct(address botProductAddress, bytes32 dataHash) public {
-    require(isApprovedDeveloperAddress(msg.sender));
+  function createBotProduct(uint256 developerId, address botProductAddress, bytes32 dataHash) public {
+    require(ownerRegistry().mintingAllowed(msg.sender, developerId));
     require(botProductAddress != 0x0);
     require(dataHash != 0x0);
     require(!botProductAddressExists(botProductAddress));
 
-    uint256 botProductId = super.totalSupply().add(1);
-    super._mint(msg.sender, botProductId);
+    uint256 botProductId = totalSupply().add(1);
+    _mint(developerId, botProductId);
     setBotProductData(botProductId, botProductAddress, dataHash);
     setBotProductIdForAddress(botProductAddress, botProductId);
     setApprovalStatus(botProductId, true);
     setActiveStatus(botProductId, true);
 
-    BotProductCreated(botProductId, msg.sender, botProductAddress, dataHash);
+    BotProductCreated(botProductId, developerId, msg.sender, botProductAddress, dataHash);
   }
 
-  /**
-  * @dev Internal function to clear current approval and transfer the ownership of a given bot product ID
-  * @param _from address which you want to send a bot product from
-  * @param _to address which you want to transfer the bot product to
-  * @param _botProductId uint256 ID of the bot product to be transferred
-  */
-  function clearApprovalAndTransfer(address _from, address _to, uint256 _botProductId) internal {
-    require(approvalStatus(_botProductId) == true);
-    require(isApprovedDeveloperAddress(_to));
-    super.clearApprovalAndTransfer(_from, _to, _botProductId);
+  function checkEntryOwnership(uint256 _botProductId) private view returns (bool) {
+    return ownerOfEntry(_botProductId) == msg.sender;
   }
 
-  function isApprovedDeveloperAddress(address _developerAddress) private view returns (bool) {
-    uint256 developerId = developerRegistry().owns(_developerAddress);
-    return developerRegistry().approvalStatus(developerId);
+  function entryExists(uint256 _botProductId) private view returns (bool) {
+    return ownerOfEntry(_botProductId) != 0x0;
   }
 
   function setBotProductData(uint256 botProductId, address botProductAddress, bytes32 botDataHash) private {
