@@ -12,8 +12,12 @@ import "./OwnerRegistry.sol";
 contract OwnableRegistry is Registry, StorageConsumer {
   using SafeMath for uint256;
 
+  /* @dev Constructor for OwnableRegistry */
   function OwnableRegistry(BaseStorage storage_) StorageConsumer(storage_) public {}
 
+  /**
+  * @dev Gets address for owner registry
+  */
   function ownerRegistry() public view returns (OwnerRegistry) {
     return OwnerRegistry(_storage.getAddress("ownerRegistryAddress"));
   }
