@@ -33,16 +33,12 @@ contract DeveloperRegistryDelegate is ApprovableRegistryDelegate, OwnerRegistry,
     return _storage.getUint(keccak256("ownerToId", owner));
   }
 
-  function canMintOwnedEntry(address _owner) public view returns (bool) {
-    return approvalStatus(entryForOwner(_owner));
+  function ownerOfEntry(uint256 _developerId) public view returns (address _owner) {
+    return ownerOf(_developerId);
   }
 
-  function entryForOwner(address _owner) public view returns (uint256) {
-    return owns(_owner);
-  }
-
-  function ownerForEntry(uint256 _devloperId) public view returns (address) {
-    return ownerOf(_devloperId);
+  function mintingAllowed(address minter, uint256 _developerId) public view returns (bool) {
+    return ownerOf(_developerId) == minter && approvalStatus(_developerId) == true;
   }
 
   /// @dev Adds the sender's address as a new developer. defaults to unapproved.

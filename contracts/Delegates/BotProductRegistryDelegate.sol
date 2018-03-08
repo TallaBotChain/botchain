@@ -2,12 +2,13 @@ pragma solidity ^0.4.18;
 
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
 import "./OwnableRegistry.sol";
+import "./OwnerRegistry.sol";
 import "./ActivatableRegistryDelegate.sol";
 import "./ApprovableRegistryDelegate.sol";
 
 /// @dev Non-Fungible token (ERC-721) that handles ownership and transfer
 ///  of Bots. Bots can be transferred to and from approved developers.
-contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRegistryDelegate, OwnableRegistry {
+contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRegistryDelegate, OwnableRegistry, OwnerRegistry {
   using SafeMath for uint256;
 
   event BotProductCreated(uint256 botProductId, uint256 developerId, address developerOwnerAddress, address botProductAddress, bytes32 data);
@@ -41,22 +42,32 @@ contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRe
     address _botProductAddress,
     bytes32 _data
   ) {
-    _owner = ownerAddressOf(botProductId); 
+    _owner = ownerOfEntry(botProductId); 
     _botProductAddress = botProductAddress(botProductId);
     _data = botProductDataHash(botProductId);
   }
 
+  function mintingAllowed(address _minter, uint256 _botProductId) public view returns (bool) {
+    uint256 developerId = ownerOf(_botProductId);
+    return ownerRegistry().mintingAllowed(_minter, developerId) && ownerOfEntry(_botProductId) == _minter && approvalStatus(_botProductId) == true && active(_botProductId) == true;
+  }
+
+  function ownerOfEntry(uint256 _botProductId) public view returns (address) {
+    uint256 developerId = ownerOf(_botProductId);
+    return ownerRegistry().ownerOfEntry(developerId);
+  }
+
   /// @dev Creates a new bot product.
+  /// @param developerId ID of the developer that will own this bot product
   /// @param botProductAddress Address of the bot
   /// @param dataHash Hash of data associated with the bot
-  function createBotProduct(address botProductAddress, bytes32 dataHash) public {
-    require(ownerRegistry().canMintOwnedEntry(msg.sender));
+  function createBotProduct(uint256 developerId, address botProductAddress, bytes32 dataHash) public {
+    require(ownerRegistry().mintingAllowed(msg.sender, developerId));
     require(botProductAddress != 0x0);
     require(dataHash != 0x0);
     require(!botProductAddressExists(botProductAddress));
 
     uint256 botProductId = totalSupply().add(1);
-    uint256 developerId = ownerRegistry().entryForOwner(msg.sender);
     _mint(developerId, botProductId);
     setBotProductData(botProductId, botProductAddress, dataHash);
     setBotProductIdForAddress(botProductAddress, botProductId);
@@ -67,11 +78,11 @@ contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRe
   }
 
   function checkEntryOwnership(uint256 _botProductId) private view returns (bool) {
-    return ownerAddressOf(_botProductId) == msg.sender;
+    return ownerOfEntry(_botProductId) == msg.sender;
   }
 
   function entryExists(uint256 _botProductId) private view returns (bool) {
-    return ownerAddressOf(_botProductId) != 0x0;
+    return ownerOfEntry(_botProductId) != 0x0;
   }
 
   function setBotProductData(uint256 botProductId, address botProductAddress, bytes32 botDataHash) private {

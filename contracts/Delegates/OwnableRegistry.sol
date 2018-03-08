@@ -59,10 +59,6 @@ contract OwnableRegistry is StorageConsumer {
     return ownerTokenId;
   }
 
-  function ownerAddressOf(uint256 _entryId) public view returns (address) {
-    return ownerRegistry().ownerForEntry(ownerOf(_entryId));
-  }
-
   /**
   * @dev Mint token function
   * @param _ownerTokenId uint256 ID of the token that will own the minted token

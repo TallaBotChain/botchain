@@ -19,10 +19,6 @@ contract BotInstanceRegistryDelegate is ActivatableRegistryDelegate, ApprovableR
     public
   {}
 
-  function botProductRegistry() public view returns (BotProductRegistryDelegate) {
-    return BotProductRegistryDelegate(_storage.getAddress("botProductRegistry"));
-  }
-
   function botInstanceAddress(uint botInstanceId) public view returns (address) {
     return _storage.getAddress(keccak256("botInstanceAddresses", botInstanceId));
   }
@@ -45,48 +41,43 @@ contract BotInstanceRegistryDelegate is ActivatableRegistryDelegate, ApprovableR
     address _botInstanceAddress,
     bytes32 _data
   ) {
-    _owner = ownerOfBotInstance(botInstanceId); 
+    _owner = ownerOfEntry(botInstanceId); 
     _botInstanceAddress = botInstanceAddress(botInstanceId);
     _data = botInstanceDataHash(botInstanceId);
   }
 
   /// @dev Creates a new bot product.
+  /// @param botProductId ID of the bot product that will own this bot instance
   /// @param botInstanceAddress Address of the bot
   /// @param dataHash Hash of data associated with the bot
-  function createBotInstance(address botInstanceAddress, bytes32 dataHash) public {
-
-    // TODO: fix this check
-    // require(isApprovedDeveloperAddress(msg.sender));
+  function createBotInstance(uint256 botProductId, address botInstanceAddress, bytes32 dataHash) public {
+    require(ownerRegistry().mintingAllowed(msg.sender, botProductId));
     require(botInstanceAddress != 0x0);
     require(dataHash != 0x0);
     require(!botInstanceAddressExists(botInstanceAddress));
 
     uint256 botInstanceId = totalSupply().add(1);
-
-    // TODO: implement minting
-    // uint256 botProductId = botProductIdFor(msg.sender);
-    // _mint(botProductId, botInstanceId);
+    _mint(botProductId, botInstanceId);
 
     setBotInstanceData(botInstanceId, botInstanceAddress, dataHash);
     setBotInstanceIdForAddress(botInstanceAddress, botInstanceId);
     setApprovalStatus(botInstanceId, true);
     setActiveStatus(botInstanceId, true);
 
-    // BotInstanceCreated(botInstanceId, developerId, msg.sender, botInstanceAddress, dataHash);
+    BotInstanceCreated(botInstanceId, botProductId, msg.sender, botInstanceAddress, dataHash);
   }
 
-  function ownerOfBotInstance(uint256 _botInstanceId) private view returns (address) {
-    // TODO: implement
-    // uint256 developerId = ownerOf(_botInstanceId);
-    // return botProductRegistry().ownerOf(developerId);
+  function ownerOfEntry(uint256 _botInstanceId) public view returns (address) {
+    uint256 botProductId = ownerOf(_botInstanceId);
+    return ownerRegistry().ownerOfEntry(botProductId);
   }
 
   function checkEntryOwnership(uint256 _botInstanceId) private view returns (bool) {
-    return ownerOfBotInstance(_botInstanceId) == msg.sender;
+    ownerOfEntry(_botInstanceId) == msg.sender;
   }
 
   function entryExists(uint256 _botInstanceId) private view returns (bool) {
-    return ownerOfBotInstance(_botInstanceId) != 0x0;
+    return ownerOf(_botInstanceId) > 0;
   }
 
   function setBotInstanceData(uint256 botInstanceId, address botInstanceAddress, bytes32 botDataHash) private {
