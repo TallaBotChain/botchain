@@ -4,7 +4,6 @@ import 'zeppelin-solidity/contracts/math/SafeMath.sol';
 import "./TokenOwnedRegistry.sol";
 import "./ActivatableRegistryDelegate.sol";
 import "./ApprovableRegistryDelegate.sol";
-import './DeveloperRegistryDelegate.sol';
 
 /// @dev Non-Fungible token (ERC-721) that handles ownership and transfer
 ///  of Bots. Bots can be transferred to and from approved developers.
@@ -19,10 +18,6 @@ contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRe
     TokenOwnedRegistry(storage_)
     public
   {}
-
-  function developerRegistry() public view returns (DeveloperRegistryDelegate) {
-    return DeveloperRegistryDelegate(_storage.getAddress("developerRegistryAddress"));
-  }
 
   function botProductAddress(uint botProductId) public view returns (address) {
     return _storage.getAddress(keccak256("botProductAddresses", botProductId));
@@ -46,7 +41,7 @@ contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRe
     address _botProductAddress,
     bytes32 _data
   ) {
-    _owner = ownerOfBotProduct(botProductId); 
+    _owner = ownerAddressOf(botProductId); 
     _botProductAddress = botProductAddress(botProductId);
     _data = botProductDataHash(botProductId);
   }
@@ -55,13 +50,13 @@ contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRe
   /// @param botProductAddress Address of the bot
   /// @param dataHash Hash of data associated with the bot
   function createBotProduct(address botProductAddress, bytes32 dataHash) public {
-    require(isApprovedDeveloperAddress(msg.sender));
+    require(ownerRegistry().canMintOwnedEntry(msg.sender));
     require(botProductAddress != 0x0);
     require(dataHash != 0x0);
     require(!botProductAddressExists(botProductAddress));
 
     uint256 botProductId = totalSupply().add(1);
-    uint256 developerId = developerIdFor(msg.sender);
+    uint256 developerId = ownerRegistry().entryForOwner(msg.sender);
     _mint(developerId, botProductId);
     setBotProductData(botProductId, botProductAddress, dataHash);
     setBotProductIdForAddress(botProductAddress, botProductId);
@@ -71,29 +66,12 @@ contract BotProductRegistryDelegate is ActivatableRegistryDelegate, ApprovableRe
     BotProductCreated(botProductId, developerId, msg.sender, botProductAddress, dataHash);
   }
 
-  function isApprovedDeveloperAddress(address _developerAddress) private view returns (bool) {
-    return isApprovedDeveloperId(developerIdFor(_developerAddress));
-  }
-
-  function isApprovedDeveloperId(uint256 _developerId) private view returns (bool) {
-    return developerRegistry().approvalStatus(_developerId);
-  }
-
-  function developerIdFor(address _developerAddress) private view returns (uint256) {
-    return developerRegistry().owns(_developerAddress);
-  }
-
-  function ownerOfBotProduct(uint256 _botProductId) private view returns (address) {
-    uint256 developerId = ownerOf(_botProductId);
-    return developerRegistry().ownerOf(developerId);
-  }
-
   function checkEntryOwnership(uint256 _botProductId) private view returns (bool) {
-    return ownerOfBotProduct(_botProductId) == msg.sender;
+    return ownerAddressOf(_botProductId) == msg.sender;
   }
 
   function entryExists(uint256 _botProductId) private view returns (bool) {
-    return ownerOfBotProduct(_botProductId) != 0x0;
+    return ownerAddressOf(_botProductId) != 0x0;
   }
 
   function setBotProductData(uint256 botProductId, address botProductAddress, bytes32 botDataHash) private {

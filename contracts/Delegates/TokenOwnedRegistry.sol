@@ -2,6 +2,7 @@ pragma solidity ^0.4.18;
 
 import "zeppelin-solidity/contracts/math/SafeMath.sol";
 import "../Upgradability/StorageConsumer.sol";
+import "./OwnerRegistry.sol";
 
 /**
  * @title TokenOwnedRegistry
@@ -11,6 +12,10 @@ contract TokenOwnedRegistry is StorageConsumer {
   using SafeMath for uint256;
 
   function TokenOwnedRegistry(BaseStorage storage_) StorageConsumer(storage_) public {}
+
+  function ownerRegistry() public view returns (OwnerRegistry) {
+    return OwnerRegistry(_storage.getAddress("ownerRegistryAddress"));
+  }
 
   /**
   * @dev Gets the total amount of tokens stored by the contract
@@ -52,6 +57,10 @@ contract TokenOwnedRegistry is StorageConsumer {
     uint256 ownerTokenId = getTokenOwner(_tokenId);
     require(ownerTokenId != 0);
     return ownerTokenId;
+  }
+
+  function ownerAddressOf(uint256 _entryId) public view returns (address) {
+    return ownerRegistry().ownerForEntry(ownerOf(_entryId));
   }
 
   /**

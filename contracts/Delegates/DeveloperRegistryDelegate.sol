@@ -5,11 +5,12 @@ import "../Upgradability/ERC721TokenKeyed.sol";
 import "./ApprovableRegistryDelegate.sol";
 import './BotProductRegistryDelegate.sol';
 import '../BotCoinPaymentRegistry.sol';
+import "./OwnerRegistry.sol";
 import 'zeppelin-solidity/contracts/token/ERC20/StandardToken.sol';
 
 /// @title DeveloperRegistryDelegate
 /// @dev Delegate contract for DeveloperRegistry functionality
-contract DeveloperRegistryDelegate is ApprovableRegistryDelegate, BotCoinPaymentRegistry, ERC721TokenKeyed {
+contract DeveloperRegistryDelegate is ApprovableRegistryDelegate, OwnerRegistry, BotCoinPaymentRegistry, ERC721TokenKeyed {
 
   event DeveloperAdded(address owner, uint256 developerId, bytes32 dataHash, bytes32 url);
 
@@ -30,6 +31,18 @@ contract DeveloperRegistryDelegate is ApprovableRegistryDelegate, BotCoinPayment
 
   function owns(address owner) public view returns (uint256) {
     return _storage.getUint(keccak256("ownerToId", owner));
+  }
+
+  function canMintOwnedEntry(address _owner) public view returns (bool) {
+    return approvalStatus(entryForOwner(_owner));
+  }
+
+  function entryForOwner(address _owner) public view returns (uint256) {
+    return owns(_owner);
+  }
+
+  function ownerForEntry(uint256 _devloperId) public view returns (address) {
+    return ownerOf(_devloperId);
   }
 
   /// @dev Adds the sender's address as a new developer. defaults to unapproved.
