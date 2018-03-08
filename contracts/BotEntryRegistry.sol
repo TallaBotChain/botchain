@@ -8,12 +8,14 @@ contract BotEntryRegistry is OwnableProxy {
   function BotEntryRegistry(
     address ownerRegistryAddress,
     PublicStorage storage_,
-    address delegate
+    address delegate,
+    address botCoinAddress
   )
     OwnableProxy(storage_, delegate)
     public
   {
     storage_.setAddress("ownerRegistryAddress", ownerRegistryAddress);
+  	storage_.setAddress("botCoinAddress", botCoinAddress);
   }
 
 }

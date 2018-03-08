@@ -33,6 +33,12 @@ contract('BotProductRegistry', () => {
       tallaWalletAddress,
       entryPrice
     )
+    bom = await newBotProductRegistry(
+      bc.address,
+      botCoin.address,
+      tallaWalletAddress,
+      entryPrice
+    )
     const botCoinSeededAccounts = [
       accounts[1],
       accounts[2],
@@ -46,8 +52,13 @@ contract('BotProductRegistry', () => {
         botCoinSeededAccounts[i],
         entryPrice
       )
+      await botCoinTransferApproveSetup(
+        botCoin,
+        bom.address,
+        botCoinSeededAccounts[i],
+        entryPrice
+      )
     }
-    bom = await newBotProductRegistry(bc.address)
   })
 
   describe('createBotProduct()', () => {
@@ -166,23 +177,33 @@ contract('BotProductRegistry', () => {
   })
 })
 
-async function newBotProductRegistry (developerRegistryAddress) {
+async function newBotProductRegistry (registryAddress, botCoinAddress, tallaWalletAddress, entryPrice) {
   const publicStorage = await PublicStorage.new()
   const botProductRegistryDelegate = await BotProductRegistryDelegate.new()
-  const bom = await BotEntryRegistry.new(
-    developerRegistryAddress,
+  let botProductRegistry = await BotEntryRegistry.new(
+    registryAddress,
     publicStorage.address,
-    botProductRegistryDelegate.address
+    botProductRegistryDelegate.address,
+    botCoinAddress
   )
-  return _.extend(bom, await BotProductRegistryDelegate.at(bom.address))
+
+  botProductRegistry = _.extend(
+    botProductRegistry,
+    await BotProductRegistryDelegate.at(botProductRegistry.address)
+  )
+
+  await botProductRegistry.setTallaWallet(tallaWalletAddress)
+  await botProductRegistry.setEntryPrice(entryPrice)
+
+  return botProductRegistry
 }
 
 async function botCoinTransferApproveSetup (
   botCoin,
-  developerRegistryAddress,
+  registryAddress,
   transferFromAddress,
   amount
 ) {
-  await botCoin.transfer(transferFromAddress, amount)
-  await botCoin.approve(developerRegistryAddress, amount, { from: transferFromAddress })
+  await botCoin.transfer(transferFromAddress, 100000000000)
+  await botCoin.approve(registryAddress, amount * 3, { from: transferFromAddress })
 }

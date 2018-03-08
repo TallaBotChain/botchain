@@ -4,9 +4,10 @@ import 'zeppelin-solidity/contracts/math/SafeMath.sol';
 import "../Registry/OwnableRegistry.sol";
 import "../Registry/ActivatableRegistry.sol";
 import "../Registry/ApprovableRegistry.sol";
+import '../Registry/BotCoinPayableRegistry.sol';
 
 /// @dev handles ownership of bot services
-contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, OwnableRegistry {
+contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, BotCoinPayableRegistry, OwnableRegistry {
   using SafeMath for uint256;
 
   event BotServiceCreated(uint256 botServiceId, uint256 developerId, address developerOwnerAddress, address botServiceAddress, bytes32 data);
@@ -14,6 +15,7 @@ contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   function BotServiceRegistryDelegate(BaseStorage storage_)
     ActivatableRegistry(storage_)
     ApprovableRegistry(storage_)
+    BotCoinPayableRegistry(storage_)
     OwnableRegistry(storage_)
     public
   {}
@@ -61,6 +63,9 @@ contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
     require(!botServiceAddressExists(botServiceAddress));
 
     uint256 botServiceId = totalSupply().add(1);
+
+    transferBotCoin();
+
     _mint(developerId, botServiceId);
     setBotServiceData(botServiceId, botServiceAddress, dataHash);
     setBotServiceIdForAddress(botServiceAddress, botServiceId);

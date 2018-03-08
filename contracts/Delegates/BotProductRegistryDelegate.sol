@@ -5,10 +5,11 @@ import "../Registry/OwnableRegistry.sol";
 import "../Registry/OwnerRegistry.sol";
 import "../Registry/ActivatableRegistry.sol";
 import "../Registry/ApprovableRegistry.sol";
+import '../Registry/BotCoinPayableRegistry.sol';
 
 /// @dev Non-Fungible token (ERC-721) that handles ownership and transfer
 ///  of Bots. Bots can be transferred to and from approved developers.
-contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, OwnableRegistry, OwnerRegistry {
+contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, BotCoinPayableRegistry, OwnableRegistry, OwnerRegistry {
   using SafeMath for uint256;
 
   event BotProductCreated(uint256 botProductId, uint256 developerId, address developerOwnerAddress, address botProductAddress, bytes32 data);
@@ -16,6 +17,7 @@ contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   function BotProductRegistryDelegate(BaseStorage storage_)
     ActivatableRegistry(storage_)
     ApprovableRegistry(storage_)
+    BotCoinPayableRegistry(storage_)
     OwnableRegistry(storage_)
     public
   {}
@@ -68,6 +70,9 @@ contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
     require(!botProductAddressExists(botProductAddress));
 
     uint256 botProductId = totalSupply().add(1);
+
+    transferBotCoin();
+
     _mint(developerId, botProductId);
     setBotProductData(botProductId, botProductAddress, dataHash);
     setBotProductIdForAddress(botProductAddress, botProductId);
