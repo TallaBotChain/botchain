@@ -94,12 +94,13 @@ contract DeveloperRegistryDelegate is ApprovableRegistry, OwnerRegistry, BotCoin
     _storage.setUint(keccak256("ownerToId", owner), developerId);
   }
 
-  /// @dev Sets the address of a bot product address
+  /// @dev Sets the address of a bot product
   function setBotProductRegistry(BotProductRegistryDelegate botProductRegistry) private {
     _storage.setAddress("botProductRegistry", botProductRegistry);
   }
 
   /// @dev Checks if entry exists for id
+  /// @param _entryId An id associated entry
   function entryExists(uint256 _entryId) private view returns (bool) {
     return ownerOf(_entryId) != 0x0;
   }
