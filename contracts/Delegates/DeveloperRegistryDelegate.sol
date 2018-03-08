@@ -1,6 +1,5 @@
 pragma solidity ^0.4.18;
 
-import 'zeppelin-solidity/contracts/token/ERC20/StandardToken.sol';
 import "../Upgradability/ERC721TokenKeyed.sol";
 import "../Registry/ApprovableRegistry.sol";
 import '../Registry/BotCoinPayableRegistry.sol';
