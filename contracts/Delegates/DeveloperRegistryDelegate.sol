@@ -13,6 +13,7 @@ contract DeveloperRegistryDelegate is ApprovableRegistryDelegate, OwnerRegistry,
 
   event DeveloperAdded(address owner, uint256 developerId, bytes32 dataHash, bytes32 url);
 
+  /// @dev Constructor for DeveloperRegistryDelegate
   function DeveloperRegistryDelegate(BaseStorage storage_) 
     ApprovableRegistryDelegate(storage_)
     BotCoinPaymentRegistry(storage_)
@@ -20,22 +21,38 @@ contract DeveloperRegistryDelegate is ApprovableRegistryDelegate, OwnerRegistry,
     public 
     { }
 
+  /// @dev Returns dataHash of developerId 
+  /// @param _developerId An id associated with the developer
+  /// @returns the developerDataHash
   function developerDataHash(uint256 developerId) public view returns (bytes32) {
     return _storage.getBytes32(keccak256("developerDataHash", developerId));
   }
 
+  /// @dev Returns developerUrl of developerId 
+  /// @param _developerId An id associated with the developer
+  /// @returns the developerUrl
   function developerUrl(uint256 developerId) public view returns (bytes32) {
     return _storage.getBytes32(keccak256("developerUrl", developerId));
   }
 
+  /// @dev Returns id of entry that is owned by the given owner address
+  /// @param owner address of the owner
+  /// @returns the id of the entry
   function owns(address owner) public view returns (uint256) {
     return _storage.getUint(keccak256("ownerToId", owner));
   }
 
+  /// @dev Returns address of owner of entry
+  /// @param _developerId An id associated with the developer
+  /// @returns the address of the owner
   function ownerOfEntry(uint256 _developerId) public view returns (address _owner) {
     return ownerOf(_developerId);
   }
 
+  /// @dev Returns true if minting is allowed
+  /// @param minter Address of minter
+  /// @param _developerId An id associated with the developer
+  /// @returns bool
   function mintingAllowed(address minter, uint256 _developerId) public view returns (bool) {
     return ownerOf(_developerId) == minter && approvalStatus(_developerId) == true;
   }
