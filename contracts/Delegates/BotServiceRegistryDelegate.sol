@@ -6,54 +6,68 @@ import "../Registry/ActivatableRegistry.sol";
 import "../Registry/ApprovableRegistry.sol";
 import '../Registry/BotCoinPayableRegistry.sol';
 
-/// @title BotServiceRegistryDelegate
-/// @dev handles ownership of bot services
+/**
+* @title BotServiceRegistryDelegate
+* @dev handles ownership of bot services
+*/
 contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, BotCoinPayableRegistry, OwnableRegistry {
   using SafeMath for uint256;
 
-  /// @dev Event for when bot service is created
-  /// @param botServiceId An id associated with the bot service  
-  /// @param developerId An id associated with the developer
-  /// @param developerOwnerAddress An address associated with the developer owner
-  /// @param botServiceAddress An address associated with the bot service
-  /// @param data Data associated with the bot service
+  /**
+  * @dev Event for when bot service is created
+  * @param botServiceId An id associated with the bot service  
+  * @param developerId An id associated with the developer
+  * @param developerOwnerAddress An address associated with the developer owner
+  * @param botServiceAddress An address associated with the bot service
+  * @param data Data associated with the bot service
+  */
   event BotServiceCreated(uint256 botServiceId, uint256 developerId, address developerOwnerAddress, address botServiceAddress, bytes32 data);
 
-  /// @dev Constructor for BotServiceRegistryDelegate
+  /** @dev Constructor for BotServiceRegistryDelegate */
   function BotServiceRegistryDelegate(BaseStorage storage_)
     ActivatableRegistry(storage_)
     ApprovableRegistry(storage_)
     BotCoinPayableRegistry(storage_)
     OwnableRegistry(storage_)
     public
-  {}
+    {}
 
-  /// @dev Returns address of botServiceId 
-  /// @param botServiceId An id associated with the bot service
+  /**
+  * @dev Returns address of botServiceId 
+  * @param botServiceId An id associated with the bot service
+  */
   function botServiceAddress(uint botServiceId) public view returns (address) {
     return _storage.getAddress(keccak256("botServiceAddresses", botServiceId));
   }
 
-  /// @dev Returns dataHash of botServiceId 
-  /// @param botServiceId An id associated with the bot service
+  /**
+  * @dev Returns dataHash of botServiceId 
+  * @param botServiceId An id associated with the bot service
+  */
   function botServiceDataHash(uint botServiceId) public view returns (bytes32) {
     return _storage.getBytes32(keccak256("botServiceDataHashes", botServiceId));
   }
 
-  /// @dev Returns id of botServiceAddress 
-  /// @param botServiceAddress An address associated with the bot service
+  /**
+  * @dev Returns id of botServiceAddress 
+  * @param botServiceAddress An address associated with the bot service
+  */
   function botServiceIdForAddress(address botServiceAddress) public view returns (uint256) {
     return _storage.getUint(keccak256("botServiceIdsByAddress", botServiceAddress));
   }
 
-  /// @dev Checks if botServiceAddress exists
-  /// @param botServiceAddress An address associated with the bot service
+  /**
+  * @dev Checks if botServiceAddress exists
+  * @param botServiceAddress An address associated with the bot service
+  */
   function botServiceAddressExists(address botServiceAddress) public view returns (bool) {
     return botServiceIdForAddress(botServiceAddress) > 0;
   }
 
-  /// @dev Returns bot service associated with a bot service id
-  /// @param botServiceId An id associated with the bot service
+  /**
+  * @dev Returns bot service associated with a bot service id
+  * @param botServiceId An id associated with the bot service
+  */
   function getBotService(uint256 botServiceId) public view returns
   (
     address _owner,
@@ -65,17 +79,21 @@ contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
     _data = botServiceDataHash(botServiceId);
   }
 
-  /// @dev Returns address of owner of entry
-  /// @param _botServiceId An id associated with the bot service
+  /**
+  * @dev Returns address of owner of entry
+  * @param _botServiceId An id associated with the bot service
+  */
   function ownerOfEntry(uint256 _botServiceId) public view returns (address) {
     uint256 developerId = ownerOf(_botServiceId);
     return ownerRegistry().ownerOfEntry(developerId);
   }
 
-  /// @dev Creates a new bot service.
-  /// @param developerId ID of the developer that will own this bot service
-  /// @param botServiceAddress Address of the bot service
-  /// @param dataHash Hash of data associated with the bot service
+  /**
+  * @dev Creates a new bot service.
+  * @param developerId ID of the developer that will own this bot service
+  * @param botServiceAddress Address of the bot service
+  * @param dataHash Hash of data associated with the bot service
+  */
   function createBotService(uint256 developerId, address botServiceAddress, bytes32 dataHash) public {
     require(ownerRegistry().mintingAllowed(msg.sender, developerId));
     require(botServiceAddress != 0x0);
@@ -95,30 +113,38 @@ contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
     BotServiceCreated(botServiceId, developerId, msg.sender, botServiceAddress, dataHash);
   }
 
-  /// @dev Checks if botServiceId has entry ownership
-  /// @param _botServiceId An id associated with the bot service
+  /**
+  * @dev Checks if botServiceId has entry ownership
+  * @param _botServiceId An id associated with the bot service
+  */
   function checkEntryOwnership(uint256 _botServiceId) private view returns (bool) {
     return ownerOfEntry(_botServiceId) == msg.sender;
   }
 
-  /// @dev Checks if botServiceId entry exists
-  /// @param _botServiceId An id associated with the bot service
+  /**
+  * @dev Checks if botServiceId entry exists
+  * @param _botServiceId An id associated with the bot service
+  */
   function entryExists(uint256 _botServiceId) private view returns (bool) {
     return ownerOfEntry(_botServiceId) != 0x0;
   }
 
-  /// @dev Sets bot service data
-  /// @param botServiceId An id associated with the bot service
-  /// @param botServiceAddress An address associated with the bot service
-  /// @param botDataHash An data hash associated with the bot service
+  /**
+  * @dev Sets bot service data
+  * @param botServiceId An id associated with the bot service
+  * @param botServiceAddress An address associated with the bot service
+  * @param botDataHash An data hash associated with the bot service
+  */
   function setBotServiceData(uint256 botServiceId, address botServiceAddress, bytes32 botDataHash) private {
     _storage.setAddress(keccak256("botServiceAddresses", botServiceId), botServiceAddress);
     _storage.setBytes32(keccak256("botServiceDataHashes", botServiceId), botDataHash);
   }
 
-  /// @dev Sets bot service id for address
-  /// @param botServiceAddress An address associated with the bot service
-  /// @param botServiceId An id associated with the bot service
+  /**
+  * @dev Sets bot service id for address
+  * @param botServiceAddress An address associated with the bot service
+  * @param botServiceId An id associated with the bot service
+  */
   function setBotServiceIdForAddress(address botServiceAddress, uint256 botServiceId) private {
     _storage.setUint(keccak256("botServiceIdsByAddress", botServiceAddress), botServiceId);
   }
