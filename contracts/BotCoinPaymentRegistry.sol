@@ -1,21 +1,16 @@
 pragma solidity ^0.4.18;
 
 import 'zeppelin-solidity/contracts/token/ERC20/StandardToken.sol';
-import "levelk-upgradability-contracts/contracts/StorageConsumer/StorageConsumer.sol";
+import "levelk-upgradability-contracts/contracts/Implementations/ownership/OwnableKeyed.sol";
 
 /// @title BotCoinPaymentRegistry 
 /// @dev Delegate contract for BotCoinPayment functionality
-contract BotCoinPaymentRegistry is StorageConsumer {
+contract BotCoinPaymentRegistry is OwnableKeyed {
 
-	function BotCoinPaymentRegistry(
-		BaseStorage storage_,
-	    address botCoinAddress
-	)
-		StorageConsumer(storage_)
+	function BotCoinPaymentRegistry(BaseStorage storage_)
+		OwnableKeyed(storage_)
 	    public
-	{
-	  	storage_.setAddress("botCoinAddress", botCoinAddress);
-	}
+		{}
 
 	function tallaWallet() public view returns (address) {
 		return _storage.getAddress("tallaWallet");
@@ -29,17 +24,17 @@ contract BotCoinPaymentRegistry is StorageConsumer {
     	return StandardToken(_storage.getAddress("botCoinAddress"));
   	}
 
-  	function transferBotCoin() {
-    	botCoin().transferFrom(msg.sender, tallaWallet(), getEntryPrice());
-    }
-
-	function setTallaWallet(address tallaWallet) public {
+	function setTallaWallet(address tallaWallet) onlyOwner public {
 		require(tallaWallet != 0x0);
 		_storage.setAddress("tallaWallet", tallaWallet);
 	}
 
-	function setEntryPrice(uint256 entryPrice) public {
+	function setEntryPrice(uint256 entryPrice) onlyOwner public {
 		_storage.setUint("entryPrice", entryPrice);
 	}
+
+	function transferBotCoin() internal {
+    	botCoin().transferFrom(msg.sender, tallaWallet(), getEntryPrice());
+    }
 
 }

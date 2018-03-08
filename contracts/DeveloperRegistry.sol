@@ -8,13 +8,13 @@ contract DeveloperRegistry is OwnableProxy {
 
   function DeveloperRegistry(
     PublicStorage storage_,
-    address developerRegistryDelegateAddress
-    //address botCoinAddress
+    address developerRegistryDelegateAddress,
+    address botCoinAddress
   )
     public
     OwnableProxy(storage_, developerRegistryDelegateAddress)
   {
-  	//storage_.setAddress("botCoinAddress", botCoinAddress);
+  	storage_.setAddress("botCoinAddress", botCoinAddress);
   }
 
 }

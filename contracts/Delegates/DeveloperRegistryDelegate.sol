@@ -12,7 +12,7 @@ contract DeveloperRegistryDelegate is ApprovableRegistryDelegate, BotCoinPayment
   event DeveloperAdded(address owner, uint256 developerId, bytes32 dataHash, bytes32 url);
 
   function DeveloperRegistryDelegate(BaseStorage storage_) 
-    BotCoinPaymentRegistry(storage_, address) 
+    BotCoinPaymentRegistry(storage_) 
     ApprovableRegistryDelegate(storage_) 
     public 
     { }
