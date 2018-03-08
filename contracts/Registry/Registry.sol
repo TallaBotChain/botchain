@@ -5,5 +5,9 @@ pragma solidity ^0.4.18;
  * Interface for a registry
  */
 contract Registry {
-  function ownerOfEntry(uint256 _entryId) public view returns (address _owner);
+	/**
+	* @dev Returns address of owner of entry
+	* @param _entryId An id associated with the entry
+	*/
+  	function ownerOfEntry(uint256 _entryId) public view returns (address _owner);
 }
