@@ -1,4 +1,4 @@
-/* global describe it beforeEach contract */
+/* global describe it beforeEach contract artifacts */
 
 import { expect } from 'chai'
 import { web3 } from './helpers/w3'
@@ -8,13 +8,10 @@ import newDeveloperRegistry from './helpers/newDeveloperRegistry'
 const BotCoin = artifacts.require('BotCoin')
 
 const { accounts } = web3.eth
-const zeroAddr = '0x0000000000000000000000000000000000000000'
 const zeroHash = '0x0000000000000000000000000000000000000000000000000000000000000000'
-const addr = '0x72c2ba659460151cdfbb3cd8005ae7fbe68191b1'
 const tallaWalletAddress = '0x1ae554eea0dcfdd72dcc3fa4034761cf6d041bf3'
 
 const entryPrice = 100
-const nonOwnerAddr = accounts[3]
 const dataHash = web3.sha3('some data to hash')
 const url = web3.fromAscii('www.google.com')
 
