@@ -7,7 +7,7 @@ import "./OwnerRegistry.sol";
 
 /**
  * @title OwnableRegistry
- * Registry of token ID's that are owned by another token from a different registry
+ * @dev Registry of token ID's that are owned by another token from a different registry
  */
 contract OwnableRegistry is Registry, StorageConsumer {
   using SafeMath for uint256;

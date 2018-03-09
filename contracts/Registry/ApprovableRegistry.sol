@@ -2,33 +2,38 @@ pragma solidity ^0.4.18;
 
 import "../Upgradability/OwnableKeyed.sol";
 
+/**
+* @title ApprovableRegistry 
+* @dev Contract for creating a registry of approvable entries
+*/
 contract ApprovableRegistry is OwnableKeyed {
 
   /**
-   * @dev Event for when approval is granted
-   * @param entryId The ID of the entry that was approved
-   */
+  * @dev Event for when approval is granted
+  * @param entryId The ID of the entry that was approved
+  */
   event ApprovalGranted(uint256 entryId);
 
   /**
-   * @dev Event for when approval is revoked
-   * @param entryId The ID of the entry that was revoked
-   */
+  * @dev Event for when approval is revoked
+  * @param entryId The ID of the entry that was revoked
+  */
   event ApprovalRevoked(uint256 entryId);
 
   /**
-   * @dev Creates a registry of approvable entries
-   * @param storage_ The BaseStorage contract that stores ApprovableRegistry's state
-   */
+  * @dev Creates a registry of approvable entries
+  * @param storage_ The BaseStorage contract that stores ApprovableRegistry's state
+  */
   function ApprovableRegistry(BaseStorage storage_)
     OwnableKeyed(storage_)
     public
     {}
 
   /**
-   * @dev Checks approval status of entry
-   * @param _entryId The ID of the entry
-   */
+  * @dev Checks approval status of entry
+  * @param _entryId The ID of the entry
+  * @return true if entry id has approval status
+  */
   function approvalStatus(uint256 _entryId) public view returns (bool) {
     return _storage.getBool(keccak256("approvalStatus", _entryId));
   }
@@ -60,10 +65,10 @@ contract ApprovableRegistry is OwnableKeyed {
   }
 
   /**
-   * @dev Sets the entry's status to _approvalStatus
-   * @param _entryId The ID of the entry
-   * @param _approvalStatus The status that will be set
-   */
+  * @dev Sets the entry's status to _approvalStatus
+  * @param _entryId The ID of the entry
+  * @param _approvalStatus The status that will be set
+  */
   function setApprovalStatus(uint256 _entryId, bool _approvalStatus) internal {
     _storage.setBool(keccak256("approvalStatus", _entryId), _approvalStatus);
   }
@@ -71,6 +76,7 @@ contract ApprovableRegistry is OwnableKeyed {
   /**
   * @dev Checks if entry exists for id
   * @param _entryId An id associated entry
+  * @return true if entry exists for id
   */
   function entryExists(uint256 _entryId) private view returns (bool);
 }
