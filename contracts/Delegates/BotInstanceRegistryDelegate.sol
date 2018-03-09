@@ -14,13 +14,4 @@ contract BotInstanceRegistryDelegate is BotEntryStorableRegistry {
     public
   {}
 
-  /**
-  * @dev Checks if botInstanceId entry exists
-  * @param _botInstanceId An id associated with the bot instance
-  * @return Returns true if entry exists for id
-  */
-  function entryExists(uint256 _botInstanceId) private view returns (bool) {
-    return ownerOf(_botInstanceId) > 0;
-  }
-
 }

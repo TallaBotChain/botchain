@@ -27,13 +27,4 @@ contract BotProductRegistryDelegate is BotEntryStorableRegistry, OwnerRegistry {
     return ownerRegistry().mintingAllowed(_minter, developerId) && ownerOfEntry(_botProductId) == _minter && approvalStatus(_botProductId) == true && active(_botProductId) == true;
   }
 
-  /**
-  * @dev Checks if botProductId entry exists
-  * @param _botProductId The id of the bot product that the bot instance belongs to 
-  * @return Returns true if entry exists for id
-  */
-  function entryExists(uint256 _botProductId) private view returns (bool) {
-    return ownerOfEntry(_botProductId) != 0x0;
-  }
-
 }

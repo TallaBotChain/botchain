@@ -171,9 +171,12 @@ contract BotEntryStorableRegistry is BotCoinPayableRegistry, ApprovableRegistry,
   }
 
   /**
-  * @dev Checks if entry exists for id. Abstract function from ApprovableRegistry
-  * @param _entryId An id associated entry
+  * @dev Checks if an entry exists
+  * @param _entryId An entry id
+  * @return true if an entry with the given id exists
   */
-  function entryExists(uint256 _entryId) private view returns (bool);
+  function entryExists(uint256 _entryId) private view returns (bool) {
+    return ownerOfEntry(_entryId) != 0x0;
+  }
 
 }
