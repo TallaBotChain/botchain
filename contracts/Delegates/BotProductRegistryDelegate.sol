@@ -54,7 +54,7 @@ contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   /**
   * @dev Returns data hash of bot product
   * @param botProductId The id of the bot product that the bot instance belongs to 
-  * @return Reutns data hash corresponding to botProductId
+  * @return Returns data hash corresponding to botProductId
   */
   function botProductDataHash(uint256 botProductId) public view returns (bytes32) {
     return _storage.getBytes32(keccak256("botProductDataHashes", botProductId));
