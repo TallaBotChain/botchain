@@ -5,7 +5,7 @@ import "../Upgradability/OwnableKeyed.sol";
 
 /**
 * @title BotCoinPayableRegistry 
-* @dev Delegate contract for BotCoinPayment functionality
+* @dev Contract for BotCoinPayment functionality
 */
 contract BotCoinPayableRegistry is OwnableKeyed {
 
