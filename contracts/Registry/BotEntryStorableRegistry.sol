@@ -116,7 +116,6 @@ contract BotEntryStorableRegistry is BotCoinPayableRegistry, ApprovableRegistry,
     require(botEntryAddress != 0x0);
     require(dataHash != 0x0);
     require(!botEntryAddressExists(botEntryAddress));
-    require(url != 0x0);
 
     uint256 botEntryId = totalSupply().add(1);
 

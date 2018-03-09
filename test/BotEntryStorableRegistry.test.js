@@ -5,7 +5,7 @@ import { expect } from 'chai'
 import { web3 } from './helpers/w3'
 import expectRevert from './helpers/expectRevert'
 import { hasEvent } from './helpers/event'
-import newDeveloperRegistry from './helpers/newDeveloperRegistry'
+import botCoinTransferApproveSetup from './helpers/botCoinTransferApproveSetup'
 
 const { accounts } = web3.eth
 const zero = '0x0000000000000000000000000000000000000000'
@@ -16,26 +16,22 @@ const tallaWalletAddress = '0x1ae554eea0dcfdd72dcc3fa4034761cf6d041bf3'
 const entryPrice = 100
 const dataHash = web3.sha3('some data to hash')
 const dataHash2 = web3.sha3('other data to hash')
-const devUrl = web3.fromAscii('some url to hash')
 const url = 'www.google.com'
+const initialBotCoinBalance = 100000000000
 
 const PublicStorage = artifacts.require('./PublicStorage.sol')
-const BotEntryRegistry = artifacts.require('./BotEntryRegistry.sol')
-const BotEntryStorableRegistry = artifacts.require('./BotEntryStorableRegistry.sol')
+const MockOwnerRegistry = artifacts.require('./MockOwnerRegistry.sol')
+const BotEntryStorableRegistry = artifacts.require('./MockBotEntryStorableRegistry.sol')
 const BotCoin = artifacts.require('BotCoin')
 
 contract('BotEntryStorableRegistry', () => {
-  let developerRegistry, botEntryStorableRegistry, botCoin
+  let botEntryStorableRegistry, botCoin, ownerRegistry
 
   beforeEach(async () => {
     botCoin = await BotCoin.new()
-    developerRegistry = await newDeveloperRegistry(
-      botCoin.address,
-      tallaWalletAddress,
-      entryPrice
-    )
+    ownerRegistry = await MockOwnerRegistry.new()
     botEntryStorableRegistry = await newBotEntryStorableRegistry(
-      developerRegistry.address,
+      ownerRegistry.address,
       botCoin.address,
       tallaWalletAddress,
       entryPrice
@@ -48,12 +44,7 @@ contract('BotEntryStorableRegistry', () => {
     ]
     for (var i = 0; i < botCoinSeededAccounts.length; i++) {
       await botCoinTransferApproveSetup(
-        botCoin,
-        developerRegistry.address,
-        botCoinSeededAccounts[i],
-        entryPrice
-      )
-      await botCoinTransferApproveSetup(
+        initialBotCoinBalance,
         botCoin,
         botEntryStorableRegistry.address,
         botCoinSeededAccounts[i],
@@ -63,11 +54,6 @@ contract('BotEntryStorableRegistry', () => {
   })
 
   describe('createBotEntry()', () => {
-    beforeEach(async () => {
-      await developerRegistry.addDeveloper(dataHash, devUrl, { from: accounts[1] })
-      await developerRegistry.grantApproval(1)
-    })
-
     describe('when given valid params', () => {
       let txResult
 
@@ -76,6 +62,7 @@ contract('BotEntryStorableRegistry', () => {
       })
 
       it('should add bot with the given owner, bot address, data hash, and url', async () => {
+        await ownerRegistry.setMockOwner(1, accounts[1])
         let bot = await botEntryStorableRegistry.getBotEntry(1)
         expect(bot[0]).to.equal(accounts[1])
         expect(bot[1]).to.equal(botAddr1)
@@ -94,21 +81,21 @@ contract('BotEntryStorableRegistry', () => {
         expect(await botEntryStorableRegistry.active(1)).to.equal(true)
       })
 
+      it('should transfer BotCoin payment', async () => {
+        expect(
+          (await botCoin.balanceOf(accounts[1])).toNumber()
+        ).to.equal(initialBotCoinBalance - entryPrice)
+      })
+
       it('should log BotEntryCreated event', () => {
         expect(hasEvent(txResult, 'BotEntryCreated')).to.equal(true)
       })
     })
 
-    describe('when sender is not the owner of the given developer ID', () => {
+    describe('when minting is not allowed by the owner registry', () => {
       it('should revert', async () => {
-        await expectRevert(botEntryStorableRegistry.createBotEntry(1, botAddr1, dataHash, url, { from: accounts[2] }))
-      })
-    })
-
-    describe('when the given developer ID is not approved', () => {
-      it('should revert', async () => {
-        await developerRegistry.addDeveloper(dataHash, devUrl, { from: accounts[2] })
-        await expectRevert(botEntryStorableRegistry.createBotEntry(2, botAddr1, dataHash, url, { from: accounts[2] }))
+        await ownerRegistry.disableMinting()
+        await expectRevert(botEntryStorableRegistry.createBotEntry(1, botAddr1, dataHash, url, { from: accounts[1] }))
       })
     })
 
@@ -133,17 +120,12 @@ contract('BotEntryStorableRegistry', () => {
   })
 
   describe('getBotEntry()', () => {
-    beforeEach(async () => {
-      await developerRegistry.addDeveloper(dataHash, devUrl, { from: accounts[1] })
-      await developerRegistry.addDeveloper(dataHash, devUrl, { from: accounts[2] })
-      await developerRegistry.grantApproval(1)
-      await developerRegistry.grantApproval(2)
-    })
-
     describe('when given the ID of an existing bot', () => {
       let bot
 
       beforeEach(async () => {
+        await ownerRegistry.setMockOwner(1, accounts[1])
+        await ownerRegistry.setMockOwner(2, accounts[2])
         await botEntryStorableRegistry.createBotEntry(1, botAddr1, dataHash, url, { from: accounts[1] })
         await botEntryStorableRegistry.createBotEntry(2, botAddr2, dataHash2, url, { from: accounts[2] })
         bot = await botEntryStorableRegistry.getBotEntry(2)
@@ -160,15 +142,10 @@ contract('BotEntryStorableRegistry', () => {
       it('should return bot data', () => {
         expect(bot[2]).to.equal(dataHash2)
       })
-
     })
   })
 
   describe('balanceOf()', () => {
-    beforeEach(async () => {
-      await developerRegistry.addDeveloper(dataHash, devUrl, { from: accounts[1] })
-      await developerRegistry.grantApproval(1)
-    })
     it('should return number of bots owned by an address', async () => {
       await botEntryStorableRegistry.createBotEntry(1, botAddr1, dataHash, url, { from: accounts[1] })
       await botEntryStorableRegistry.createBotEntry(1, botAddr2, dataHash, url, { from: accounts[1] })
@@ -179,13 +156,11 @@ contract('BotEntryStorableRegistry', () => {
   })
 })
 
-async function newBotEntryStorableRegistry (registryAddress, botCoinAddress, tallaWalletAddress, entryPrice) {
+async function newBotEntryStorableRegistry (ownerRegistryAddress, botCoinAddress, tallaWalletAddress, entryPrice) {
   const publicStorage = await PublicStorage.new()
-  const botEntryStorableRegistryDelegate = await BotEntryStorableRegistry.new()
-  let botEntryStorableRegistry = await BotEntryRegistry.new(
-    registryAddress,
+  let botEntryStorableRegistry = await BotEntryStorableRegistry.new(
     publicStorage.address,
-    botEntryStorableRegistryDelegate.address,
+    ownerRegistryAddress,
     botCoinAddress
   )
 
@@ -198,14 +173,4 @@ async function newBotEntryStorableRegistry (registryAddress, botCoinAddress, tal
   await botEntryStorableRegistry.setEntryPrice(entryPrice)
 
   return botEntryStorableRegistry
-}
-
-async function botCoinTransferApproveSetup (
-  botCoin,
-  registryAddress,
-  transferFromAddress,
-  amount
-) {
-  await botCoin.transfer(transferFromAddress, 100000000000)
-  await botCoin.approve(registryAddress, amount * 3, { from: transferFromAddress })
 }
