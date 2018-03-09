@@ -17,9 +17,9 @@ contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
 
   /**
   * @dev Event for when bot product is created
-  * @param botProductId An id associated with the bot product  
+  * @param botProductId The id of the bot product that the bot instance belongs to  
   * @param developerId An id associated with the developer
-  * @param developerOwnerAddress An address associated with the developer owner
+  * @param developerOwnerAddress The address that owns the bot product
   * @param botProductAddress An address associated with the bot product
   * @param data Data associated with the bot product
   * @param url A url associated with this bot product
@@ -44,7 +44,8 @@ contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
 
   /**
   * @dev Returns address of bot product
-  * @param botProductId An id associated with the bot product
+  * @param botProductId The id of the bot product that the bot instance belongs to 
+  * @return Returns address corresponding to botProductId
   */
   function botProductAddress(uint256 botProductId) public view returns (address) {
     return _storage.getAddress(keccak256("botProductAddresses", botProductId));
@@ -52,7 +53,8 @@ contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
 
   /**
   * @dev Returns data hash of bot product
-  * @param botProductId An id associated with the bot product
+  * @param botProductId The id of the bot product that the bot instance belongs to 
+  * @return Reutns data hash corresponding to botProductId
   */
   function botProductDataHash(uint256 botProductId) public view returns (bytes32) {
     return _storage.getBytes32(keccak256("botProductDataHashes", botProductId));
@@ -60,7 +62,8 @@ contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
 
   /**
   * @dev Returns bot product url of botProductId 
-  * @param botProductId An id associated with the bot product
+  * @param botProductId The id of the bot product that the bot instance belongs to 
+  * @return Returns url that corresponds to botProductId
   */
   function botProductUrl(uint256 botProductId) public view returns (bytes32) {
     return _storage.getBytes32(keccak256("botProductUrl", botProductId));
@@ -69,6 +72,7 @@ contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   /**
   * @dev Gets id of bot product address
   * @param botProductAddress An address associated with the bot product
+  * @return Returns id of bot product corresponding to address
   */
   function botProductIdForAddress(address botProductAddress) public view returns (uint256) {
     return _storage.getUint(keccak256("botProductIdsByAddress", botProductAddress));
@@ -77,6 +81,7 @@ contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   /**
   * @dev Checks if botProductAddress exists
   * @param botProductAddress An address associated with the bot product
+  * @return Returns true if botProductAddress exists
   */
   function botProductAddressExists(address botProductAddress) public view returns (bool) {
     return botProductIdForAddress(botProductAddress) > 0;
@@ -84,7 +89,8 @@ contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
 
   /**
   * @dev Returns bot product associated with a bot product id
-  * @param botProductId An id associated with the bot product
+  * @param botProductId The id of the bot product that the bot instance belongs to
+  * @return Returns the owner, botProductAddress, data, and url of the bot product 
   */
   function getBotProduct(uint256 botProductId) public view returns
   (
@@ -101,7 +107,8 @@ contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
 
   /**
   * @dev Returns address of owner of entry
-  * @param _botProductId An id associated with the bot product
+  * @param _botProductId The id of the bot product that the bot instance belongs to
+  * @return Returns address of owner of entry
   */
   function ownerOfEntry(uint256 _botProductId) public view returns (address) {
     uint256 developerId = ownerOf(_botProductId);
@@ -111,7 +118,8 @@ contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   /**
   * @dev Returns true if minting is allowed
   * @param _minter Address of minter
-  * @param _botProductId An id associated with the bot product
+  * @param _botProductId The id of the bot product that the bot instance belongs to
+  * @return Returns true if minting is allowed
   */
   function mintingAllowed(address _minter, uint256 _botProductId) public view returns (bool) {
     uint256 developerId = ownerOf(_botProductId);
@@ -153,7 +161,8 @@ contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
 
   /**
   * @dev Checks if botProductId has entry ownership
-  * @param _botProductId An id associated with the bot product
+  * @param _botProductId The id of the bot product that the bot instance belongs to 
+  * @return Returns true if botProductId has entry ownership
   */
   function checkEntryOwnership(uint256 _botProductId) private view returns (bool) {
     return ownerOfEntry(_botProductId) == msg.sender;
@@ -161,7 +170,8 @@ contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
 
   /**
   * @dev Checks if botProductId entry exists
-  * @param _botProductId An id associated with the bot product
+  * @param _botProductId The id of the bot product that the bot instance belongs to 
+  * @return Returns true if entry exists for id
   */
   function entryExists(uint256 _botProductId) private view returns (bool) {
     return ownerOfEntry(_botProductId) != 0x0;
@@ -169,7 +179,7 @@ contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
 
   /**
   * @dev Sets bot product data
-  * @param botProductId An id associated with the bot product
+  * @param botProductId The id of the bot product that the bot instance belongs to 
   * @param botProductAddress An address associated with the bot product
   * @param botDataHash An data hash associated with the bot product
   */
@@ -181,7 +191,7 @@ contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   /**
   * @dev Sets bot product id for address
   * param botProductAddress An address associated with the bot product
-  * @param botProductId An id associated with the bot product
+  * @param botProductId The id of the bot product that the bot instance belongs to 
   */
   function setBotProductIdForAddress(address botProductAddress, uint256 botProductId) private {
     _storage.setUint(keccak256("botProductIdsByAddress", botProductAddress), botProductId);
@@ -189,7 +199,7 @@ contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
 
   /**
   * @dev Sets url of botProductId 
-  * @param botProductId An id associated with the bot product
+  * @param botProductId The id of the bot product that the bot instance belongs to 
   * @param url An url associated with the bot product
   */
   function setBotProductUrl(uint256 botProductId, bytes32 url) private {
