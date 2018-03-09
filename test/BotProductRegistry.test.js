@@ -60,7 +60,7 @@ contract('BotProductRegistry', () => {
     describe('when conditions are valid', () => {
       it('should return true', async () => {
         await ownerRegistry.setMockOwner(1, accounts[1])
-        await botProductRegistry.createBotEntry(1, botAddr1, dataHash, url, { from: accounts[1] })
+        await botProductRegistry.createBotProduct(1, botAddr1, dataHash, url, { from: accounts[1] })
         expect(
           await mockInstanceRegistry.mintingAllowedOnOwner(accounts[1], 1)
         ).to.equal(true)
@@ -70,7 +70,7 @@ contract('BotProductRegistry', () => {
     describe('when minting is not allowed by owner registry', () => {
       it('should return false', async () => {
         await ownerRegistry.setMockOwner(1, accounts[1])
-        await botProductRegistry.createBotEntry(1, botAddr1, dataHash, url, { from: accounts[1] })
+        await botProductRegistry.createBotProduct(1, botAddr1, dataHash, url, { from: accounts[1] })
         await ownerRegistry.disableMinting()
         expect(
           await mockInstanceRegistry.mintingAllowedOnOwner(accounts[1], 1)
@@ -80,7 +80,7 @@ contract('BotProductRegistry', () => {
 
     describe('when sender is not the owner of the bot product', () => {
       it('should return false', async () => {
-        await botProductRegistry.createBotEntry(1, botAddr1, dataHash, url, { from: accounts[1] })
+        await botProductRegistry.createBotProduct(1, botAddr1, dataHash, url, { from: accounts[1] })
         expect(
           await mockInstanceRegistry.mintingAllowedOnOwner(accounts[1], 1)
         ).to.equal(false)
@@ -90,7 +90,7 @@ contract('BotProductRegistry', () => {
     describe('when bot product is disabled', () => {
       it('should return false', async () => {
         await ownerRegistry.setMockOwner(1, accounts[1])
-        await botProductRegistry.createBotEntry(1, botAddr1, dataHash, url, { from: accounts[1] })
+        await botProductRegistry.createBotProduct(1, botAddr1, dataHash, url, { from: accounts[1] })
         await botProductRegistry.revokeApproval(1)
         expect(
           await mockInstanceRegistry.mintingAllowedOnOwner(accounts[1], 1)

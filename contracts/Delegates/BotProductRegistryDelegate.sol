@@ -33,6 +33,24 @@ contract BotProductRegistryDelegate is BotEntryStorableRegistry, OwnerRegistry {
   }
 
   /**
+  * @dev Creates a new bot product.
+  * @param developerId ID of the developer that will own this bot product
+  * @param botEntryAddress Address of the bot product
+  * @param dataHash Hash of data associated with the bot product
+  * @param url A url associated with this bot product
+  */
+  function createBotProduct(
+    uint256 developerId, 
+    address botEntryAddress, 
+    bytes32 dataHash, 
+    bytes32 url
+  )
+    public 
+  {
+    createBotEntry(developerId, botEntryAddress, dataHash, url);
+  }
+
+  /**
   * @dev Returns true if minting is allowed
   * @param _minter Address of minter
   * @param _botProductId The id of the bot product that the bot instance belongs to
