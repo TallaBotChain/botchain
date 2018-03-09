@@ -5,6 +5,7 @@ import { expect } from 'chai'
 import { web3 } from './helpers/w3'
 import expectRevert from './helpers/expectRevert'
 import { hasEvent } from './helpers/event'
+import botCoinTransferApproveSetup from './helpers/botCoinTransferApproveSetup'
 
 const { accounts } = web3.eth
 const zero = '0x0000000000000000000000000000000000000000'
@@ -23,7 +24,7 @@ const MockOwnerRegistry = artifacts.require('./MockOwnerRegistry.sol')
 const BotEntryStorableRegistry = artifacts.require('./MockBotEntryStorableRegistry.sol')
 const BotCoin = artifacts.require('BotCoin')
 
-describe('BotEntryStorableRegistry', () => {
+contract('BotEntryStorableRegistry', () => {
   let botEntryStorableRegistry, botCoin, ownerRegistry
 
   beforeEach(async () => {
@@ -43,6 +44,7 @@ describe('BotEntryStorableRegistry', () => {
     ]
     for (var i = 0; i < botCoinSeededAccounts.length; i++) {
       await botCoinTransferApproveSetup(
+        initialBotCoinBalance,
         botCoin,
         botEntryStorableRegistry.address,
         botCoinSeededAccounts[i],
@@ -92,8 +94,8 @@ describe('BotEntryStorableRegistry', () => {
 
     describe('when minting is not allowed by the owner registry', () => {
       it('should revert', async () => {
-        // mock disallows minting for parent entry id 6
-        await expectRevert(botEntryStorableRegistry.createBotEntry(6, botAddr1, dataHash, url, { from: accounts[1] }))
+        await ownerRegistry.disableMinting()
+        await expectRevert(botEntryStorableRegistry.createBotEntry(1, botAddr1, dataHash, url, { from: accounts[1] }))
       })
     })
 
@@ -171,14 +173,4 @@ async function newBotEntryStorableRegistry (ownerRegistryAddress, botCoinAddress
   await botEntryStorableRegistry.setEntryPrice(entryPrice)
 
   return botEntryStorableRegistry
-}
-
-async function botCoinTransferApproveSetup (
-  botCoin,
-  registryAddress,
-  transferFromAddress,
-  amount
-) {
-  await botCoin.transfer(transferFromAddress, initialBotCoinBalance)
-  await botCoin.approve(registryAddress, initialBotCoinBalance, { from: transferFromAddress })
 }

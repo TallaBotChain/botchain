@@ -10,11 +10,27 @@ import "../Registry/OwnerRegistry.sol";
 */
 contract BotProductRegistryDelegate is BotEntryStorableRegistry, OwnerRegistry {
 
+  string public constant name = "BotProductRegistry";
+
   /** @dev Constructor for BotProductRegistryDelegate */
   function BotProductRegistryDelegate(BaseStorage storage_)
     BotEntryStorableRegistry(storage_)
     public
   {}
+
+  /**
+  * @dev Returns bot product associated with a bot product id
+  * @param botProductId An id associated with the bot product
+  */
+  function getBotProduct(uint256 botProductId) public view returns
+  (
+    address _owner,
+    address _botEntryAddress,
+    bytes32 _data, 
+    bytes32 _url
+  ) {
+    return getBotEntry(botProductId);
+  }
 
   /**
   * @dev Returns true if minting is allowed
