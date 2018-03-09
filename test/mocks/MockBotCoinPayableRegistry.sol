@@ -1,7 +1,6 @@
 pragma solidity ^0.4.18;
 
 import "../../contracts/Upgradability/PublicStorage.sol";
-import "../../contracts/Upgradability/ERC721TokenKeyed.sol";
 import "../../contracts/Registry/BotCoinPayableRegistry.sol";
 
 contract MockBotCoinPayableRegistry is BotCoinPayableRegistry {
