@@ -22,8 +22,16 @@ contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   * @param developerOwnerAddress An address associated with the developer owner
   * @param botProductAddress An address associated with the bot product
   * @param data Data associated with the bot product
+  * @param url A url associated with this bot product
   */
-  event BotProductCreated(uint256 botProductId, uint256 developerId, address developerOwnerAddress, address botProductAddress, bytes32 data);
+  event BotProductCreated(
+    uint256 botProductId, 
+    uint256 developerId, 
+    address developerOwnerAddress, 
+    address botProductAddress, 
+    bytes32 data, 
+    bytes32 url
+  );
 
   /** @dev Constructor for BotProductRegistryDelegate */
   function BotProductRegistryDelegate(BaseStorage storage_)
@@ -51,6 +59,14 @@ contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   }
 
   /**
+  * @dev Returns bot product url of botProductId 
+  * @param botProductId An id associated with the bot product
+  */
+  function botProductUrl(uint256 botProductId) public view returns (bytes32) {
+    return _storage.getBytes32(keccak256("botProductUrl", botProductId));
+  }
+
+  /**
   * @dev Gets id of bot product address
   * @param botProductAddress An address associated with the bot product
   */
@@ -74,11 +90,13 @@ contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   (
     address _owner,
     address _botProductAddress,
-    bytes32 _data
+    bytes32 _data, 
+    bytes32 _url
   ) {
     _owner = ownerOfEntry(botProductId); 
     _botProductAddress = botProductAddress(botProductId);
     _data = botProductDataHash(botProductId);
+    _url = botProductUrl(botProductId);
   }
 
   /**
@@ -105,12 +123,19 @@ contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   * @param developerId ID of the developer that will own this bot product
   * @param botProductAddress Address of the bot
   * @param dataHash Hash of data associated with the bot
+  * @param url A url associated with this bot product
   */
-  function createBotProduct(uint256 developerId, address botProductAddress, bytes32 dataHash) public {
+  function createBotProduct(
+    uint256 developerId, 
+    address botProductAddress, 
+    bytes32 dataHash, 
+    bytes32 url
+  ) public {
     require(ownerRegistry().mintingAllowed(msg.sender, developerId));
     require(botProductAddress != 0x0);
     require(dataHash != 0x0);
     require(!botProductAddressExists(botProductAddress));
+    require(url != 0x0);
 
     uint256 botProductId = totalSupply().add(1);
 
@@ -119,10 +144,11 @@ contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
     _mint(developerId, botProductId);
     setBotProductData(botProductId, botProductAddress, dataHash);
     setBotProductIdForAddress(botProductAddress, botProductId);
+    setBotProductUrl(botProductId, url);
     setApprovalStatus(botProductId, true);
     setActiveStatus(botProductId, true);
 
-    BotProductCreated(botProductId, developerId, msg.sender, botProductAddress, dataHash);
+    BotProductCreated(botProductId, developerId, msg.sender, botProductAddress, dataHash, url);
   }
 
   /**
@@ -159,6 +185,15 @@ contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   */
   function setBotProductIdForAddress(address botProductAddress, uint256 botProductId) private {
     _storage.setUint(keccak256("botProductIdsByAddress", botProductAddress), botProductId);
+  }
+
+  /**
+  * @dev Sets url of botProductId 
+  * @param botProductId An id associated with the bot product
+  * @param url An url associated with the bot product
+  */
+  function setBotProductUrl(uint256 botProductId, bytes32 url) private {
+    _storage.setBytes32(keccak256("botProductId", botProductId), url);
   }
 
 }

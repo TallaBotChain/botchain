@@ -17,6 +17,7 @@ const entryPrice = 100
 const dataHash = web3.sha3('some data to hash')
 const dataHash2 = web3.sha3('other data to hash')
 const devUrl = web3.fromAscii('some url to hash')
+const url = 'www.google.com'
 
 const PublicStorage = artifacts.require('./PublicStorage.sol')
 const BotEntryRegistry = artifacts.require('./BotEntryRegistry.sol')
@@ -71,10 +72,10 @@ contract('BotProductRegistry', () => {
       let txResult
 
       beforeEach(async () => {
-        txResult = await bom.createBotProduct(1, botAddr1, dataHash, { from: accounts[1] })
+        txResult = await bom.createBotProduct(1, botAddr1, dataHash, url, { from: accounts[1] })
       })
 
-      it('should add bot with the given owner, bot address, and data hash', async () => {
+      it('should add bot with the given owner, bot address, data hash, and url', async () => {
         let bot = await bom.getBotProduct(1)
         expect(bot[0]).to.equal(accounts[1])
         expect(bot[1]).to.equal(botAddr1)
@@ -100,33 +101,33 @@ contract('BotProductRegistry', () => {
 
     describe('when sender is not the owner of the given developer ID', () => {
       it('should revert', async () => {
-        await expectRevert(bom.createBotProduct(1, botAddr1, dataHash, { from: accounts[2] }))
+        await expectRevert(bom.createBotProduct(1, botAddr1, dataHash, url, { from: accounts[2] }))
       })
     })
 
     describe('when the given developer ID is not approved', () => {
       it('should revert', async () => {
         await bc.addDeveloper(dataHash, devUrl, { from: accounts[2] })
-        await expectRevert(bom.createBotProduct(2, botAddr1, dataHash, { from: accounts[2] }))
+        await expectRevert(bom.createBotProduct(2, botAddr1, dataHash, url, { from: accounts[2] }))
       })
     })
 
     describe('when given invalid bot address', () => {
       it('should revert', async () => {
-        await expectRevert(bom.createBotProduct(1, zero, dataHash, { from: accounts[1] }))
+        await expectRevert(bom.createBotProduct(1, zero, dataHash, url, { from: accounts[1] }))
       })
     })
 
     describe('when given invalid data', () => {
       it('should revert', async () => {
-        await expectRevert(bom.createBotProduct(1, botAddr1, zero, { from: accounts[1] }))
+        await expectRevert(bom.createBotProduct(1, botAddr1, zero, url, { from: accounts[1] }))
       })
     })
 
     describe('when bot address already exists', () => {
       it('should revert', async () => {
-        await bom.createBotProduct(1, botAddr1, dataHash, { from: accounts[1] })
-        await expectRevert(bom.createBotProduct(1, botAddr1, dataHash, { from: accounts[1] }))
+        await bom.createBotProduct(1, botAddr1, dataHash, url, { from: accounts[1] })
+        await expectRevert(bom.createBotProduct(1, botAddr1, dataHash, url, { from: accounts[1] }))
       })
     })
   })
@@ -143,8 +144,8 @@ contract('BotProductRegistry', () => {
       let bot
 
       beforeEach(async () => {
-        await bom.createBotProduct(1, botAddr1, dataHash, { from: accounts[1] })
-        await bom.createBotProduct(2, botAddr2, dataHash2, { from: accounts[2] })
+        await bom.createBotProduct(1, botAddr1, dataHash, url, { from: accounts[1] })
+        await bom.createBotProduct(2, botAddr2, dataHash2, url, { from: accounts[2] })
         bot = await bom.getBotProduct(2)
       })
 
@@ -159,6 +160,7 @@ contract('BotProductRegistry', () => {
       it('should return bot data', () => {
         expect(bot[2]).to.equal(dataHash2)
       })
+
     })
   })
 
@@ -168,9 +170,9 @@ contract('BotProductRegistry', () => {
       await bc.grantApproval(1)
     })
     it('should return number of bots owned by an address', async () => {
-      await bom.createBotProduct(1, botAddr1, dataHash, { from: accounts[1] })
-      await bom.createBotProduct(1, botAddr2, dataHash, { from: accounts[1] })
-      await bom.createBotProduct(1, botAddr3, dataHash, { from: accounts[1] })
+      await bom.createBotProduct(1, botAddr1, dataHash, url, { from: accounts[1] })
+      await bom.createBotProduct(1, botAddr2, dataHash, url, { from: accounts[1] })
+      await bom.createBotProduct(1, botAddr3, dataHash, url, { from: accounts[1] })
       let numBots = (await bom.balanceOf(1)).toNumber()
       expect(numBots).to.equal(3)
     })
