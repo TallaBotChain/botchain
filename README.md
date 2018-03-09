@@ -89,19 +89,9 @@ Creates bot entry registry
 
 Creates developer registry
 
-#### ERC721
-
-Interface for contracts conforming to ERC-721: Non-Fungible Tokens
-
 #### Migrations
 
-#### Subscribable
-
 The Subscribable has a Subscription contract passed in and provides functions that simplify authorization of features requiring subscription
-
-#### TokenSubscription
-
-Subscription implementation for payments in token
 
 
 ### Delegates:
@@ -137,6 +127,10 @@ An extension contract for creating a registry of approvable entries
 #### BotCoinPayableRegistry
 
 An extension contract for BotCoinPayment functionality
+
+#### BotEntryStorableRegistry
+
+
 
 #### OwnableRegistry
 
