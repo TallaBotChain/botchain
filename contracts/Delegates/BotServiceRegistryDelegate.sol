@@ -17,7 +17,7 @@ contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   * @dev Event for when bot service is created
   * @param botServiceId An id associated with the bot service  
   * @param developerId An id associated with the developer
-  * @param developerOwnerAddress An address associated with the developer owner
+  * @param developerOwnerAddress The address that owns the bot service
   * @param botServiceAddress An address associated with the bot service
   * @param data Data associated with the bot service
   * @param url A url associated with this bot service
