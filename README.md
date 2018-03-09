@@ -68,4 +68,52 @@ Go to https://infura.io/register.html to register for Infura. Paste your API key
 
 ## BotChain Dapp Overview
 
+### Network Overview
+
+### Upgradability Pattern
+
+### Deployed vs Extension Contracts
+
+
 ## Smart Contracts
+
+### BotInstanceRegistryDelegate
+
+A deployed contract that handles ownership of bot services. Bot services are owned by a developer in the developer registry.
+
+### BotProductRegistryDelegate
+
+A deployed contract using non-Fungible tokens (ERC-721) that handles ownership and transfer
+of Bots. Bots can be transferred to and from approved developers.
+
+### BotServiceRegistryDelegate
+
+A deployed contract that handles ownership of bot services
+
+### DeveloperRegistryDelegate
+
+A deployed contract for DeveloperRegistry functionality
+
+### ActivatableRegistry
+
+An extension contract for creating a registry of activatable entries
+
+### ApprovableRegistry
+
+An extension contract for creating a registry of approvable entries
+
+### BotCoinPayableRegistry
+
+An extension contract for BotCoinPayment functionality
+
+### OwnableRegistry
+
+A registry of token ID's that are owned by another token from a different registry
+
+### OwnerRegistry
+
+An interface for a registry with entries that own entries in another registry
+
+### Registry
+
+An interface for a registry
