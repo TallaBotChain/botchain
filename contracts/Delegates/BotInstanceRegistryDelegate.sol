@@ -21,8 +21,16 @@ contract BotInstanceRegistryDelegate is ActivatableRegistry, ApprovableRegistry,
   * @param ownerAddress An address associated with the owner
   * @param botInstanceAddress An address associated with the bot instance
   * @param data Data associated with the bot instance
+  * @param url A url associated with this bot instance
   */
-  event BotInstanceCreated(uint256 botInstanceId, uint256 botProductId, address ownerAddress, address botInstanceAddress, bytes32 data);
+  event BotInstanceCreated(
+    uint256 botInstanceId, 
+    uint256 botProductId, 
+    address ownerAddress, 
+    address botInstanceAddress, 
+    bytes32 data, 
+    bytes32 url
+  );
 
   /** @dev Constructor for BotInstanceRegistryDelegate */
   function BotInstanceRegistryDelegate(BaseStorage storage_)
@@ -50,6 +58,14 @@ contract BotInstanceRegistryDelegate is ActivatableRegistry, ApprovableRegistry,
   }
 
   /**
+  * @dev Returns bot instance url of botInstanceId 
+  * @param botInstanceId An id associated with the bot instance
+  */
+  function botInstanceUrl(uint256 botInstanceId) public view returns (bytes32) {
+    return _storage.getBytes32(keccak256("botInstanceUrl", botInstanceId));
+  }
+
+  /**
   * @dev Gets id of bot instance address
   * @param botInstanceAddress An address associated with the bot instance
   */
@@ -73,11 +89,13 @@ contract BotInstanceRegistryDelegate is ActivatableRegistry, ApprovableRegistry,
   (
     address _owner,
     address _botInstanceAddress,
-    bytes32 _data
+    bytes32 _data, 
+    bytes32 _url
   ) {
     _owner = ownerOfEntry(botInstanceId); 
     _botInstanceAddress = botInstanceAddress(botInstanceId);
     _data = botInstanceDataHash(botInstanceId);
+    _url = botInstanceUrl(botInstanceId);
   }
 
   /**
@@ -85,8 +103,14 @@ contract BotInstanceRegistryDelegate is ActivatableRegistry, ApprovableRegistry,
   * @param botProductId ID of the bot product that will own this bot instance
   * @param botInstanceAddress Address of the bot
   * @param dataHash Hash of data associated with the bot
+  * @param url A url associated with this bot instance - NOT required
   */
-  function createBotInstance(uint256 botProductId, address botInstanceAddress, bytes32 dataHash) public {
+  function createBotInstance(
+    uint256 botProductId, 
+    address botInstanceAddress, 
+    bytes32 dataHash, 
+    bytes32 url
+  ) public {
     require(ownerRegistry().mintingAllowed(msg.sender, botProductId));
     require(botInstanceAddress != 0x0);
     require(dataHash != 0x0);
@@ -100,10 +124,11 @@ contract BotInstanceRegistryDelegate is ActivatableRegistry, ApprovableRegistry,
 
     setBotInstanceData(botInstanceId, botInstanceAddress, dataHash);
     setBotInstanceIdForAddress(botInstanceAddress, botInstanceId);
+    setBotInstanceUrl(botInstanceId, url);
     setApprovalStatus(botInstanceId, true);
     setActiveStatus(botInstanceId, true);
 
-    BotInstanceCreated(botInstanceId, botProductId, msg.sender, botInstanceAddress, dataHash);
+    BotInstanceCreated(botInstanceId, botProductId, msg.sender, botInstanceAddress, dataHash, url);
   }
 
   /**
@@ -151,4 +176,12 @@ contract BotInstanceRegistryDelegate is ActivatableRegistry, ApprovableRegistry,
     _storage.setUint(keccak256("botInstanceIdsByAddress", botInstanceAddress), botInstanceId);
   }
 
+  /**
+  * @dev Sets url of botInstanceId 
+  * @param botInstanceId An id associated with the bot instance
+  * @param url An url associated with the bot instance
+  */
+  function setBotInstanceUrl(uint256 botInstanceId, bytes32 url) private {
+    _storage.setBytes32(keccak256("botInstanceId", botInstanceId), url);
+  }
 }
