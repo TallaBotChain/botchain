@@ -117,3 +117,9 @@ An interface for a registry with entries that own entries in another registry
 ### Registry
 
 An interface for a registry
+
+#### Registry
+
+An interface for a registry
+* Development stand-in for a ERC20 token till we get the real one delivered by
+* ambisafe
