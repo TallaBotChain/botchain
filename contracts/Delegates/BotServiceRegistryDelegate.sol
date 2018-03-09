@@ -88,11 +88,13 @@ contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   (
     address _owner,
     address _botServiceAddress,
-    bytes32 _data
+    bytes32 _data, 
+    bytes32 _url
   ) {
     _owner = ownerOfEntry(botServiceId); 
     _botServiceAddress = botServiceAddress(botServiceId);
     _data = botServiceDataHash(botServiceId);
+    _url = botServiceUrl(botServiceId);
   }
 
   /**
