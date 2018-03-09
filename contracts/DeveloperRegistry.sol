@@ -6,6 +6,7 @@ import "./Delegates/DeveloperRegistryDelegate.sol";
 
 contract DeveloperRegistry is OwnableProxy {
 
+  /** @dev Creates developer registry*/
   function DeveloperRegistry(
     PublicStorage storage_,
     address developerRegistryDelegateAddress,
