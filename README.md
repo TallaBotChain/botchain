@@ -131,7 +131,6 @@ An extension contract for BotCoinPayment functionality
 #### BotEntryStorableRegistry
 
 
-
 #### OwnableRegistry
 
 A registry of token ID's that are owned by another token from a different registry
