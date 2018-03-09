@@ -20,8 +20,16 @@ contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   * @param developerOwnerAddress An address associated with the developer owner
   * @param botServiceAddress An address associated with the bot service
   * @param data Data associated with the bot service
+  * @param url A url associated with this bot service
   */
-  event BotServiceCreated(uint256 botServiceId, uint256 developerId, address developerOwnerAddress, address botServiceAddress, bytes32 data);
+  event BotServiceCreated(
+    uint256 botServiceId, 
+    uint256 developerId, 
+    address developerOwnerAddress, 
+    address botServiceAddress, 
+    bytes32 data, 
+    bytes32 url
+  );
 
   /** @dev Constructor for BotServiceRegistryDelegate */
   function BotServiceRegistryDelegate(BaseStorage storage_)
@@ -46,6 +54,14 @@ contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   */
   function botServiceDataHash(uint256 botServiceId) public view returns (bytes32) {
     return _storage.getBytes32(keccak256("botServiceDataHashes", botServiceId));
+  }
+
+  /**
+  * @dev Returns bot service url of botServiceId 
+  * @param botServiceId An id associated with the bot service
+  */
+  function botServiceUrl(uint256 botServiceId) public view returns (bytes32) {
+    return _storage.getBytes32(keccak256("botServiceUrl", botServiceId));
   }
 
   /**
@@ -93,12 +109,19 @@ contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   * @param developerId ID of the developer that will own this bot service
   * @param botServiceAddress Address of the bot service
   * @param dataHash Hash of data associated with the bot service
+  * @param url A url associated with this bot service
   */
-  function createBotService(uint256 developerId, address botServiceAddress, bytes32 dataHash) public {
+  function createBotService(
+    uint256 developerId, 
+    address botServiceAddress, 
+    bytes32 dataHash, 
+    bytes32 url
+  ) public {
     require(ownerRegistry().mintingAllowed(msg.sender, developerId));
     require(botServiceAddress != 0x0);
     require(dataHash != 0x0);
     require(!botServiceAddressExists(botServiceAddress));
+    require(url != 0x0);
 
     uint256 botServiceId = totalSupply().add(1);
 
@@ -107,10 +130,11 @@ contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
     _mint(developerId, botServiceId);
     setBotServiceData(botServiceId, botServiceAddress, dataHash);
     setBotServiceIdForAddress(botServiceAddress, botServiceId);
+    setBotServiceUrl(botServiceId, url);
     setApprovalStatus(botServiceId, true);
     setActiveStatus(botServiceId, true);
 
-    BotServiceCreated(botServiceId, developerId, msg.sender, botServiceAddress, dataHash);
+    BotServiceCreated(botServiceId, developerId, msg.sender, botServiceAddress, dataHash, url);
   }
 
   /**
@@ -147,6 +171,15 @@ contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   */
   function setBotServiceIdForAddress(address botServiceAddress, uint256 botServiceId) private {
     _storage.setUint(keccak256("botServiceIdsByAddress", botServiceAddress), botServiceId);
+  }
+
+  /**
+  * @dev Sets url of botServiceId 
+  * @param botServiceId An id associated with the bot service
+  * @param url An url associated with the bot service
+  */
+  function setBotServiceUrl(uint256 botServiceId, bytes32 url) private {
+    _storage.setBytes32(keccak256("botServiceId", botServiceId), url);
   }
 
 }
