@@ -17,6 +17,7 @@ const NEGATIVE_NUM = -5
 
 describe('BaseStorage', () => {
   let baseStorage
+  
   beforeEach(async () => {
     baseStorage = await BaseStorage.new()
   })
