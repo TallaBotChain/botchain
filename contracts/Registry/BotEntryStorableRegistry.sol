@@ -1,11 +1,11 @@
 pragma solidity ^0.4.18;
 
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
-import "../Registry/OwnableRegistry.sol";
-import "../Registry/OwnerRegistry.sol";
-import "../Registry/ActivatableRegistry.sol";
-import "../Registry/ApprovableRegistry.sol";
-import '../Registry/BotCoinPayableRegistry.sol';
+import "./OwnableRegistry.sol";
+import "./OwnerRegistry.sol";
+import "./ActivatableRegistry.sol";
+import "./ApprovableRegistry.sol";
+import './BotCoinPayableRegistry.sol';
 
 /**
 * @title BotEntryStorableRegistry
@@ -160,12 +160,6 @@ contract BotEntryStorableRegistry is BotCoinPayableRegistry, ApprovableRegistry,
   function setBotEntryUrl(uint256 botEntryId, bytes32 url) private {
     _storage.setBytes32(keccak256("botEntryId", botEntryId), url);
   }
-
-	/**
-	* @dev Returns address of owner of entry. Abstract function from Registry
-	* @param _entryId An id associated with the entry
-	*/
-  function ownerOfEntry(uint256 _entryId) public view returns (address _owner);
 
   /**
   * @dev Checks if _entryId has entry ownership. Abstract function from ActivatableRegistry

@@ -15,16 +15,6 @@ contract BotServiceRegistryDelegate is BotEntryStorableRegistry {
   {}
 
   /**
-  * @dev Returns address of owner of entry
-  * @param _botServiceId An id associated with the bot service
-  * @return Returns address of owner of entry
-  */
-  function ownerOfEntry(uint256 _botServiceId) public view returns (address) {
-    uint256 developerId = ownerOf(_botServiceId);
-    return ownerRegistry().ownerOfEntry(developerId);
-  }
-
-  /**
   * @dev Checks if botServiceId has entry ownership
   * @param _botServiceId An id associated with the bot service
   * @return Returns true if _botServiceId has entry ownership

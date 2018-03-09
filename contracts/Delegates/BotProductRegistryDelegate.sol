@@ -17,16 +17,6 @@ contract BotProductRegistryDelegate is BotEntryStorableRegistry, OwnerRegistry {
   {}
 
   /**
-  * @dev Returns address of owner of entry
-  * @param _botProductId The id of the bot product that the bot instance belongs to
-  * @return Returns address of owner of entry
-  */
-  function ownerOfEntry(uint256 _botProductId) public view returns (address) {
-    uint256 developerId = ownerOf(_botProductId);
-    return ownerRegistry().ownerOfEntry(developerId);
-  }
-
-  /**
   * @dev Returns true if minting is allowed
   * @param _minter Address of minter
   * @param _botProductId The id of the bot product that the bot instance belongs to

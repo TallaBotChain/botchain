@@ -2,8 +2,8 @@ pragma solidity ^0.4.18;
 
 import "zeppelin-solidity/contracts/math/SafeMath.sol";
 import "../Upgradability/StorageConsumer.sol";
-import "./Registry.sol";
 import "./OwnerRegistry.sol";
+import "./Registry.sol";
 
 /**
  * @title OwnableRegistry
@@ -62,6 +62,16 @@ contract OwnableRegistry is Registry, StorageConsumer {
     uint256 ownerTokenId = getTokenOwner(_tokenId);
     require(ownerTokenId != 0);
     return ownerTokenId;
+  }
+
+  /**
+  * @dev Returns address of owner of entry
+  * @param _entryId The id of the entry
+  * @return address that owns the entry with the given id
+  */
+  function ownerOfEntry(uint256 _entryId) public view returns (address) {
+    uint256 parentEntryId = ownerOf(_entryId);
+    return ownerRegistry().ownerOfEntry(parentEntryId);
   }
 
   /**
