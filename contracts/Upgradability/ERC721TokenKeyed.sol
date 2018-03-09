@@ -47,7 +47,7 @@ contract ERC721TokenKeyed is StorageConsumer, ERC721 {
   function tokensOf(address _owner) public view returns (uint256[]) {
     uint256 _ownerBalance = balanceOf(_owner);
     uint256[] memory _tokens = new uint256[](_ownerBalance);
-    for (uint i = 0; i < _ownerBalance; i++) {
+    for (uint256 i = 0; i < _ownerBalance; i++) {
       _tokens[i] = getOwnedToken(_owner, i);
     }
     return _tokens;

@@ -23,7 +23,7 @@ contract ActivatableRegistry is StorageConsumer {
   function ActivatableRegistry(BaseStorage storage_)
     StorageConsumer(storage_)
     public
-  {}
+    {}
 
   /**
    * @dev Check if an entry is active
@@ -69,6 +69,10 @@ contract ActivatableRegistry is StorageConsumer {
     _storage.setBool(keccak256("activeStatus", _entryId), _approvalStatus);
   }
 
+  /**
+  * @dev Checks if _entryId has entry ownership
+  * @param _entryId An id associated with entry
+  */
   function checkEntryOwnership(uint256 _entryId) private view returns (bool);
 
 }

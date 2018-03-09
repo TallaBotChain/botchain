@@ -5,6 +5,7 @@ import "./Upgradability/PublicStorage.sol";
 
 contract BotEntryRegistry is OwnableProxy {
 
+  /** @dev Creates bot entry registry*/
   function BotEntryRegistry(
     address ownerRegistryAddress,
     PublicStorage storage_,
