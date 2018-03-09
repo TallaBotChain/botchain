@@ -41,8 +41,9 @@ contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
     {}
 
   /**
-  * @dev Returns address of botServiceId 
+  * @dev Returns address of bot service id  
   * @param botServiceId An id associated with the bot service
+  * @return Returns address of bot service id   
   */
   function botServiceAddress(uint256 botServiceId) public view returns (address) {
     return _storage.getAddress(keccak256("botServiceAddresses", botServiceId));
@@ -51,6 +52,7 @@ contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   /**
   * @dev Returns dataHash of botServiceId 
   * @param botServiceId An id associated with the bot service
+  * @return Returns data hash corresponding to bot service id  
   */
   function botServiceDataHash(uint256 botServiceId) public view returns (bytes32) {
     return _storage.getBytes32(keccak256("botServiceDataHashes", botServiceId));
@@ -59,6 +61,7 @@ contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   /**
   * @dev Returns bot service url of botServiceId 
   * @param botServiceId An id associated with the bot service
+  * @return Returns url corresponding to bot service id    
   */
   function botServiceUrl(uint256 botServiceId) public view returns (bytes32) {
     return _storage.getBytes32(keccak256("botServiceUrl", botServiceId));
@@ -67,6 +70,7 @@ contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   /**
   * @dev Returns id of botServiceAddress 
   * @param botServiceAddress An address associated with the bot service
+  * @return Returns id corresponding to bot service address    
   */
   function botServiceIdForAddress(address botServiceAddress) public view returns (uint256) {
     return _storage.getUint(keccak256("botServiceIdsByAddress", botServiceAddress));
@@ -75,6 +79,7 @@ contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   /**
   * @dev Checks if botServiceAddress exists
   * @param botServiceAddress An address associated with the bot service
+  * @return Returns true if botServiceAddress exists
   */
   function botServiceAddressExists(address botServiceAddress) public view returns (bool) {
     return botServiceIdForAddress(botServiceAddress) > 0;
@@ -83,6 +88,7 @@ contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   /**
   * @dev Returns bot service associated with a bot service id
   * @param botServiceId An id associated with the bot service
+  * @return Returns the owner, botInstanceAddress, data, and url of the bot service
   */
   function getBotService(uint256 botServiceId) public view returns
   (
@@ -100,6 +106,7 @@ contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   /**
   * @dev Returns address of owner of entry
   * @param _botServiceId An id associated with the bot service
+  * @return Returns address of owner of entry
   */
   function ownerOfEntry(uint256 _botServiceId) public view returns (address) {
     uint256 developerId = ownerOf(_botServiceId);
@@ -142,6 +149,7 @@ contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   /**
   * @dev Checks if botServiceId has entry ownership
   * @param _botServiceId An id associated with the bot service
+  * @return Returns true if _botServiceId has entry ownership
   */
   function checkEntryOwnership(uint256 _botServiceId) private view returns (bool) {
     return ownerOfEntry(_botServiceId) == msg.sender;
@@ -150,6 +158,7 @@ contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   /**
   * @dev Checks if botServiceId entry exists
   * @param _botServiceId An id associated with the bot service
+  * @return Returns true if entry exists for id
   */
   function entryExists(uint256 _botServiceId) private view returns (bool) {
     return ownerOfEntry(_botServiceId) != 0x0;
