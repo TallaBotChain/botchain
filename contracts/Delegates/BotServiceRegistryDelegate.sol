@@ -36,7 +36,7 @@ contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   * @dev Returns address of botServiceId 
   * @param botServiceId An id associated with the bot service
   */
-  function botServiceAddress(uint botServiceId) public view returns (address) {
+  function botServiceAddress(uint256 botServiceId) public view returns (address) {
     return _storage.getAddress(keccak256("botServiceAddresses", botServiceId));
   }
 
@@ -44,7 +44,7 @@ contract BotServiceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   * @dev Returns dataHash of botServiceId 
   * @param botServiceId An id associated with the bot service
   */
-  function botServiceDataHash(uint botServiceId) public view returns (bytes32) {
+  function botServiceDataHash(uint256 botServiceId) public view returns (bytes32) {
     return _storage.getBytes32(keccak256("botServiceDataHashes", botServiceId));
   }
 

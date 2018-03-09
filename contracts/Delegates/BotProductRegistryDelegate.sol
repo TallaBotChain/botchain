@@ -38,7 +38,7 @@ contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   * @dev Returns address of bot product
   * @param botProductId An id associated with the bot product
   */
-  function botProductAddress(uint botProductId) public view returns (address) {
+  function botProductAddress(uint256 botProductId) public view returns (address) {
     return _storage.getAddress(keccak256("botProductAddresses", botProductId));
   }
 
@@ -46,7 +46,7 @@ contract BotProductRegistryDelegate is ActivatableRegistry, ApprovableRegistry, 
   * @dev Returns data hash of bot product
   * @param botProductId An id associated with the bot product
   */
-  function botProductDataHash(uint botProductId) public view returns (bytes32) {
+  function botProductDataHash(uint256 botProductId) public view returns (bytes32) {
     return _storage.getBytes32(keccak256("botProductDataHashes", botProductId));
   }
 

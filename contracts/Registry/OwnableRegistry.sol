@@ -47,7 +47,7 @@ contract OwnableRegistry is Registry, StorageConsumer {
   function tokensOf(uint256 _ownerTokenId) public view returns (uint256[]) {
     uint256 _ownerBalance = balanceOf(_ownerTokenId);
     uint256[] memory _tokens = new uint256[](_ownerBalance);
-    for (uint i = 0; i < _ownerBalance; i++) {
+    for (uint256 i = 0; i < _ownerBalance; i++) {
       _tokens[i] = getOwnedToken(_ownerTokenId, i);
     }
     return _tokens;

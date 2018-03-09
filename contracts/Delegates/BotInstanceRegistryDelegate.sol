@@ -37,7 +37,7 @@ contract BotInstanceRegistryDelegate is ActivatableRegistry, ApprovableRegistry,
   * @dev Returns address of bot instance
   * @param botInstanceId An id associated with the bot instance
   */
-  function botInstanceAddress(uint botInstanceId) public view returns (address) {
+  function botInstanceAddress(uint256 botInstanceId) public view returns (address) {
     return _storage.getAddress(keccak256("botInstanceAddresses", botInstanceId));
   }
 
@@ -45,7 +45,7 @@ contract BotInstanceRegistryDelegate is ActivatableRegistry, ApprovableRegistry,
   * @dev Returns data hash of bot instance
   * @param botInstanceId An id associated with the bot instance
   */
-  function botInstanceDataHash(uint botInstanceId) public view returns (bytes32) {
+  function botInstanceDataHash(uint256 botInstanceId) public view returns (bytes32) {
     return _storage.getBytes32(keccak256("botInstanceDataHashes", botInstanceId));
   }
 
