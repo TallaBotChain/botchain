@@ -1,6 +1,6 @@
 pragma solidity ^0.4.18;
 
-import "./ERC721TokenKeyed.sol";
+import "../../contracts/Upgradability/ERC721TokenKeyed.sol";
 
 /**
  * @title ERC721TokenKeyedMock

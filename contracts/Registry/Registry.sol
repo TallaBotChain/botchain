@@ -10,5 +10,5 @@ contract Registry {
 	* @param _entryId An id associated with the entry
 	* @return Returns address of owner of entry
 	*/
-  	function ownerOfEntry(uint256 _entryId) public view returns (address _owner);
+  function ownerOfEntry(uint256 _entryId) public view returns (address _owner);
 }
