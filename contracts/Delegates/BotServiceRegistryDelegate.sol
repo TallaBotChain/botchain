@@ -48,4 +48,19 @@ contract BotServiceRegistryDelegate is BotEntryStorableRegistry {
     createBotEntry(developerId, botServiceAddress, dataHash, url);
   }
 
+  /**
+  * @dev Override for BotEntryStorableRegistry.createBotEntry()
+  */
+  function createBotEntry(
+    uint256 developerId, 
+    address botServiceAddress, 
+    bytes32 dataHash,
+    bytes32 url
+  )
+    public
+  {
+    require(url != 0x0);
+    super.createBotEntry(developerId, botServiceAddress, dataHash, url);
+  }
+
 }

@@ -3,9 +3,11 @@
 import _ from 'lodash'
 import { expect } from 'chai'
 import { web3 } from './helpers/w3'
+import expectRevert from './helpers/expectRevert'
 import botCoinTransferApproveSetup from './helpers/botCoinTransferApproveSetup'
 
 const { accounts } = web3.eth
+const zeroAddr = '0x0000000000000000000000000000000000000000'
 const botAddr1 = '0x63e230f3b57ec9d180b9403c0d8783ddc135f664'
 const tallaWalletAddress = '0x1ae554eea0dcfdd72dcc3fa4034761cf6d041bf3'
 const entryPrice = 100
@@ -53,6 +55,26 @@ contract('BotProductRegistry', () => {
   describe('name()', () => {
     it('should return BotProductRegistry', async () => {
       expect(await botProductRegistry.name()).to.equal('BotProductRegistry')
+    })
+  })
+
+  describe('createBotProduct()', () => {
+    beforeEach(async () => {
+      await ownerRegistry.setMockOwner(1, accounts[1])
+    })
+
+    describe('when params are valid', async () => {
+      it('should succeed', async () => {
+        await botProductRegistry.createBotProduct(1, botAddr1, dataHash, url, { from: accounts[1] })
+      })
+    })
+
+    describe('when url is empty', async () => {
+      it('should revert', async () => {
+        await expectRevert(
+          botProductRegistry.createBotProduct(1, botAddr1, dataHash, zeroAddr, { from: accounts[1] })
+        )
+      })
     })
   })
 

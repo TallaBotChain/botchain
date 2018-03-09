@@ -3,12 +3,18 @@
 import _ from 'lodash'
 import { expect } from 'chai'
 import { web3 } from './helpers/w3'
+import expectRevert from './helpers/expectRevert'
 import botCoinTransferApproveSetup from './helpers/botCoinTransferApproveSetup'
 
 const { accounts } = web3.eth
+
+const botAddr1 = '0x63e230f3b57ec9d180b9403c0d8783ddc135f664'
+const zeroAddr = '0x0000000000000000000000000000000000000000'
 const tallaWalletAddress = '0x1ae554eea0dcfdd72dcc3fa4034761cf6d041bf3'
 const entryPrice = 100
 const initialBotCoinBalance = 100000000000
+const dataHash = web3.sha3('some data to hash')
+const url = 'www.google.com'
 
 const PublicStorage = artifacts.require('./PublicStorage.sol')
 const MockOwnerRegistry = artifacts.require('./MockOwnerRegistry.sol')
@@ -48,6 +54,26 @@ contract('BotServiceRegistry', () => {
   describe('name()', () => {
     it('should return BotServiceRegistry', async () => {
       expect(await botServiceRegistry.name()).to.equal('BotServiceRegistry')
+    })
+  })
+
+  describe('createBotService()', () => {
+    beforeEach(async () => {
+      await ownerRegistry.setMockOwner(1, accounts[1])
+    })
+
+    describe('when params are valid', async () => {
+      it('should succeed', async () => {
+        await botServiceRegistry.createBotService(1, botAddr1, dataHash, url, { from: accounts[1] })
+      })
+    })
+
+    describe('when url is empty', async () => {
+      it('should revert', async () => {
+        await expectRevert(
+          botServiceRegistry.createBotService(1, botAddr1, dataHash, zeroAddr, { from: accounts[1] })
+        )
+      })
     })
   })
 })
