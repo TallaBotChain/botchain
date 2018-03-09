@@ -162,10 +162,13 @@ contract BotEntryStorableRegistry is BotCoinPayableRegistry, ApprovableRegistry,
   }
 
   /**
-  * @dev Checks if _entryId has entry ownership. Abstract function from ActivatableRegistry
-  * @param _entryId An id associated with entry
+  * @dev Checks if msg.sender owns the given bot entry
+  * @param _botEntryId A bot entry id
+  * @return true if msg.sender owns the given bot entry
   */
-  function checkEntryOwnership(uint256 _entryId) private view returns (bool);
+  function checkEntryOwnership(uint256 _botEntryId) private view returns (bool) {
+    ownerOfEntry(_botEntryId) == msg.sender;
+  }
 
   /**
   * @dev Checks if entry exists for id. Abstract function from ApprovableRegistry

@@ -15,15 +15,6 @@ contract BotInstanceRegistryDelegate is BotEntryStorableRegistry {
   {}
 
   /**
-  * @dev Checks if botInstanceId has entry ownership
-  * @param _botInstanceId An id associated with the bot instance
-  * @return Returns true if _botInstanceId has entry ownership
-  */
-  function checkEntryOwnership(uint256 _botInstanceId) private view returns (bool) {
-    ownerOfEntry(_botInstanceId) == msg.sender;
-  }
-
-  /**
   * @dev Checks if botInstanceId entry exists
   * @param _botInstanceId An id associated with the bot instance
   * @return Returns true if entry exists for id
