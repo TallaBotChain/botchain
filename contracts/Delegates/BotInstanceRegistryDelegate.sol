@@ -8,9 +8,9 @@ import '../Registry/BotCoinPayableRegistry.sol';
 import './BotProductRegistryDelegate.sol';
 
 /**
- * @title BotInstanceRegistryDelegate
- * @dev Handles ownership of bot services. Bot services are owned by a developer in the developer registry.
- */
+* @title BotInstanceRegistryDelegate
+* @dev Handles ownership of bot services. Bot services are owned by a developer in the developer registry.
+*/
 contract BotInstanceRegistryDelegate is ActivatableRegistry, ApprovableRegistry, BotCoinPayableRegistry, OwnableRegistry {
   using SafeMath for uint256;
 
