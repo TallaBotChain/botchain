@@ -1,13 +1,9 @@
 pragma solidity ^0.4.18;
 
-import 'zeppelin-solidity/contracts/math/SafeMath.sol';
-import "../Registry/OwnableRegistry.sol";
-import "../Registry/ActivatableRegistry.sol";
-import "../Registry/ApprovableRegistry.sol";
-import '../Registry/BotCoinPayableRegistry.sol';
-import './BotProductRegistryDelegate.sol';
+import "../Registry/BotEntryStorableRegistry.sol";
 
 /**
+<<<<<<< HEAD
 * @title BotInstanceRegistryDelegate
 * @dev Handles ownership of bot services. Bot services are owned by a developer in the developer registry.
 */
@@ -31,14 +27,18 @@ contract BotInstanceRegistryDelegate is ActivatableRegistry, ApprovableRegistry,
     bytes32 data, 
     bytes32 url
   );
+=======
+ * @title BotInstanceRegistryDelegate
+ * @dev Handles ownership of bot instances. Bot instances belong to a bot product. Ownership of a bot instance is determined by the developer that owns the bot product that the instance belongs to.
+ */
+contract BotInstanceRegistryDelegate is BotEntryStorableRegistry {
+>>>>>>> use BotEntryStorableRegistry or BotInstanceRegistryDelegate
 
   /** @dev Constructor for BotInstanceRegistryDelegate */
   function BotInstanceRegistryDelegate(BaseStorage storage_)
-    ActivatableRegistry(storage_)
-    ApprovableRegistry(storage_)
-    BotCoinPayableRegistry(storage_)
-    OwnableRegistry(storage_)
+    BotEntryStorableRegistry(storage_)
     public
+<<<<<<< HEAD
     {}
 
   /**
@@ -136,6 +136,9 @@ contract BotInstanceRegistryDelegate is ActivatableRegistry, ApprovableRegistry,
 
     BotInstanceCreated(botInstanceId, botProductId, msg.sender, botInstanceAddress, dataHash, url);
   }
+=======
+  {}
+>>>>>>> use BotEntryStorableRegistry or BotInstanceRegistryDelegate
 
   /**
   * @dev Returns address of owner of entry
@@ -165,32 +168,4 @@ contract BotInstanceRegistryDelegate is ActivatableRegistry, ApprovableRegistry,
     return ownerOf(_botInstanceId) > 0;
   }
 
-  /**
-  * @dev Sets bot instance data
-  * @param botInstanceId An id associated with the bot instance
-  * @param botInstanceAddress An address associated with the bot instance
-  * @param botDataHash An data hash associated with the bot instance
-  */
-  function setBotInstanceData(uint256 botInstanceId, address botInstanceAddress, bytes32 botDataHash) private {
-    _storage.setAddress(keccak256("botInstanceAddresses", botInstanceId), botInstanceAddress);
-    _storage.setBytes32(keccak256("botInstanceDataHashes", botInstanceId), botDataHash);
-  }
-
-  /**
-  * @dev Sets bot instance id for address
-  * @param botInstanceAddress An address associated with the bot instance
-  * @param botInstanceId An id associated with the bot instance
-  */
-  function setBotInstanceIdForAddress(address botInstanceAddress, uint256 botInstanceId) private {
-    _storage.setUint(keccak256("botInstanceIdsByAddress", botInstanceAddress), botInstanceId);
-  }
-
-  /**
-  * @dev Sets url of botInstanceId 
-  * @param botInstanceId An id associated with the bot instance
-  * @param url An url associated with the bot instance
-  */
-  function setBotInstanceUrl(uint256 botInstanceId, bytes32 url) private {
-    _storage.setBytes32(keccak256("botInstanceId", botInstanceId), url);
-  }
 }
