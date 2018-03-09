@@ -2,7 +2,7 @@
 
 Truffle project for the botchain smart contracts (solidity)
 
-### Setup
+## Setup
 
 Make sure you have the following installed globally:
 
@@ -64,3 +64,8 @@ Add address from the BIP39 page to MetaMask. Send it some rinkeby Ether, or get 
 Go to https://infura.io/register.html to register for Infura. Paste your API key into `"infura_apikey"` value in `secrets.json`
 
 `npm run deploy-rinkeby` to deploy to rinkeby
+
+
+## BotChain Dapp Overview
+
+## Smart Contracts
