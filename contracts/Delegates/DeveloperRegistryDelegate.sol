@@ -32,6 +32,7 @@ contract DeveloperRegistryDelegate is ApprovableRegistry, OwnerRegistry, BotCoin
   /**
   * @dev Returns dataHash of developerId 
   * @param developerId An id associated with the developer
+  * @return Returns dataHash of developerId
   */
   function developerDataHash(uint256 developerId) public view returns (bytes32) {
     return _storage.getBytes32(keccak256("developerDataHash", developerId));
@@ -40,6 +41,7 @@ contract DeveloperRegistryDelegate is ApprovableRegistry, OwnerRegistry, BotCoin
   /**
   * @dev Returns developerUrl of developerId 
   * @param developerId An id associated with the developer
+  * @return Returns url of developerId
   */
   function developerUrl(uint256 developerId) public view returns (bytes32) {
     return _storage.getBytes32(keccak256("developerUrl", developerId));
@@ -48,6 +50,7 @@ contract DeveloperRegistryDelegate is ApprovableRegistry, OwnerRegistry, BotCoin
   /**
   * @dev Returns id of entry that is owned by the given owner address
   * @param owner address of the owner
+  * @return Returns id of entry that is owned by the given owner address
   */
   function owns(address owner) public view returns (uint256) {
     return _storage.getUint(keccak256("ownerToId", owner));
@@ -56,6 +59,7 @@ contract DeveloperRegistryDelegate is ApprovableRegistry, OwnerRegistry, BotCoin
   /**
   * @dev Returns address of owner of entry
   * @param _developerId An id associated with the developer
+  * @return Returns address of owner of entry
   */
   function ownerOfEntry(uint256 _developerId) public view returns (address _owner) {
     return ownerOf(_developerId);
@@ -65,6 +69,7 @@ contract DeveloperRegistryDelegate is ApprovableRegistry, OwnerRegistry, BotCoin
   * @dev Returns true if minting is allowed
   * @param minter Address of minter
   * @param _developerId An id associated with the developer
+  * @return Returns true if minting is allowed
   */
   function mintingAllowed(address minter, uint256 _developerId) public view returns (bool) {
     return ownerOf(_developerId) == minter && approvalStatus(_developerId) == true;
@@ -128,6 +133,7 @@ contract DeveloperRegistryDelegate is ApprovableRegistry, OwnerRegistry, BotCoin
   /**
   * @dev Checks if entry exists for id
   * @param _entryId An id associated entry
+  * @return Returns true if entry corresponding to id exists
   */
   function entryExists(uint256 _entryId) private view returns (bool) {
     return ownerOf(_entryId) != 0x0;
