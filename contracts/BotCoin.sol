@@ -11,7 +11,7 @@ contract BotCoin is StandardToken {
 	string public name = 'BotCoin';
 	string public symbol = 'BOT';
 	uint public decimals = 18;
-	uint public INITIAL_SUPPLY = 1.5 * 10^9;
+	uint public INITIAL_SUPPLY = 1.5 * 10**9;
 
 	/**
 	* @dev Creates botCoin
