@@ -54,9 +54,9 @@ contract OwnableRegistry is Registry, StorageConsumer {
   }
 
   /**
-  * @dev Gets the owner of the specified token ID
-  * @param _tokenId uint256 ID of the token to query the owner of
-  * @return ownerTokenId token ID currently marked as the owner of the given token ID
+  * @dev Gets the owner id of the specified token ID
+  * @param _tokenId uint256 ID of the token to query the owner id of
+  * @return ownerTokenId token ID currently marked as the owner id of the given token ID
   */
   function ownerOf(uint256 _tokenId) public view returns (uint256) {
     uint256 ownerTokenId = getTokenOwner(_tokenId);
@@ -65,7 +65,7 @@ contract OwnableRegistry is Registry, StorageConsumer {
   }
 
   /**
-  * @dev Returns address of owner of entry
+  * @dev Returns id of owner of entry
   * @param _entryId The id of the entry
   * @return address that owns the entry with the given id
   */
