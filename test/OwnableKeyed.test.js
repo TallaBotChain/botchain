@@ -6,22 +6,19 @@ import expectRevert from './helpers/expectRevert'
 
 const { accounts } = web3.eth
 
-const BaseStorage = artifacts.require('BaseStorage.sol')
+const BaseStorage = artifacts.require('BaseStorage')
 const OwnableKeyed = artifacts.require('OwnableKeyed')
 
 describe('OwnableKeyed', () => {
 	let ownable
 
 	beforeEach(async function () {
-		const _creator = accounts[0]
 	    const storage = await BaseStorage.new()
-
-		ownable = await OwnableKeyed.new(storage.address, { from: _creator })
+		ownable = await OwnableKeyed.new(storage.address)
 	})
 
   	it('should have an owner', async () => {
-    	const owner = await OwnableKeyed.new()
-    	expect(owner !== 0).to.equal(true)
+    	expect(ownable.address !== 0).to.equal(true)
   	})
 
   	describe('transferOwnership', () => {
