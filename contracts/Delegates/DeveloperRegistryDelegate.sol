@@ -8,20 +8,24 @@ import './BotProductRegistryDelegate.sol';
 
 /**
 * @title DeveloperRegistryDelegate
-* @dev Delegate contract for DeveloperRegistry functionality
+* @dev Delegate contract that handles functionality for ownership of developer entries. Implements
+*  ERC721 standard, which allows for transferability of developer entries.
 */
 contract DeveloperRegistryDelegate is ApprovableRegistry, OwnerRegistry, BotCoinPayableRegistry, ERC721TokenKeyed {
 
   /**
   * @dev Event for when developer is added
-  * @param owner address of the owner
-  * @param developerId An id associated with the developer
-  * @param dataHash A dataHash associated with the developer
-  * @param url A url associated with the developer
+  * @param owner address that owns the developer
+  * @param developerId ID of the developer
+  * @param dataHash Hash of data associated with the developer
+  * @param url A URL associated with the developer
   */
   event DeveloperAdded(address owner, uint256 developerId, bytes32 dataHash, bytes32 url);
 
-  /** @dev Constructor for DeveloperRegistryDelegate */
+  /**
+  * @dev Constructor for DeveloperRegistryDelegate
+  * @param storage_ address of a BaseStorage contract
+  */
   function DeveloperRegistryDelegate(BaseStorage storage_) 
     ApprovableRegistry(storage_)
     BotCoinPayableRegistry(storage_)
@@ -30,55 +34,59 @@ contract DeveloperRegistryDelegate is ApprovableRegistry, OwnerRegistry, BotCoin
     {}
 
   /**
-  * @dev Returns dataHash of developerId 
-  * @param developerId An id associated with the developer
-  * @return Returns dataHash of developerId
+  * @dev Returns hash of data for the given developer ID
+  * @param developerId A developer ID
+  * @return bytes32 hash of data
   */
   function developerDataHash(uint256 developerId) public view returns (bytes32) {
     return _storage.getBytes32(keccak256("developerDataHash", developerId));
   }
 
   /**
-  * @dev Returns developerUrl of developerId 
-  * @param developerId An id associated with the developer
-  * @return Returns url of developerId
+  * @dev Returns URL for a given developer ID 
+  * @param developerId A developer ID
+  * @return bytes32 URL
   */
   function developerUrl(uint256 developerId) public view returns (bytes32) {
     return _storage.getBytes32(keccak256("developerUrl", developerId));
   }
 
   /**
-  * @dev Returns id of entry that is owned by the given owner address
+  * @dev Returns ID of the developer entry that is owned by the given address. An address
+  *  can only own one developer entry.
   * @param owner address of the owner
-  * @return Returns id of entry that is owned by the given owner address
+  * @return A developer ID, or 0 if the given address does not own a developer entry
   */
   function owns(address owner) public view returns (uint256) {
     return _storage.getUint(keccak256("ownerToId", owner));
   }
 
   /**
-  * @dev Returns address of owner of entry
-  * @param _developerId An id associated with the developer
-  * @return Returns address of owner of entry
+  * @dev Returns address that owns the given developer ID.
+  *  Implements Registry.ownerOfEntry() abstract
+  * @param _developerId A developer ID
+  * @return The address that owns the given developer ID
   */
   function ownerOfEntry(uint256 _developerId) public view returns (address _owner) {
     return ownerOf(_developerId);
   }
 
   /**
-  * @dev Returns true if minting is allowed
+  * @dev Returns true if the given address is allowed to mint bot products for the given
+  *  developer ID
   * @param minter Address of minter
-  * @param _developerId An id associated with the developer
-  * @return Returns true if minting is allowed
+  * @param _developerId A developer ID
+  * @return True if minting is allowed
   */
   function mintingAllowed(address minter, uint256 _developerId) public view returns (bool) {
     return ownerOf(_developerId) == minter && approvalStatus(_developerId) == true;
   }
 
   /**
-  * @dev Adds the sender's address as a new developer. defaults to unapproved.
+  * @dev Adds a new developer entry which is owned by the sender address. Defaults to unapproved,
+  *  but can be approved by the contract owner in a subsequent transaction.
   * @param _data A hash of the data associated with the new developer
-  * @param _url A url associated with this developer
+  * @param _url A URL associated with the new developer
   */
   function addDeveloper(bytes32 _data, bytes32 _url) public {
     require(owns(msg.sender) == 0);
@@ -99,41 +107,45 @@ contract DeveloperRegistryDelegate is ApprovableRegistry, OwnerRegistry, BotCoin
   }
 
   /**
-  * @dev Sets dataHash of developerId 
-  * @param developerId An id associated with the developer
-  * @param dataHash An dataHash associated with the developer
+  * @dev Private function to set a data hash for a developer
+  * @param developerId A developer ID
+  * @param dataHash bytes32 hash of data associated with the given developer ID
   */
   function setDeveloperDataHash(uint256 developerId, bytes32 dataHash) private {
     _storage.setBytes32(keccak256("developerDataHash", developerId), dataHash);
   }
 
   /**
-  * @dev Sets url of developerId 
-  * @param developerId An id associated with the developer
-  * @param url An url associated with the developer
+  * @dev Private function to set a URL for a developer
+  * @param developerId A developer ID
+  * @param url bytes32 URL associated with the given developer ID
   */
   function setDeveloperUrl(uint256 developerId, bytes32 url) private {
     _storage.setBytes32(keccak256("developerUrl", developerId), url);
   }
 
   /**
-  * @dev Sets the owner id of a developer
-  * @param owner address of the owner
-  * @param developerId An id associated with the developer
+  * @dev Private function to set the owner for a developer
+  * @param owner Address of the owner
+  * @param developerId A developer ID
   */
   function setOwnerId(address owner, uint256 developerId) private {
     _storage.setUint(keccak256("ownerToId", owner), developerId);
   }
 
-  /** @dev Sets the address of a bot product */
+  /**
+  * @dev Private function to set the address of the bot product registry
+  * @param botProductRegistry Address of a bot product registry
+  */
   function setBotProductRegistry(BotProductRegistryDelegate botProductRegistry) private {
     _storage.setAddress("botProductRegistry", botProductRegistry);
   }
 
   /**
-  * @dev Checks if entry exists for id
-  * @param _entryId An id associated entry
-  * @return Returns true if entry corresponding to id exists
+  * @dev Checks if the given entry ID exists in the registry.
+  *  Implements ApprovableRegistry.entryExists() abstract.
+  * @param _entryId An entry ID
+  * @return bool indicating if the given entry ID exists
   */
   function entryExists(uint256 _entryId) private view returns (bool) {
     return ownerOf(_entryId) != 0x0;
