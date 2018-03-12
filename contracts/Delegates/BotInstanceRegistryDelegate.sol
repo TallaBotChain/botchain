@@ -4,21 +4,30 @@ import "../Registry/BotEntryStorableRegistry.sol";
 
 /**
  * @title BotInstanceRegistryDelegate
- * @dev Handles ownership of bot instances. Bot instances belong to a bot product. Ownership of a bot instance is determined by the developer that owns the bot product that the instance belongs to.
+ * @dev Delegate contract for functionality that handles ownership of bot instances.
+ *  Bot instances belong to a bot product. Ownership of a bot instance is determined
+ *  by the developer that owns the bot product that the instance belongs to.
  */
 contract BotInstanceRegistryDelegate is BotEntryStorableRegistry {
 
   string public constant name = "BotInstanceRegistry";
 
-  /** @dev Constructor for BotInstanceRegistryDelegate */
+  /**
+  * @dev Constructor for BotInstanceRegistryDelegate
+  * @param storage_ address of a BaseStorage contract
+  */
   function BotInstanceRegistryDelegate(BaseStorage storage_)
     BotEntryStorableRegistry(storage_)
     public
   {}
 
   /**
-  * @dev Returns bot instance associated with a bot instance id
-  * @param botInstanceId An id associated with the bot instance
+  * @dev Returns bot instance data for a given bot instance ID
+  * @param botInstanceId ID of the bot instance
+  * @return _owner The address that owns the bot instance
+  * @return _botInstanceAddress The address of the bot instance
+  * @return _data A hash of data associated with the bot instance
+  * @return _url A URL for the bot instance
   */
   function getBotInstance(uint256 botInstanceId) public view returns
   (

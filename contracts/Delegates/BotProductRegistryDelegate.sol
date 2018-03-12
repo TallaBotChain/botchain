@@ -4,23 +4,31 @@ import "../Registry/BotEntryStorableRegistry.sol";
 import "../Registry/OwnerRegistry.sol";
 
 /**
-* @title BotProductRegistryDelegate
-* @dev Non-Fungible token (ERC-721) that handles ownership and transfer
-*  of Bots. Bots can be transferred to and from approved developers.
-*/
+ * @title BotProductRegistryDelegate
+ * @dev Delegate contract for functionality that handles ownership of bot products.
+ *  Bot products belong to a developer. Bot instances can be minted for a bot product.
+ *  Ownership of a bot product is determined by the developer that the bot product belongs to.
+ */
 contract BotProductRegistryDelegate is BotEntryStorableRegistry, OwnerRegistry {
 
   string public constant name = "BotProductRegistry";
 
-  /** @dev Constructor for BotProductRegistryDelegate */
+  /**
+  * @dev Constructor for BotProductRegistryDelegate
+  * @param storage_ address of a BaseStorage contract
+  */
   function BotProductRegistryDelegate(BaseStorage storage_)
     BotEntryStorableRegistry(storage_)
     public
   {}
 
   /**
-  * @dev Returns bot product associated with a bot product id
-  * @param botProductId An id associated with the bot product
+  * @dev Returns bot product data for the given bot product ID
+  * @param botProductId A bot product ID
+  * @return _owner The address that owns the bot product
+  * @return _botEntryAddress The address of the bot product
+  * @return _data A hash of data associated with the bot product
+  * @return _url A URL for the bot product
   */
   function getBotProduct(uint256 botProductId) public view returns
   (
@@ -37,7 +45,7 @@ contract BotProductRegistryDelegate is BotEntryStorableRegistry, OwnerRegistry {
   * @param developerId ID of the developer that will own this bot product
   * @param botProductAddress Address of the bot product
   * @param dataHash Hash of data associated with the bot product
-  * @param url A url associated with this bot product
+  * @param url A URL associated with this bot product
   */
   function createBotProduct(
     uint256 developerId, 
@@ -66,10 +74,11 @@ contract BotProductRegistryDelegate is BotEntryStorableRegistry, OwnerRegistry {
   }
 
   /**
-  * @dev Returns true if minting is allowed
+  * @dev Returns true if the given address is allowed to mint bot instances under the
+  *  given bot product ID. Implementation for OwnerRegistry abstract.
   * @param _minter Address of minter
-  * @param _botProductId The id of the bot product that the bot instance belongs to
-  * @return Returns true if minting is allowed
+  * @param _botProductId A bot product ID
+  * @return True if minting is allowed
   */
   function mintingAllowed(address _minter, uint256 _botProductId) public view returns (bool) {
     uint256 developerId = ownerOf(_botProductId);
