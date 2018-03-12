@@ -135,7 +135,7 @@ contract BotEntryStorableRegistry is BotCoinPayableRegistry, ApprovableRegistry,
   * @dev Sets bot entry data
   * @param botEntryId An id associated with the bot entry
   * @param botEntryAddress An address associated with the bot entry
-  * @param botDataHash An data hash associated with the bot entry
+  * @param botDataHash A data hash associated with the bot entry
   */
   function setBotEntryData(uint256 botEntryId, address botEntryAddress, bytes32 botDataHash) private {
     _storage.setAddress(keccak256("botEntryAddresses", botEntryId), botEntryAddress);
