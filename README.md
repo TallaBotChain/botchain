@@ -98,7 +98,7 @@ The Subscribable has a Subscription contract passed in and provides functions th
 
 #### BotInstanceRegistryDelegate
 
-A deployed contract that handles ownership of bot services. Bot services are owned by a developer in the developer registry
+A deployed contract that handles ownership of bot instances. Bot instances belong to a bot product. Ownership of a bot instance is determined by the developer that owns the bot product that the instance belongs to
 
 #### BotProductRegistryDelegate
 
