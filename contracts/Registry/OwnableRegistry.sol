@@ -67,7 +67,7 @@ contract OwnableRegistry is Registry, StorageConsumer {
   /**
   * @dev Returns id of owner of entry
   * @param _entryId The id of the entry
-  * @return address that owns the entry with the given id
+  * @return id that owns the entry with the given id
   */
   function ownerOfEntry(uint256 _entryId) public view returns (address) {
     uint256 parentEntryId = ownerOf(_entryId);
