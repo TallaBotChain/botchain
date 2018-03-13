@@ -5,7 +5,6 @@ const contractsOutputFile = 'build/contracts.json'
 const contractFiles = [
   'DeveloperRegistry.json',
   'BotCoin.json',
-  'TokenSubscription.json'
 ]
 
 let contractJSON
