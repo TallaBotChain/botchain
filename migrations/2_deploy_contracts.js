@@ -61,17 +61,28 @@ module.exports = function (deployer) {
   }).then((_token) => {
   	tokenAddress = _token.address
   	return DeveloperRegistryDelegate.new()
-  }).then((_address) => {
-  	developerRegistryAddress = _address
+  }).then((developerRegistryDelegate) => {
+  	return DeveloperRegistryDelegate.at(developerRegistryDelegate.address)
+  }).then((developerRegistry) => {
+ 	  developerRegistry.addDeveloper(dataHash, url)
   	return BotProductRegistryDelegate.new()
-  }).then((_address) => {
-  	botProductRegistryAddress = _address
+  }).then((botProductRegistryDelegate) => {
+  	botProductRegistryAddress = botProductRegistryDelegate.address
+  	return BotProductRegistryDelegate.at(botProductRegistryAddress)
+  }).then((botProductRegistry) => {
+ 	  botProductRegistry.createBotProduct(devId, botProductRegistryAddress, dataHash, url)
   	return BotServiceRegistryDelegate.new()
-  }).then((_address) => {
-  	botServiceRegistryAddress = _address
+  }).then((botServiceRegistryDelegate) => {
+  	botServiceRegistryAddress = botServiceRegistryDelegate.address
+  	return BotServiceRegistryDelegate.at(botServiceRegistryAddress)
+  }).then((botServiceRegistry) => {
+ 	  botServiceRegistry.createBotService(devId, botServiceRegistryAddress, dataHash, url)
   	return BotInstanceRegistryDelegate.new()
-  }).then((_address) => {
-  	botInstanceRegistryAddress = _address
+  }).then((botInstanceRegistryDelegate) => {
+  	botInstanceRegistryAddress = botInstanceRegistryDelegate.address
+  	return BotInstanceRegistryDelegate.at(botInstanceRegistryAddress)
+  }).then((botInstanceRegistry) => {
+  	botInstanceRegistry.createBotInstance(botId, botInstanceRegistryAddress, dataHash, url)
   }).then(() => {
   	return DeveloperRegistry.new(
   		storage,
@@ -84,9 +95,7 @@ module.exports = function (deployer) {
   		botProductRegistryAddress, 
   		tokenAddress
   	), (err) => { console.error(err) }
-  })
-/*
-  .then(() => {
+  }).then(() => {
   	return BotEntryRegistry.new(
   		storage,
   		botServiceRegistryAddress, 
@@ -99,24 +108,4 @@ module.exports = function (deployer) {
   		tokenAddress
   	), (err) => { console.error(err) }
   })
-
-  developerRegistry = await DeveloperRegistryDelegate.at(developerRegistryAddress)
-  await developerRegistry.addDeveloper(dataHash, url)
-
-  botProductRegistry = await BotProductRegistryDelegate.at(botProductRegistryAddress)
-  await botProductRegistry.createBotProduct(devId, botProductRegistryAddress, dataHash, url)
-
-	botServiceRegistry = await BotServiceRegistryDelegate.at(botServiceRegistryAddress)
-  await botServiceRegistry.createBotService(devId, botServiceRegistryAddress, dataHash, url)
-
-  botInstanceRegistry = await BotInstanceRegistryDelegate.at(botInstanceRegistryAddress)
-  await botInstanceRegistry.createBotInstance(botId, botInstanceRegistryAddress, dataHash, url)
-
-   deployer.deploy(DeveloperRegistry).then(() => {
-    return deployer.deploy(BotCoin)
-  }).then(() => {
-    return deployer.deploy(TokenSubscription)
-  }, (err) => {
-    console.error(err)
-  }) */
 }
