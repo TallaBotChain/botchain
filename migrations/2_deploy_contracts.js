@@ -78,16 +78,14 @@ module.exports = function (deployer) {
   		developerRegistryAddress, 
   		tokenAddress
   	), (err) => { console.error(err) }
-  })
-/*
-  .then(() => {
+  }).then(() => {
   	return BotEntryRegistry.new(
   		storage,
   		botProductRegistryAddress, 
   		tokenAddress
   	), (err) => { console.error(err) }
   })
-
+/*
   .then(() => {
   	return BotEntryRegistry.new(
   		storage,
