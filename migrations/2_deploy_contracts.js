@@ -42,16 +42,9 @@ const BotInstanceRegistryDelegate = artifacts.require('./BotInstanceRegistryDele
 const BotEntryRegistry = artifacts.require('./BotEntryRegistry.sol')
 const DeveloperRegistry = artifacts.require('./DeveloperRegistry.sol')
 
-const walletAddress = '0xdf08f82de32b8d460adbe8d72043e3a7e25a3b39'
-const entryPrice =  1 * 10 ** 18
-const devId = '0x6704fbfcd5ef766b287262fa2281c105d57246a6'
-const botId = '0x9e1ef1ec212f5dffb41d35d9e5c14054f26c6560'
-const dataHash = web3.sha3('some data to hash')
-const url = web3.fromAscii('www.google.com')
-
 module.exports = function (deployer) {
-  let storage, tokenAddress, developerRegistryAddress, botProductRegistryAddress
-  let botServiceRegistryAddress, botInstanceRegistryAddress
+  let storage, tokenAddress, developerRegistryDelegateAddress, botProductRegistryDelegateAddress
+  let botServiceRegistryDelegateAddress, botInstanceRegistryDelegateAddress
 
 	deployer.then(() => {
     return PublicStorage.new()
@@ -64,48 +57,22 @@ module.exports = function (deployer) {
   }).then((developerRegistryDelegate) => {
   	return DeveloperRegistryDelegate.at(developerRegistryDelegate.address)
   }).then((developerRegistry) => {
- 	  developerRegistry.addDeveloper(dataHash, url)
+  	developerRegistryDelegateAddress = developerRegistry.address
   	return BotProductRegistryDelegate.new()
   }).then((botProductRegistryDelegate) => {
-  	botProductRegistryAddress = botProductRegistryDelegate.address
-  	return BotProductRegistryDelegate.at(botProductRegistryAddress)
-  }).then((botProductRegistry) => {
- 	  botProductRegistry.createBotProduct(devId, botProductRegistryAddress, dataHash, url)
+  	botProductRegistryDelegateAddress = botProductRegistryDelegate.address
+  	return BotProductRegistryDelegate.at(botProductRegistryDelegateAddress)
+  }).then(() => {
   	return BotServiceRegistryDelegate.new()
   }).then((botServiceRegistryDelegate) => {
-  	botServiceRegistryAddress = botServiceRegistryDelegate.address
-  	return BotServiceRegistryDelegate.at(botServiceRegistryAddress)
-  }).then((botServiceRegistry) => {
- 	  botServiceRegistry.createBotService(devId, botServiceRegistryAddress, dataHash, url)
+  	botServiceRegistryDelegateAddress = botServiceRegistryDelegate.address
+  	return BotServiceRegistryDelegate.at(botServiceRegistryDelegateAddress)
+  }).then(() => {
   	return BotInstanceRegistryDelegate.new()
   }).then((botInstanceRegistryDelegate) => {
-  	botInstanceRegistryAddress = botInstanceRegistryDelegate.address
-  	return BotInstanceRegistryDelegate.at(botInstanceRegistryAddress)
-  }).then((botInstanceRegistry) => {
-  	botInstanceRegistry.createBotInstance(botId, botInstanceRegistryAddress, dataHash, url)
-  }).then(() => {
-  	return DeveloperRegistry.new(
-  		storage,
-  		developerRegistryAddress, 
-  		tokenAddress
-  	), (err) => { console.error(err) }
-  }).then(() => {
-  	return BotEntryRegistry.new(
-  		storage,
-  		botProductRegistryAddress, 
-  		tokenAddress
-  	), (err) => { console.error(err) }
-  }).then(() => {
-  	return BotEntryRegistry.new(
-  		storage,
-  		botServiceRegistryAddress, 
-  		tokenAddress
-  	), (err) => { console.error(err) }
-  }).then(() => {
-  	return BotEntryRegistry.new(
-  		storage,
-  		botInstanceRegistryAddress, 
-  		tokenAddress
-  	), (err) => { console.error(err) }
-  })
-}
+  	botInstanceRegistryDelegateAddress = botInstanceRegistryDelegate.address
+  	return BotInstanceRegistryDelegate.at(botInstanceRegistryDelegateAddress)
+  }).catch((err) =>{
+  	console.error(err)
+  });
+} 
