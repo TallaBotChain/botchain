@@ -1,37 +1,5 @@
 /* global artifacts */
 
-/*
-* If using parity, run with the --geth flag to run in geth compatible mode,
-* otherwise truffle migrate will throw an error even if the contract deployment
-* is successful
-*
-* this is a known issue with truffle:
-* https://github.com/trufflesuite/truffle-migrate/issues/15
-*
-* parity --chain kovan --geth --force-ui
-*
-*/
-
-/*
-The script needs to first deploy the following contracts:
-
-* An instance of PublicStorage
-* An instance of BotCoin
-* The four contracts in Delegate dir:
-  - DeveloperRegistryDelegate
-  - BotProductRegistryDelegate
-  - BotServiceRegistryDelegate
-  - BotInstanceRegistryDelegate
-* Four registry instance contracts. Each instantiated with PublicStorage, delegate, and BotCoin addresses
-  - A DeveloperRegistry instance, with proxy implementation set to DeveloperRegistryDelegate address
-  - A BotEntryRegistry instance, with proxy implementation set to BotProductRegistryDelegate address
-  - A BotEntryRegistry instance, with proxy implementation set to BotServiceRegistryDelegate address
-  - A BotEntryRegistry instance, with proxy implementation set to BotInstanceRegistryDelegate address
-
-After deployment, script needs to set talla wallet and entry price for each registry. 
-This can be done by executing transactions to each registry instance contract.
-*/
-
 const PublicStorage = artifacts.require('./PublicStorage.sol')
 const BotCoin = artifacts.require('./BotCoin.sol')
 const DeveloperRegistryDelegate = artifacts.require('./DeveloperRegistryDelegate.sol')
@@ -42,37 +10,142 @@ const BotInstanceRegistryDelegate = artifacts.require('./BotInstanceRegistryDele
 const BotEntryRegistry = artifacts.require('./BotEntryRegistry.sol')
 const DeveloperRegistry = artifacts.require('./DeveloperRegistry.sol')
 
-module.exports = function (deployer) {
-  let storage, tokenAddress, developerRegistryDelegateAddress, botProductRegistryDelegateAddress
-  let botServiceRegistryDelegateAddress, botInstanceRegistryDelegateAddress
+const tallaWalletAddress = '0xc3f61fca6bd491424bc19e844c6847c9c9ab3d2c'
+const entryPrice = 1 * 10 ** 18
 
-	deployer.then(() => {
+const fs = require('fs')
+const contractsPath = 'build/contracts'
+const contractsOutputFile = 'build/contracts.json'
+let jsonOutput = {}
+
+module.exports = function (deployer) {
+  let storage, botCoin
+  let developerRegistry, botProductRegistry, botServiceRegistry, botInstanceRegistry
+
+  deployer.then(() => {
     return PublicStorage.new()
   }).then((_storage) => {
     storage = _storage
+    addToJSON("PublicStorage", storage.address)
     return BotCoin.new()
-  }).then((_token) => {
-  	tokenAddress = _token.address
-  	return DeveloperRegistryDelegate.new()
-  }).then((developerRegistryDelegate) => {
-  	return DeveloperRegistryDelegate.at(developerRegistryDelegate.address)
+  }).then((_botCoin) => {
+    botCoin = _botCoin
+    addToJSON("BotCoin", botCoin.address)
+    return deployDeveloperRegistry(
+      storage.address,
+      botCoin.address
+    )
+  }).then((_developerRegistry) => {
+    developerRegistry = _developerRegistry
+    addToJSON("DeveloperRegistry", developerRegistry.address)
+    return deployRegistry(
+      'BotProductRegistryDelegate',
+      developerRegistry.address,
+      storage.address,
+      botCoin.address,
+      BotEntryRegistry,
+      BotProductRegistryDelegate
+    )
+  }).then((_botProductRegistry) => {
+    botProductRegistry = _botProductRegistry
+    addToJSON("BotProductRegistry", botProductRegistry.address)
+    return deployRegistry(
+      'BotServiceRegistryDelegate',
+      developerRegistry.address,
+      storage.address,
+      botCoin.address,
+      BotEntryRegistry,
+      BotServiceRegistryDelegate
+    )
+  }).then((_botServiceRegistry) => {
+    botServiceRegistry = _botServiceRegistry
+    addToJSON("BotServiceRegistry", botServiceRegistry.address)
+    return deployRegistry(
+      'BotInstanceRegistryDelegate',
+      botProductRegistry.address,
+      storage.address,
+      botCoin.address,
+      BotEntryRegistry,
+      BotInstanceRegistryDelegate
+    )
+  }).then((_botInstanceRegistry) => {
+    botInstanceRegistry = _botInstanceRegistry
+    addToJSON("BotInstanceRegistry", botInstanceRegistry.address)
+    return configureRegistry('developer', developerRegistry, tallaWalletAddress, entryPrice)
+  }).then(() => {
+    return configureRegistry('bot product', botProductRegistry, tallaWalletAddress, entryPrice)
+  }).then(() => {
+    return configureRegistry('bot service', botServiceRegistry, tallaWalletAddress, entryPrice)
+  }).then(() => {
+    return configureRegistry('bot instance', botInstanceRegistry, tallaWalletAddress, entryPrice)
+  })
+  .catch((err) => {
+    console.error(err)
+  })
+}
+
+function deployDeveloperRegistry (
+  storageAddress,
+  botCoinAddress
+) {
+  console.log('')
+  console.log(`deploying contracts for developer registry`)
+  return DeveloperRegistryDelegate.new().then((developerRegistryDelegate) => {
+    console.log(`deployed developer registry delegate: ${developerRegistryDelegate.address}`)
+    addToJSON("DeveloperRegistryDelegate", developerRegistryDelegate.address)
+    return DeveloperRegistry.new(
+      storageAddress,
+      developerRegistryDelegate.address,
+      botCoinAddress
+    )
   }).then((developerRegistry) => {
-  	developerRegistryDelegateAddress = developerRegistry.address
-  	return BotProductRegistryDelegate.new()
-  }).then((botProductRegistryDelegate) => {
-  	botProductRegistryDelegateAddress = botProductRegistryDelegate.address
-  	return BotProductRegistryDelegate.at(botProductRegistryDelegateAddress)
-  }).then(() => {
-  	return BotServiceRegistryDelegate.new()
-  }).then((botServiceRegistryDelegate) => {
-  	botServiceRegistryDelegateAddress = botServiceRegistryDelegate.address
-  	return BotServiceRegistryDelegate.at(botServiceRegistryDelegateAddress)
-  }).then(() => {
-  	return BotInstanceRegistryDelegate.new()
-  }).then((botInstanceRegistryDelegate) => {
-  	botInstanceRegistryDelegateAddress = botInstanceRegistryDelegate.address
-  	return BotInstanceRegistryDelegate.at(botInstanceRegistryDelegateAddress)
-  }).catch((err) =>{
-  	console.error(err)
-  });
-} 
+    console.log(`deployed developer registry instance: ${developerRegistry.address}`)
+    return DeveloperRegistryDelegate.at(developerRegistry.address)
+  })
+}
+
+function deployRegistry (
+  name,
+  ownerRegistryAddress,
+  storageAddress,
+  botCoinAddress,
+  registryArtifact,
+  delegateArtifact
+) {
+  console.log('')
+  console.log(`deploying contracts for ${name} `)
+  return delegateArtifact.new().then((registryDelegate) => {
+    console.log(`deployed ${name} registry delegate: ${registryDelegate.address}`)
+    addToJSON(name, registryDelegate.address)
+    return registryArtifact.new(
+      ownerRegistryAddress,
+      storageAddress,
+      registryDelegate.address,
+      botCoinAddress
+    )
+  }).then((registry) => {
+    console.log(`deployed ${name} registry instance: ${registry.address}`)
+    return delegateArtifact.at(registry.address)
+  })
+  
+}
+
+function configureRegistry (name, registry, walletAddress, price) {
+  console.log('')
+  console.log(`configuring ${name} registry`, registry)
+  return registry.setTallaWallet(walletAddress).then(() => {
+    console.log(` ${name}: tallaWalletAddress = ${walletAddress}`)
+    return registry.setEntryPrice(price).then(() => {
+      console.log(` ${name}: entryPrice = ${price}`)
+    })
+  })
+}
+
+function addToJSON (name, address) {
+  jsonOutput[name] = address
+  fs.writeFile(contractsOutputFile, JSON.stringify(jsonOutput, null, 2), function (err) {
+    if (err) {
+      return console.log(err)
+    }
+  })
+}

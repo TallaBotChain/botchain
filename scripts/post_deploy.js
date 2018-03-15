@@ -1,3 +1,4 @@
+/*
 const fs = require('fs')
 
 const contractsPath = 'build/contracts'
@@ -28,3 +29,4 @@ function getContractAddress (networksJSON) {
   }
   return '""'
 }
+*/
