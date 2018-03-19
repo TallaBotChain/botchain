@@ -26,20 +26,18 @@ module.exports = function (deployer) {
     return PublicStorage.new()
   }).then((_storage) => {
     storage = _storage
-    addToJSON("PublicStorage", storage.address)
     return BotCoin.new()
   }).then((_botCoin) => {
     botCoin = _botCoin
-    addToJSON("BotCoin", botCoin.address)
     return deployDeveloperRegistry(
       storage.address,
       botCoin.address
     )
   }).then((_developerRegistry) => {
     developerRegistry = _developerRegistry
-    addToJSON("DeveloperRegistry", developerRegistry.address)
     return deployRegistry(
-      'BotProductRegistryDelegate',
+      'Bot Product',
+      'BotProductRegistry',
       developerRegistry.address,
       storage.address,
       botCoin.address,
@@ -48,9 +46,9 @@ module.exports = function (deployer) {
     )
   }).then((_botProductRegistry) => {
     botProductRegistry = _botProductRegistry
-    addToJSON("BotProductRegistry", botProductRegistry.address)
     return deployRegistry(
-      'BotServiceRegistryDelegate',
+      'Bot Service',
+      'BotServiceRegistry',
       developerRegistry.address,
       storage.address,
       botCoin.address,
@@ -59,9 +57,9 @@ module.exports = function (deployer) {
     )
   }).then((_botServiceRegistry) => {
     botServiceRegistry = _botServiceRegistry
-    addToJSON("BotServiceRegistry", botServiceRegistry.address)
     return deployRegistry(
-      'BotInstanceRegistryDelegate',
+      'Bot Instance',
+      'BotInstanceRegistry',
       botProductRegistry.address,
       storage.address,
       botCoin.address,
@@ -70,7 +68,6 @@ module.exports = function (deployer) {
     )
   }).then((_botInstanceRegistry) => {
     botInstanceRegistry = _botInstanceRegistry
-    addToJSON("BotInstanceRegistry", botInstanceRegistry.address)
     return configureRegistry('developer', developerRegistry, tallaWalletAddress, entryPrice)
   }).then(() => {
     return configureRegistry('bot product', botProductRegistry, tallaWalletAddress, entryPrice)
@@ -90,6 +87,8 @@ function deployDeveloperRegistry (
 ) {
   console.log('')
   console.log(`deploying contracts for developer registry`)
+  addToJSON("PublicStorage", storageAddress)
+  addToJSON("BotCoin", botCoinAddress)
   return DeveloperRegistryDelegate.new().then((developerRegistryDelegate) => {
     console.log(`deployed developer registry delegate: ${developerRegistryDelegate.address}`)
     addToJSON("DeveloperRegistryDelegate", developerRegistryDelegate.address)
@@ -100,12 +99,14 @@ function deployDeveloperRegistry (
     )
   }).then((developerRegistry) => {
     console.log(`deployed developer registry instance: ${developerRegistry.address}`)
+    addToJSON("DeveloperRegistry", developerRegistry.address)
     return DeveloperRegistryDelegate.at(developerRegistry.address)
   })
 }
 
 function deployRegistry (
   name,
+  displayName,
   ownerRegistryAddress,
   storageAddress,
   botCoinAddress,
@@ -116,7 +117,7 @@ function deployRegistry (
   console.log(`deploying contracts for ${name} `)
   return delegateArtifact.new().then((registryDelegate) => {
     console.log(`deployed ${name} registry delegate: ${registryDelegate.address}`)
-    addToJSON(name, registryDelegate.address)
+    addToJSON(displayName, registryDelegate.address)
     return registryArtifact.new(
       ownerRegistryAddress,
       storageAddress,
@@ -125,6 +126,8 @@ function deployRegistry (
     )
   }).then((registry) => {
     console.log(`deployed ${name} registry instance: ${registry.address}`)
+    displayName = displayName + "Delegate"
+    addToJSON(displayName, registry.address)
     return delegateArtifact.at(registry.address)
   })
   
@@ -141,8 +144,9 @@ function configureRegistry (name, registry, walletAddress, price) {
   })
 }
 
-function addToJSON (name, address) {
-  jsonOutput[name] = address
+function addToJSON (displayName, address) {
+  console.log(`Adding ${displayName} to JSON with address ${address}`)
+  jsonOutput[displayName] = address
   fs.writeFile(contractsOutputFile, JSON.stringify(jsonOutput, null, 2), function (err) {
     if (err) {
       return console.log(err)
