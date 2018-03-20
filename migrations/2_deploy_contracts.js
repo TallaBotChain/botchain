@@ -14,7 +14,6 @@ const tallaWalletAddress = '0xc3f61fca6bd491424bc19e844c6847c9c9ab3d2c'
 const entryPrice = 1 * 10 ** 18
 
 const fs = require('fs')
-const contractsPath = 'build/contracts'
 const contractsOutputFile = 'build/contracts.json'
 let jsonOutput = {}
 
