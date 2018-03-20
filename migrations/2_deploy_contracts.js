@@ -116,7 +116,8 @@ function deployRegistry (
   console.log(`deploying contracts for ${name} `)
   return delegateArtifact.new().then((registryDelegate) => {
     console.log(`deployed ${name} registry delegate: ${registryDelegate.address}`)
-    addToJSON(displayName, registryDelegate.address)
+    delegateName = displayName + "Delegate"
+    addToJSON(delegateName, registryDelegate.address)
     return registryArtifact.new(
       ownerRegistryAddress,
       storageAddress,
@@ -125,7 +126,6 @@ function deployRegistry (
     )
   }).then((registry) => {
     console.log(`deployed ${name} registry instance: ${registry.address}`)
-    displayName = displayName + "Delegate"
     addToJSON(displayName, registry.address)
     return delegateArtifact.at(registry.address)
   })
