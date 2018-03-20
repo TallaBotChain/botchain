@@ -25,9 +25,11 @@ module.exports = function (deployer) {
     return PublicStorage.new()
   }).then((_storage) => {
     storage = _storage
+    addToJSON("PublicStorage", storage.address)
     return BotCoin.new()
   }).then((_botCoin) => {
     botCoin = _botCoin
+    addToJSON("BotCoin", botCoin.address)
     return deployDeveloperRegistry(
       storage.address,
       botCoin.address
@@ -86,8 +88,6 @@ function deployDeveloperRegistry (
 ) {
   console.log('')
   console.log(`deploying contracts for developer registry`)
-  addToJSON("PublicStorage", storageAddress)
-  addToJSON("BotCoin", botCoinAddress)
   return DeveloperRegistryDelegate.new().then((developerRegistryDelegate) => {
     console.log(`deployed developer registry delegate: ${developerRegistryDelegate.address}`)
     addToJSON("DeveloperRegistryDelegate", developerRegistryDelegate.address)
