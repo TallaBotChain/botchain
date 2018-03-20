@@ -134,7 +134,7 @@ function deployRegistry (
 
 function configureRegistry (name, registry, walletAddress, price) {
   console.log('')
-  console.log(`configuring ${name} registry`, registry)
+  console.log(`configuring ${name} registry`)
   return registry.setTallaWallet(walletAddress).then(() => {
     console.log(` ${name}: tallaWalletAddress = ${walletAddress}`)
     return registry.setEntryPrice(price).then(() => {
