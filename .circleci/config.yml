@@ -11,6 +11,7 @@ jobs:
       - AWS_DEFAULT_REGION: "us-east-1"
       - ECS_CLUSTER: "main"
       - NAME_PREFIX: "dev-botchain-"
+      - ABI_BUCKET: "talla-botchain-dev-abi"
 
     steps:
       - checkout
