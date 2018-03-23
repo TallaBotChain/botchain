@@ -9,6 +9,8 @@
     "src"
   ],
   "dependencies": {
+    "bn.js": "^4.11.8",
+    "ethjs": "^0.3.3",
     "moment": "^2.18.1",
     "truffle-blockchain-utils": "^0.0.3",
     "truffle-hdwallet-provider": "^0.0.3",
