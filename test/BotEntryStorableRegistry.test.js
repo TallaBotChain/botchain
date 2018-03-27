@@ -97,6 +97,7 @@ contract('BotEntryStorableRegistry', () => {
       let txResult
 
       beforeEach(async () => {
+        await ownerRegistry.setMockOwner(1, accounts[1])
         await botEntryStorableRegistry.createBotEntry(1, botAddr1, dataHash, url, { from: accounts[1] })
       })
 
@@ -104,6 +105,7 @@ contract('BotEntryStorableRegistry', () => {
         it.only('should set active to true then to false when deactivate is called', async () => {
           //should initially default to active
           let activeBool, bool, deactiveBool
+
 
           activeBool = await botEntryStorableRegistry.active(1, { from: accounts[1] })
   
