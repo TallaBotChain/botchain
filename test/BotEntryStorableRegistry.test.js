@@ -92,6 +92,35 @@ contract('BotEntryStorableRegistry', () => {
       })
     })
 
+    describe('when given invalid params for deactivate() and activate()', () => {
+      
+      let txResult
+
+      beforeEach(async () => {
+        await botEntryStorableRegistry.createBotEntry(1, botAddr1, dataHash, url, { from: accounts[1] })
+      })
+
+      describe('when given a valid entry ID that is not activated', () => {
+        it.only('should set active to true then to false when deactivate is called', async () => {
+          //should initially default to active
+          let activeBool, bool, deactiveBool
+
+          activeBool = await botEntryStorableRegistry.active(1, { from: accounts[1] })
+  
+          expect(activeBool).to.equal(true)
+
+         //problem with activate too!!!!
+          /*Causes reverts: */
+          //await botEntryStorableRegistry.activate(3, { from: accounts[3] })
+
+          await botEntryStorableRegistry.deactivate(1, { from: accounts[1] })
+          deactiveBool = await botEntryStorableRegistry.active(1, { from: accounts[1] })
+          expect(deactiveBool).to.equal(false)
+
+        })
+      })
+    })
+
     describe('when minting is not allowed by the owner registry', () => {
       it('should revert', async () => {
         await ownerRegistry.disableMinting()
