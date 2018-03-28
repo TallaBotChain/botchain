@@ -157,7 +157,7 @@ contract BotEntryStorableRegistry is BotCoinPayableRegistry, ApprovableRegistry,
   * @param url An url associated with the bot entry
   */
   function setBotEntryUrl(uint256 botEntryId, bytes32 url) private {
-    _storage.setBytes32(keccak256("botEntryId", botEntryId), url);
+    _storage.setBytes32(keccak256("botEntryUrl", botEntryId), url);
   }
 
   /**
