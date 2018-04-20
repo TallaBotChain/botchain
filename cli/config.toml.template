@@ -1,0 +1,7 @@
+devProxyAddress        = '0x'
+botProxyAddress        = '0x'
+managementAddress      = '0x'
+serviceProxyAddress    = '0x'
+instanceProxyAddress   = '0x'
+publicStorageAddress   = '0x'
+botcoinContractAddress = '0x'

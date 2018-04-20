@@ -1,0 +1,118 @@
+#!/usr/bin/node
+
+require('babel-register')({
+    presets: [ 'env' ]
+})
+
+const fs = require('fs')
+const Web3 = require('web3');
+const cfg = require('./modules/config.js')
+const arg = require('./modules/argparse.js')
+
+if (cfg.error) {
+  process.exit()
+}
+
+if (!arg.rpc.includes('//')) {
+  console.log('The supplied RPC URL needs to contain the protocol.\n  Example: \'http://my.ethereum.node\'')
+  process.exit()
+}
+const web3 = new Web3(new Web3.providers.HttpProvider(arg.rpc+':'+arg.port));
+
+const botCoinJSON                  = require('../build/contracts/BotCoin.json')
+const ownableProxyJSON             = require('../build/contracts/OwnableProxy.json')
+const devRegistryDelegateJSON      = require('../build/contracts/DeveloperRegistryDelegate.json')
+const botRegistryDelegateJSON      = require('../build/contracts/BotProductRegistryDelegate.json')
+const serviceRegistryDelegateJSON  = require('../build/contracts/BotServiceRegistryDelegate.json')
+const instanceRegistryDelegateJSON = require('../build/contracts/BotInstanceRegistryDelegate.json')
+
+// Botcoin Interface
+const token                = web3.eth.contract(botCoinJSON.abi).at(cfg.botcoinAddr)
+
+// Upgrade Interfaces -- The "Ownable Proxies"
+const upgradeIface = new Map()
+.set('dev', web3.eth.contract(ownableProxyJSON.abi).at(cfg.devProxyAddr))
+.set('bot', web3.eth.contract(ownableProxyJSON.abi).at(cfg.botProxyAddr))
+.set('service', web3.eth.contract(ownableProxyJSON.abi).at(cfg.serviceProxyAddr))
+.set('instance', web3.eth.contract(ownableProxyJSON.abi).at(cfg.isntanceProxyAddr));
+
+// Registry Contract Objects
+// Used to create a new contract for deployment
+const Registry = new Map()
+.set('dev',      web3.eth.contract(devRegistryDelegateJSON.abi))
+.set('bot',      web3.eth.contract(botRegistryDelegateJSON.abi))
+.set('service',  web3.eth.contract(serviceRegistryDelegateJSON.abi))
+.set('instance', web3.eth.contract(instanceRegistryDelegateJSON.abi));
+
+// Registry Interfaces -- ABIs of the delegates pointed at the Proxy Addresses
+const registryIface = new Map()
+.set('dev',DevRegistry.at(devProxyAddr))
+.set('bot',BotRegistry.at(devProxyAddr))
+.set('service',ServiceRegistry.at(devProxyAddr))
+.set('instance',InstanceRegistry.at(devProxyAddr));
+
+function unlockAccount(account, password) {
+  try {
+    web3.personal.unlockAccount(account, password);
+  } catch(e) {
+    console.log(e);
+    return;
+  }
+}
+
+async function deployImplementation(type, addr, gas) {
+  console.log("Deploying the contract of type: "+type);
+  contract = Registry[type].new({from: addr, gas: gasLimit, data: devRegistryDelegateJSON.bytecode});
+  await checkDeployment(contract)
+  return contract
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// We need to wait until any miner has included the transaction
+// in a block to get the address of the contract
+async function checkDeployment(contract) {
+  while (true) {
+    let receipt = web3.eth.getTransactionReceipt(contract.transactionHash);
+    if (receipt && receipt.contractAddress) {
+      console.log("Your contract has been deployed at http://testnet.etherscan.io/address/" + receipt.contractAddress);
+      console.log("Note that it might take 30 - 90 sceonds for the block to propagate befor it's visible in etherscan.io");
+      break;
+    }
+    console.log("Waiting a mined block to include your contract... currently in block " + web3.eth.blockNumber);
+    await sleep(4000);
+  }
+}
+
+async function run() {
+  if (arg.impl) {
+    unlockAccount(cfg.mgmtAddr)
+    const contract = await deployImplementation(arg.impl, arg.gasLimit)
+  }
+  
+  if (arg.update) {
+    unlockAccount(cfg.mgmtAddr)
+    updateContracts()
+  }
+}
+
+switch(arg.subcommand_name) {
+  case 'get':
+    console.log('Command: '+arg.subcommand_name)
+    // run get handler
+    break;
+  case 'update':
+    console.log('Command: '+arg.subcommand_name)
+    // run update handler
+    break;
+  case 'deploy':
+    console.log('Command: '+arg.subcommand_name)
+    // run deploy handler
+    break;
+  case 'registration':
+    console.log('Command: '+arg.subcommand_name)
+    // run registration handler
+    break;
+}
