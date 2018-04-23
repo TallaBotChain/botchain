@@ -6,8 +6,10 @@ require('babel-register')({
 
 const fs = require('fs')
 const Web3 = require('web3');
+const Eth = require('ethjs')
 const cfg = require('./modules/config.js')
 const arg = require('./modules/argparse.js')
+const Accounts = require('ethereumjs-accounts');
 
 if (cfg.error) {
   process.exit()
@@ -17,7 +19,10 @@ if (!arg.rpc.includes('//')) {
   console.log('The supplied RPC URL needs to contain the protocol.\n  Example: \'http://my.ethereum.node\'')
   process.exit()
 }
+
 const web3 = new Web3(new Web3.providers.HttpProvider(arg.rpc+':'+arg.port));
+const eth = new Eth(new Eth.HttpProvider(arg.rpc+':'+arg.port))
+const approve_cost = 1*10**18;
 
 const botCoinJSON                  = require('../build/contracts/BotCoin.json')
 const ownableProxyJSON             = require('../build/contracts/OwnableProxy.json')
@@ -45,11 +50,11 @@ const Registry = new Map()
 .set('instance', web3.eth.contract(instanceRegistryDelegateJSON.abi));
 
 // Registry Interfaces -- ABIs of the delegates pointed at the Proxy Addresses
-const registryIface = new Map()
-.set('dev',DevRegistry.at(devProxyAddr))
-.set('bot',BotRegistry.at(devProxyAddr))
-.set('service',ServiceRegistry.at(devProxyAddr))
-.set('instance',InstanceRegistry.at(devProxyAddr));
+const registries = new Map()
+.set('dev', Registry.get('dev').at(cfg.devProxyAddr))
+.set('bot', Registry.get('bot').at(cfg.botProxyAddr))
+.set('service', Registry.get('service').at(cfg.serviceProxyAddr))
+.set('instance', Registry.get('instance').at(cfg.isntanceProxyAddr));
 
 function unlockAccount(account, password) {
   try {
@@ -98,6 +103,28 @@ async function run() {
   }
 }
 
+async function approveDeveloper(password, address) {
+  console.log('[Dev Addr: ',address,'] Approving ...')
+  let idx = registries.get('dev').owns(address)
+  console.log('[Dev Addr: ',address,'] Developer owns ID #',idx)
+  unlockAccount(cfg.mgmtAddr, password)
+  console.log('[Dev Addr: ',address,'] unlocked Mgmt Addr: ',cfg.mgmtAddr)
+  token.approve(cfg.devProxyAddr, approve_cost, {from: cfg.mgmtAddr})
+  registries.get('dev').grantApproval(idx, {from: cfg.mgmtAddr})
+  console.log('[Dev Addr: ',address,'] Approved')
+}
+
+async function registration(args) {
+  switch(arg['registration']) {
+    case 'approve':
+      let success = approveDeveloper(arg.password[0], arg.address[0])
+      break;
+    case '':
+      console.log('No valid registration command found.')
+      break;
+  }
+}
+
 switch(arg.subcommand_name) {
   case 'get':
     console.log('Command: '+arg.subcommand_name)
@@ -116,3 +143,4 @@ switch(arg.subcommand_name) {
     // run registration handler
     break;
 }
+  
