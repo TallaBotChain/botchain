@@ -60,6 +60,20 @@ regApprove.addArgument(
   }
 );
 
+const regGetOwner = regCmds.addParser('get-owner',{
+  desciption:'Get the address stored at the provided index.',
+  addHelp: true
+});
+
+regGetOwner.addArgument(
+  [ '-i', '--index' ],
+  {
+    help: 'Index of the desired address.',
+    nargs: 1,
+    required: true
+  }
+);
+
 parser.addArgument(
   [ '-i', '--rpc' ],
   {

@@ -6,10 +6,8 @@ require('babel-register')({
 
 const fs = require('fs')
 const Web3 = require('web3');
-const Eth = require('ethjs')
 const cfg = require('./modules/config.js')
 const arg = require('./modules/argparse.js')
-const Accounts = require('ethereumjs-accounts');
 
 if (cfg.error) {
   process.exit()
@@ -21,7 +19,6 @@ if (!arg.rpc.includes('//')) {
 }
 
 const web3 = new Web3(new Web3.providers.HttpProvider(arg.rpc+':'+arg.port));
-const eth = new Eth(new Eth.HttpProvider(arg.rpc+':'+arg.port))
 const approve_cost = 1*10**18;
 
 const botCoinJSON                  = require('../build/contracts/BotCoin.json')
@@ -114,10 +111,19 @@ async function approveDeveloper(password, address) {
   console.log('[Dev Addr: ',address,'] Approved')
 }
 
+async function ownerOfEntry(idx) {
+  let addr = registries.get('dev').ownerOfEntry(idx)
+  console.log('Entry: ', idx, ' Addr: ', addr)
+}
+
 async function registration(args) {
-  switch(arg['registration']) {
+  switch(args['registration']) {
     case 'approve':
       let success = approveDeveloper(arg.password[0], arg.address[0])
+      break;
+    case 'get':
+      
+      console.log('')
       break;
     case '':
       console.log('No valid registration command found.')
@@ -140,6 +146,7 @@ switch(arg.subcommand_name) {
     break;
   case 'registration':
     console.log('Command: '+arg.subcommand_name)
+    registration(arg)
     // run registration handler
     break;
 }
