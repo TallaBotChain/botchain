@@ -111,15 +111,27 @@ async function approveDeveloper(password, address) {
   console.log('[Dev Addr: ',address,'] Approved')
 }
 
+async function checkDevApproval(address) {
+  console.log('[Dev Addr: ',address,'] Checking approval status ...')
+  let idx = registries.get('dev').owns(address)
+  let result = registries.get('dev').approvalStatus(idx)
+  console.log('[Dev Addr: ',address,'] Status: ',result)
+}
+  
+
 function ownerOfEntry(idx) {
   let addr = registries.get('dev').ownerOfEntry(idx)
   console.log('Entry: ', idx, ' Addr: ', addr)
 }
 
 function registration(args) {
+  let success = false;
   switch(args['registration']) {
     case 'approve':
-      let success = approveDeveloper(arg.password[0], arg.address[0])
+      success = approveDeveloper(arg.password[0], arg.address[0])
+      break;
+    case 'check-approval':
+      success = checkDevApproval(arg.address[0])
       break;
     case 'get-owner':
       ownerOfEntry(args.index)

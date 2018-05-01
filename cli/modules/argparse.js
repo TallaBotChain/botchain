@@ -53,6 +53,11 @@ regCommands.addParser('get-owner',{
   addHelp: true
 });
 
+regCommands.addParser('check-approval',{
+  desciption:'Get the address stored at the provided index.',
+  addHelp: true
+});
+
 regCommands.choices['approve'].addArgument(
   [ '-a', '--address' ],
   {
@@ -75,6 +80,15 @@ regCommands.choices['get-owner'].addArgument(
   [ '-i', '--index' ],
   {
     help: 'Index of the desired address.',
+    nargs: 1,
+    required: true
+  }
+);
+
+regCommands.choices['check-approval'].addArgument(
+  [ '-a', '--address' ],
+  {
+    help: 'Address of the entry to check.',
     nargs: 1,
     required: true
   }
