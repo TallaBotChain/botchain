@@ -1,48 +1,59 @@
 const ArgumentParser = require('argparse').ArgumentParser;
 
-const parser = new ArgumentParser({
+/*
+ *
+ *
+ *
+ */
+
+const topLevelParser = new ArgumentParser({
   version: '0.0.1',
   addHelp: true,
   description: 'Botchain Management CLI'
 });
 
-const cmdLvl1 = parser.addSubparsers({
+const commands = topLevelParser.addSubparsers({
   title: 'subcommands',
   dest: 'subcommand_name'
 })
 
-const deploy = cmdLvl1.addParser('deploy',{
+const deploy = commands.addParser('deploy',{
   desciption:'All actions related to deploying a BotChain contract to Ethereum.',
   addHelp: true
 });
 
-const get = cmdLvl1.addParser('get',{
+const get = commands.addParser('get',{
   desciption:'All actions related to reading the current state of the contracts.',
   addHelp: true
 });
 
-const update = cmdLvl1.addParser('update',{
+const update = commands.addParser('update',{
   desciption:'All actions related to updating state in the currently deployed contracts.',
   addHelp: true
 });
 
-const registration = cmdLvl1.addParser('registration',{
+const registration = commands.addParser('registration',{
   desciption:'All actions related to registering an entity on BotChain.',
   addHelp: true
 });
 
-const regCmds = registration.addSubparsers({
+const regCommands = registration.addSubparsers({
   title: 'Registration Commands',
   parents: [registration],
   dest: 'registration'
 })
 
-const regApprove = regCmds.addParser('approve',{
+regCommands.addParser('approve',{
   desciption:'Approve a developer that has previously registered.',
   addHelp: true
 });
 
-regApprove.addArgument(
+regCommands.addParser('get-owner',{
+  desciption:'Get the address stored at the provided index.',
+  addHelp: true
+});
+
+regCommands.choices['approve'].addArgument(
   [ '-a', '--address' ],
   {
     help: 'Approve a developer at the provided address.',
@@ -51,7 +62,7 @@ regApprove.addArgument(
   }
 );
 
-regApprove.addArgument(
+regCommands.choices['approve'].addArgument(
   [ '-p', '--password' ],
   {
     help: 'Password for the Network Management Address.',
@@ -60,12 +71,7 @@ regApprove.addArgument(
   }
 );
 
-const regGetOwner = regCmds.addParser('get-owner',{
-  desciption:'Get the address stored at the provided index.',
-  addHelp: true
-});
-
-regGetOwner.addArgument(
+regCommands.choices['get-owner'].addArgument(
   [ '-i', '--index' ],
   {
     help: 'Index of the desired address.',
@@ -74,7 +80,7 @@ regGetOwner.addArgument(
   }
 );
 
-parser.addArgument(
+topLevelParser.addArgument(
   [ '-i', '--rpc' ],
   {
     help: 'Perform read against Ethereum node on localhost:8454.',
@@ -83,7 +89,7 @@ parser.addArgument(
   }
 );
 
-parser.addArgument(
+topLevelParser.addArgument(
   [ '-P', '--port' ],
   {
     help: 'The port to speak to the supplied Ethereum Node\'s RPC.',
@@ -119,4 +125,4 @@ deploy.addArgument(
   }
 );
 
-module.exports = parser.parseArgs();
+module.exports = topLevelParser.parseArgs();
