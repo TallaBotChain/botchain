@@ -21,7 +21,9 @@ if (!arg.rpc.includes('//')) {
 const rpc_host_and_port = arg.rpc + ":" + arg.port
 console.log(rpc_host_and_port)
 const web3 = new Web3(new Web3.providers.HttpProvider(rpc_host_and_port))
-const approve_cost = 1*10**18;
+const approve_cost_base = 1;
+const approve_cost_exponent = 10 ** 18;
+const approve_cost = approve_cost_base * approve_cost_exponent;
 
 const botCoinJSON                  = require('../build/contracts/BotCoin.json')
 const ownableProxyJSON             = require('../build/contracts/OwnableProxy.json')
@@ -57,7 +59,7 @@ const registries = new Map()
 
 function unlockAccount(account, password) {
   try {
-    console.log('[Addr:',account,password,'] Unlocking ...')
+    console.log('[Addr:',account,'] Unlocking ...')
     web3.personal.unlockAccount(account, password);
   } catch(e) {
     console.log('Unlock Error:',e);
@@ -66,7 +68,7 @@ function unlockAccount(account, password) {
 }
 
 async function deployImplementation(type, addr, gas, password) {
-  console.log('[Mgmt Addr: ',addr,' Gas: ',gas, ' Type: ',type,password,'] Setting up deployment ...');
+  console.log('[Mgmt Addr:',addr,'Gas:',gas,'Type:',type,'] Setting up deployment ...');
   unlockAccount(addr, password)
   contract = Registry.get(type).new({from: addr, gas: gas, data: devRegistryDelegateJSON.bytecode});
   await checkDeployment(contract)
@@ -94,26 +96,29 @@ async function checkDeployment(contract) {
 }
 
 async function approveDeveloper(password, address) {
-  console.log('[Dev Addr: ',address,'] Approving ...')
+  console.log('[Addr:',address,'] Initiating Approval Process ...')
   let idx = registries.get('dev').owns(address)
-  console.log('[Dev Addr: ',address,'] Developer owns ID #',idx.toString())
+  console.log('[Addr:',address,'] Developer owns ID #',idx.toString())
   unlockAccount(cfg.mgmtAddr, password)
-  console.log('[Dev Addr: ',address,'] unlocked Mgmt Addr: ',cfg.mgmtAddr)
   token.approve(cfg.devProxyAddr, approve_cost, {from: cfg.mgmtAddr})
+  console.log('[Addr:',address,'] Approved transfer of',approve_cost_base,'Botcoin.')
+  unlockAccount(cfg.mgmtAddr, password)
   registries.get('dev').grantApproval(idx.toNumber(), {from: cfg.mgmtAddr})
-  console.log('[Dev Addr: ',address,'] Approved')
+  let result = registries.get('dev').approvalStatus(idx.toNumber())
+  console.log('[Addr:',address,'] Approval Status: ',result)
 }
 
 async function revokeApproval(password, address) {
-  console.log('[Dev Addr: ',address,'] Revoking approval ...')
+  console.log('[Addr:',address,'] Revoking approval ...')
   let idx = registries.get('dev').owns(address)
-  console.log('[Dev Addr: ',address,'] Developer owns ID #',idx.toString())
+  console.log('[Addr:',address,'] Developer owns ID #',idx.toString())
   unlockAccount(cfg.mgmtAddr, password)
-  console.log('[Dev Addr: ',address,'] unlocked Mgmt Addr: ',cfg.mgmtAddr)
   token.approve(cfg.devProxyAddr, approve_cost, {from: cfg.mgmtAddr})
+  console.log('[Addr:',address,'] Approved transfer of',approve_cost_base,'Botcoin.')
+  unlockAccount(cfg.mgmtAddr, password)
   registries.get('dev').revokeApproval(idx.toNumber(), {from: cfg.mgmtAddr})
   let result = registries.get('dev').approvalStatus(idx.toNumber())
-  console.log('[Dev Addr: ',address,'] Approval Status: ',result)
+  console.log('[Addr:',address,'] Approval Status: ',result)
 }
 
 async function checkDevApprovalByIdx(idx) {
@@ -185,4 +190,4 @@ switch(arg.subcommand_name) {
     // run registration handler
     break;
 }
-  
+
