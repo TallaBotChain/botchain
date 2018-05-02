@@ -93,18 +93,6 @@ async function checkDeployment(contract) {
   }
 }
 
-async function run() {
-  if (arg.impl) {
-    unlockAccount(cfg.mgmtAddr)
-    const contract = await deployImplementation(arg.impl, arg.gasLimit)
-  }
-  
-  if (arg.update) {
-    unlockAccount(cfg.mgmtAddr)
-    updateContracts()
-  }
-}
-
 async function approveDeveloper(password, address) {
   console.log('[Dev Addr: ',address,'] Approving ...')
   let idx = registries.get('dev').owns(address)
