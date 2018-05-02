@@ -22,6 +22,17 @@ const deploy = commands.addParser('deploy',{
   addHelp: true
 });
 
+const deployCommands = deploy.addSubparsers({
+  title: 'Contract Deployment Commands',
+  parents: [deploy],
+  dest: 'deploy'
+})
+
+deployCommands.addParser('registry',{
+  description:'Deploy a registry contract.',
+  addHelp: true
+});
+
 const get = commands.addParser('get',{
   desciption:'All actions related to reading the current state of the contracts.',
   addHelp: true
@@ -44,17 +55,22 @@ const regCommands = registration.addSubparsers({
 })
 
 regCommands.addParser('approve',{
-  desciption:'Approve a developer that has previously registered.',
+  description:'Approve a developer that has previously registered.',
   addHelp: true
 });
 
 regCommands.addParser('get-owner',{
-  desciption:'Get the address stored at the provided index.',
+  description:'Get the address stored at the provided index.',
+  addHelp: true
+});
+
+regCommands.addParser('revoke-approval',{
+  description:'Revoke approval for the developer at the provided address.',
   addHelp: true
 });
 
 regCommands.addParser('check-approval',{
-  desciption:'Get the address stored at the provided index.',
+  description:'Get the address stored at the provided index.',
   addHelp: true
 });
 
@@ -85,7 +101,7 @@ regCommands.choices['get-owner'].addArgument(
   }
 );
 
-regCommands.choices['check-approval'].addArgument(
+regCommands.choices['revoke-approval'].addArgument(
   [ '-a', '--address' ],
   {
     help: 'Address of the entry to check.',
@@ -94,10 +110,43 @@ regCommands.choices['check-approval'].addArgument(
   }
 );
 
+regCommands.choices['revoke-approval'].addArgument(
+  [ '-p', '--password' ],
+  {
+    help: 'Password for the Network Management Address.',
+    nargs: 1,
+    required: true
+  }
+);
+
+regCommands.choices['check-approval'].addArgument(
+  [ '-a', '--address' ],
+  {
+    help: 'Address of the entry to check.',
+    nargs: 1
+  }
+);
+
+regCommands.choices['check-approval'].addArgument(
+  [ '-i', '--index' ],
+  {
+    help: 'Index of the entry to check.',
+    nargs: 1
+  }
+);
+
+deployCommands.choices['registry'].addArgument(
+  [ '-t', '--type' ],
+  {
+    help: 'Type of registry to deploy (dev|bot|instance|service).',
+    nargs: 1
+  }
+);
+
 topLevelParser.addArgument(
   [ '-i', '--rpc' ],
   {
-    help: 'Perform read against Ethereum node on localhost:8454.',
+    help: 'The URI for an Ethereum Node hosting an open RPC (defaults to localhost).',
     defaultValue: 'http://localhost',
     nargs: 1
   }
@@ -106,8 +155,8 @@ topLevelParser.addArgument(
 topLevelParser.addArgument(
   [ '-P', '--port' ],
   {
-    help: 'The port to speak to the supplied Ethereum Node\'s RPC.',
-    defaultValue: '8454',
+    help: 'The port on which to speak to the supplied Ethereum Node\'s RPC (defaults to 8545).',
+    defaultValue: '8545',
     nargs: 1
   }
 );

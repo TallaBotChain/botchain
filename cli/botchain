@@ -18,7 +18,9 @@ if (!arg.rpc.includes('//')) {
   process.exit()
 }
 
-const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+const rpc_host_and_port = arg.rpc + ":" + arg.port
+console.log(rpc_host_and_port)
+const web3 = new Web3(new Web3.providers.HttpProvider(rpc_host_and_port))
 const approve_cost = 1*10**18;
 
 const botCoinJSON                  = require('../build/contracts/BotCoin.json')
@@ -55,17 +57,20 @@ const registries = new Map()
 
 function unlockAccount(account, password) {
   try {
+    console.log('[Addr:',account,password,'] Unlocking ...')
     web3.personal.unlockAccount(account, password);
   } catch(e) {
-    console.log(e);
+    console.log('Unlock Error:',e);
     return;
   }
 }
 
-async function deployImplementation(type, addr, gas) {
-  console.log("Deploying the contract of type: "+type);
-  contract = Registry[type].new({from: addr, gas: gasLimit, data: devRegistryDelegateJSON.bytecode});
+async function deployImplementation(type, addr, gas, password) {
+  console.log('[Mgmt Addr: ',addr,' Gas: ',gas, ' Type: ',type,password,'] Setting up deployment ...');
+  unlockAccount(addr, password)
+  contract = Registry.get(type).new({from: addr, gas: gas, data: devRegistryDelegateJSON.bytecode});
   await checkDeployment(contract)
+  console.dir(contract)
   return contract
 }
 
@@ -103,21 +108,38 @@ async function run() {
 async function approveDeveloper(password, address) {
   console.log('[Dev Addr: ',address,'] Approving ...')
   let idx = registries.get('dev').owns(address)
-  console.log('[Dev Addr: ',address,'] Developer owns ID #',idx)
+  console.log('[Dev Addr: ',address,'] Developer owns ID #',idx.toString())
   unlockAccount(cfg.mgmtAddr, password)
   console.log('[Dev Addr: ',address,'] unlocked Mgmt Addr: ',cfg.mgmtAddr)
   token.approve(cfg.devProxyAddr, approve_cost, {from: cfg.mgmtAddr})
-  registries.get('dev').grantApproval(idx, {from: cfg.mgmtAddr})
+  registries.get('dev').grantApproval(idx.toNumber(), {from: cfg.mgmtAddr})
   console.log('[Dev Addr: ',address,'] Approved')
 }
 
-async function checkDevApproval(address) {
+async function revokeApproval(password, address) {
+  console.log('[Dev Addr: ',address,'] Revoking approval ...')
+  let idx = registries.get('dev').owns(address)
+  console.log('[Dev Addr: ',address,'] Developer owns ID #',idx.toString())
+  unlockAccount(cfg.mgmtAddr, password)
+  console.log('[Dev Addr: ',address,'] unlocked Mgmt Addr: ',cfg.mgmtAddr)
+  token.approve(cfg.devProxyAddr, approve_cost, {from: cfg.mgmtAddr})
+  registries.get('dev').revokeApproval(idx.toNumber(), {from: cfg.mgmtAddr})
+  let result = registries.get('dev').approvalStatus(idx.toNumber())
+  console.log('[Dev Addr: ',address,'] Approval Status: ',result)
+}
+
+async function checkDevApprovalByIdx(idx) {
+  console.log('[Dev Idx: ',idx,'] Checking approval status ...')
+  let result = registries.get('dev').approvalStatus(idx)
+  console.log('[Dev Idx: ',idx,'] Status: ',result)
+}
+
+async function checkDevApprovalByAddr(address) {
   console.log('[Dev Addr: ',address,'] Checking approval status ...')
   let idx = registries.get('dev').owns(address)
   let result = registries.get('dev').approvalStatus(idx)
   console.log('[Dev Addr: ',address,'] Status: ',result)
 }
-  
 
 function ownerOfEntry(idx) {
   let addr = registries.get('dev').ownerOfEntry(idx)
@@ -131,13 +153,26 @@ function registration(args) {
       success = approveDeveloper(arg.password[0], arg.address[0])
       break;
     case 'check-approval':
-      success = checkDevApproval(arg.address[0])
+      console.log(arg)
+      if (arg.address) checkDevApprovalByAddr(arg.address)
+      if (arg.index)   checkDevApprovalByIdx(arg.index[0])
+      break;
+    case 'revoke-approval':
+      success = revokeApproval(arg.password[0], arg.address[0])
       break;
     case 'get-owner':
       ownerOfEntry(args.index)
       break;
     case '':
       console.log('No valid registration command found.')
+      break;
+  }
+}
+
+async function deploy(args) {
+  switch(args['deploy']) {
+    case 'registry':
+      deployImplementation(args.type[0], cfg.mgmtAddr, 7900000, args.password[0])
       break;
   }
 }
@@ -153,6 +188,7 @@ switch(arg.subcommand_name) {
     break;
   case 'deploy':
     console.log('Command: '+arg.subcommand_name)
+    deploy(arg)
     // run deploy handler
     break;
   case 'registration':
