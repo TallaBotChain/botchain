@@ -9,14 +9,17 @@
     "src"
   ],
   "dependencies": {
+    "argparse": "1.0.10",
     "bn.js": "^4.11.8",
+    "bunyan": "^1.8.12",
+    "eth-lightwallet": "^3.0.1",
+    "web3": "^1.0.0-beta.34",
     "ethjs": "^0.3.3",
     "moment": "^2.18.1",
+    "toml": "2.3.3",
     "truffle-blockchain-utils": "^0.0.3",
     "truffle-hdwallet-provider": "^0.0.3",
-    "zeppelin-solidity": "1.7.0",
-    "argparse": "1.0.10",
-    "toml": "2.3.3"
+    "zeppelin-solidity": "1.7.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

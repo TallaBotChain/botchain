@@ -144,10 +144,19 @@ deployCommands.choices['registry'].addArgument(
 );
 
 topLevelParser.addArgument(
-  [ '-i', '--rpc' ],
+  [ '-t', '--timeout' ],
   {
     help: 'The URI for an Ethereum Node hosting an open RPC (defaults to localhost).',
-    defaultValue: 'http://localhost',
+    defaultValue: '1000',
+    nargs: 1
+  }
+);
+
+topLevelParser.addArgument(
+  [ '-r', '--rpc' ],
+  {
+    help: 'The URI for an Ethereum Node hosting an open RPC (defaults to Kovan on INFURA).',
+    defaultValue: 'https://kovan.infura.io/B9pg6oqTiZgkeibkCKjV',
     nargs: 1
   }
 );
@@ -156,7 +165,7 @@ topLevelParser.addArgument(
   [ '-P', '--port' ],
   {
     help: 'The port on which to speak to the supplied Ethereum Node\'s RPC (defaults to 8545).',
-    defaultValue: '8545',
+    defaultValue: '',
     nargs: 1
   }
 );
