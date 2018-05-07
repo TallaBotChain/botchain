@@ -2,11 +2,15 @@ require('babel-register')
 require('babel-polyfill')
 
 const Eth = require('ethjs')
+const fs = require("fs");
+const Web3 = require('web3');
+
 const botCoinJSON = require('../build/contracts/BotCoin.json')
 const developerRegistryDelegateJSON = require('../build/contracts/DeveloperRegistryDelegate.json')
 const botProductRegistryDelegateJSON = require('../build/contracts/BotProductRegistryDelegate.json')
 const botServiceRegistryDelegateJSON = require('../build/contracts/BotServiceRegistryDelegate.json')
 const botInstanceRegistryDelegateJSON = require('../build/contracts/BotInstanceRegistryDelegate.json')
+const botInstanceRegistryUpgradeJSON = require('../build/contracts/OwnableProxy.json')
 
 const eth = new Eth(new Eth.HttpProvider('http://localhost:8545'))
 
@@ -21,55 +25,53 @@ const botServiceRegistryAddress = '0x4728e0a668df2aa10fcedf954228b775cdd45c21'
 const token = eth.contract(botCoinJSON.abi).at(botCoinAddress)
 const developerRegistry = eth.contract(developerRegistryDelegateJSON.abi).at(developerRegistryAddress)
 const botProductRegistry = eth.contract(botProductRegistryDelegateJSON.abi).at(botProductRegistryAddress)
-const botInstanceRegistry = eth.contract(botServiceRegistryDelegateJSON.abi).at(botInstanceRegistryAddress)
 const botServiceRegistry = eth.contract(botInstanceRegistryDelegateJSON.abi).at(botServiceRegistryAddress)
+const botInstanceRegistry = eth.contract(botServiceRegistryDelegateJSON.abi).at(botInstanceRegistryAddress)
+const botInstanceUpgrade = eth.contract(botServiceRegistryDelegateJSON.abi).at(botInstanceRegistryAddress)
 
-run()
+const web3 = new Web3();
+web3.setProvider(new web3.providers.HttpProvider('http://localhost:8545'));
 
-async function run () {
-  await logOwners()
+// ABI description as JSON structure
+let abi = JSON.parse(developerRegistryDelegateJSON.abi);
+
+// Create Contract proxy class
+let SampleContract = web3.eth.contract(abi);
+
+// Unlock the coinbase account to make transactions out of it
+console.log("Unlocking coinbase account");
+var password = "Ender919485";
+try {
+  web3.personal.unlockAccount(web3.eth.coinbase, password);
+} catch(e) {
+  console.log(e);
+  return;
 }
 
-async function transferOwners () {
-  await developerRegistry.transferOwnership(tallaAddress, { from: mikecKovanAddress })
-  await botProductRegistry.transferOwnership(tallaAddress, { from: mikecKovanAddress })
-  await botInstanceRegistry.transferOwnership(tallaAddress, { from: mikecKovanAddress })
-  await botServiceRegistry.transferOwnership(tallaAddress, { from: mikecKovanAddress })
+console.log("Deploying the contract");
+let contract = SampleContract.new({from: web3.eth.coinbase, gas: 1000000, data: code});
+
+// Transaction has entered to geth memory pool
+console.log("Your contract is being deployed in transaction at http://testnet.etherscan.io/tx/" + contract.transactionHash);
+
+// http://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function logOwners () {
-  console.log(await developerRegistry.getOwner())
-  console.log(await botProductRegistry.getOwner())
-  console.log(await botInstanceRegistry.getOwner())
-  console.log(await botServiceRegistry.getOwner())
+// We need to wait until any miner has included the transaction
+// in a block to get the address of the contract
+async function waitBlock() {
+  while (true) {
+    let receipt = web3.eth.getTransactionReceipt(contract.transactionHash);
+    if (receipt && receipt.contractAddress) {
+      console.log("Your contract has been deployed at http://testnet.etherscan.io/address/" + receipt.contractAddress);
+      console.log("Note that it might take 30 - 90 sceonds for the block to propagate befor it's visible in etherscan.io");
+      break;
+    }
+    console.log("Waiting a mined block to include your contract... currently in block " + web3.eth.blockNumber);
+    await sleep(4000);
+  }
 }
 
-async function sendBotcoin () {
-  const accounts = await eth.accounts()
-  console.log(accounts)
-
-  // transfer botcoin
-  await logBalances()
-  await token.transfer(tallaAddress, new Eth.BN('1000000000000000000000000000'), { from: accounts[2] })
-}
-
-async function logBalances () {
-  const initBal = await token.balanceOf(mikecKovanAddress)
-  const tallaBal = await token.balanceOf(tallaAddress)
-  console.log('init address balance: ', initBal[0].toString())
-  console.log('talla address balance: ', tallaBal[0].toString())
-}
-
-/*
-{
-  "BotCoin": " 0x337bA7e4F7e86F429494D7196b7c122918f31f48",
-  "DeveloperRegistry": "0x877005c049a458294d3c063d2b5e48485c0900a9",
-  "BotProductRegistry": "0x2b044c8a463bc52716d9818b56505c0ea1273f5a",
-  "BotServiceRegistry": "0x00be80cb8fe2c0df6462d4eaef2ecbf6dc28541a",
-  "BotInstanceRegistry": "0x4728e0a668df2aa10fcedf954228b775cdd45c21",
-  "DeveloperRegistryDelegate": "0xabcb3295bcb6bab93839eb12cb56ab6b2cba7f2e",
-  "BotProductRegistryDelegate": "0x18cb05796cdcb886e5c4f6c7223df86e29d7320c",
-  "BotServiceRegistryDelegate": "0x894ff5b5ba6508061ed4a22d1c11bfa987ceecc4",
-  "BotInstanceRegistryDelegate": "0x4bfd1828a620f3303d358a80bc2eb5f9492e640f"
-}
-*/
+waitBlock();

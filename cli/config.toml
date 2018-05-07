@@ -1,0 +1,7 @@
+devProxyAddr        = '0x877005c049a458294d3c063d2b5e48485c0900a9'
+botProxyAddr        = '0x2b044c8a463bc52716d9818b56505c0ea1273f5a'
+mgmtAddr            = '0x547C0A0e61c41d8948251C02241df6FD4e860EcD'
+serviceProxyAddr    = '0x00be80cb8fe2c0df6462d4eaef2ecbf6dc28541a'
+instanceProxyAddr   = '0x4728e0a668df2aa10fcedf954228b775cdd45c21'
+publicStorageAddr   = '0x88d3633a6b6AC6A30C39Fc1A336933dc61f2bDf6'
+botcoinAddr = '0x337bA7e4F7e86F429494D7196b7c122918f31f48'

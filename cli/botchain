@@ -1,0 +1,272 @@
+#!/usr/bin/env node
+
+require('babel-register')({
+    presets: [ 'env' ]
+})
+
+// Node packages
+const fs   = require('fs');
+const Web3 = require('web3');
+const lw   = require('eth-lightwallet');
+const bunyan = require('bunyan');
+
+// Local modules
+const cfg  = require('./modules/config.js')
+const arg  = require('./modules/argparse.js')
+
+if (cfg.error) {
+  process.exit()
+}
+
+if (!arg.rpc.includes('//')) {
+  console.log('The supplied RPC URL needs to contain the protocol.\n  Example: \'http://my.ethereum.node\'')
+  process.exit()
+}
+
+// Construct provider hostname/port and subscribe
+const rpc_host_and_port = arg.rpc + (arg.port ? arg.port : '')
+const web3 = new Web3(new Web3.providers.HttpProvider(rpc_host_and_port))
+
+// Read Encrypted keystore from file and decrypt is a key is provided.
+// Decryption isn't necessary for reading state from the blockchain.
+const keystore = fs.readFileSync('./testKeystore.json', 'utf-8')
+console.log(arg.password)
+const decryptedAccount = arg.password ? web3.eth.accounts.decrypt(keystore, arg.password[0]) : {}
+
+// Expansion of the fee for botchain transactions
+const approve_cost_base = 1;
+const approve_cost_exponent = 10 ** 18;
+const approve_cost = approve_cost_base * approve_cost_exponent;
+
+// Load all relevant contract JSON 
+const botCoinJSON                  = require('../build/contracts/BotCoin.json')
+const ownableProxyJSON             = require('../build/contracts/OwnableProxy.json')
+const devRegistryDelegateJSON      = require('../build/contracts/DeveloperRegistryDelegate.json')
+const botRegistryDelegateJSON      = require('../build/contracts/BotProductRegistryDelegate.json')
+const serviceRegistryDelegateJSON  = require('../build/contracts/BotServiceRegistryDelegate.json')
+const instanceRegistryDelegateJSON = require('../build/contracts/BotInstanceRegistryDelegate.json')
+
+// Botcoin Interface
+const token = new web3.eth.Contract(botCoinJSON.abi, cfg.botcoinAddr)
+
+const contracts = new Map()
+.set('dev',     require('../build/contracts/DeveloperRegistryDelegate.json')); 
+
+// Upgrade Interfaces -- The "Ownable Proxies"
+// These are pointed at current proxy addresses
+const upgradeIface = new Map()
+.set('dev',      new web3.eth.Contract(ownableProxyJSON.abi, cfg.devProxyAddr))
+.set('bot',      new web3.eth.Contract(ownableProxyJSON.abi, cfg.botProxyAddr))
+.set('service',  new web3.eth.Contract(ownableProxyJSON.abi, cfg.serviceProxyAddr))
+.set('instance', new web3.eth.Contract(ownableProxyJSON.abi, cfg.isntanceProxyAddr));
+
+// Registry Contract Objects
+// Used to create a new Contract for deployment
+const Registry = new Map()
+.set('dev',      new web3.eth.Contract(devRegistryDelegateJSON.abi))
+.set('bot',      new web3.eth.Contract(botRegistryDelegateJSON.abi))
+.set('service',  new web3.eth.Contract(serviceRegistryDelegateJSON.abi))
+.set('instance', new web3.eth.Contract(instanceRegistryDelegateJSON.abi));
+
+// Registry Interfaces -- ABIs of the delegates pointed at the Proxy Addresses
+const registries = new Map()
+.set('dev',      new web3.eth.Contract(devRegistryDelegateJSON.abi, cfg.devProxyAddr))
+.set('bot',      new web3.eth.Contract(botRegistryDelegateJSON.abi, cfg.botProxyAddr))
+.set('service',  new web3.eth.Contract(serviceRegistryDelegateJSON.abi,  cfg.serviceProxyAddr))
+.set('instance', new web3.eth.Contract(instanceRegistryDelegateJSON.abi, cfg.isntanceProxyAddr));
+
+// A helper function to reliably unlock accounts as needed.
+// This sets a timeout (defaulted by the argument parser)
+// so accounts won't accidentally be left open.
+function unlockAccount(account, password) {
+  console.log('[Addr:',account,'TTL:',arg.timeout,'] Unlocking ...')
+  web3.personal.unlockAccount(account, password, arg.timeout)
+    .then((response) => {
+      console.log('[Addr:',account,'TTL:',arg.timeout,'] Unlock Response:',response);
+    })
+    .catch((error) => {
+      console.log('[Addr:',account,'TTL:',arg.timeout,'] Unlock Error:',error);
+    });
+}
+
+async function deployImplementation(type, addr, gas, password) {
+  Registry.get(type).deploy({
+      data: contract_data.unlinked_binary,
+      arguments: constructorArgs
+  }).send({
+      from: addr,
+      gas: gas,
+      gasPrice: '80000000'
+  }, function (error, transactionHash) {
+  
+  }).on('error', function (error) {
+      console.log('error', error);
+  }).on('transactionHash', function (transactionHash) {
+      console.log('transactionHash', transactionHash);
+  }).on('receipt', function (receipt) {
+      console.log('receipt', receipt.contractAddress);
+  }).on('confirmation', function (confirmationNumber, receipt) {
+      console.log('confirmation', confirmationNumber);
+  });
+
+  console.log('[Mgmt Addr:',addr,'Gas:',gas,'Type:',type,'] Setting up deployment ...');
+  unlockAccount(addr, password)
+  contract = Registry.get(type).new({from: addr, gas: gas, data: devRegistryDelegateJSON.bytecode});
+  await checkDeployment(contract)
+  console.dir(contract)
+  return contract
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// We need to wait until any miner has included the transaction
+// in a block to get the address of the contract
+async function checkDeployment(contract) {
+  while (true) {
+    let receipt = web3.eth.getTransactionReceipt(contract.transactionHash);
+    if (receipt && receipt.contractAddress) {
+      console.log("Your contract has been deployed at http://testnet.etherscan.io/address/" + receipt.contractAddress);
+      console.log("Note that it might take 30 - 90 sceonds for the block to propagate befor it's visible in etherscan.io");
+      break;
+    }
+    console.log("Waiting a mined block to include your contract... currently in block " + web3.eth.blockNumber);
+    await sleep(4000);
+  }
+}
+
+async function approveDeveloper(password, address) {
+  console.log('[Addr:',address,'] Initiating Approval Process ...')
+  let idx 
+  registries.get('dev').methods.owns(address).call().then((_idx) => {
+    idx = _idx
+    console.log('[Addr:',address,'] Developer owns ID #',_idx.toString())
+    return token.methods.approve(cfg.devProxyAddr, approve_cost).call()
+  }).then(() => {
+    console.log('[Addr:',address,'] Approved transfer of',approve_cost_base,'Botcoin.')
+    return registries.get('dev').methods.grantApproval(idx).call()
+  }).then(() => {
+    // If you check immediately it's very likely the tx hasn't propogated yet
+    // so the state could be stale.
+    sleep(2000)
+    return registries.get('dev').methods.approvalStatus(idx).call()
+  }).then((result) => {
+    console.log('[Addr:',address,'] Approval Status: ',result)
+    return true
+  }).catch((error) => {
+    console.log('[Addr:',address,'] Approval Error: ',error)
+    return false
+  })
+}
+
+async function revokeApproval(password, address) {
+  console.log('[Addr:',address,'] Revoking approval ...')
+  let idx = registries.get('dev').owns(address)
+  console.log('[Addr:',address,'] Developer owns ID #',idx.toString())
+  unlockAccount(cfg.mgmtAddr, password)
+  token.approve(cfg.devProxyAddr, approve_cost, {from: cfg.mgmtAddr})
+  console.log('[Addr:',address,'] Approved transfer of',approve_cost_base,'Botcoin.')
+  unlockAccount(cfg.mgmtAddr, password)
+  registries.get('dev').revokeApproval(idx.toNumber(), {from: cfg.mgmtAddr})
+
+  // If you check immediately it's very likely the tx hasn't propogated yet
+  // so the state will be stale.
+  sleep(2000)
+  let result = registries.get('dev').approvalStatus(idx.toNumber())
+  console.log('[Addr:',address,'] Approval Status: ',result)
+}
+
+async function checkDevApprovalByIdx(idx) {
+  console.log('[Idx:',idx,'] Checking approval status ...')
+  registries.get('dev').methods.approvalStatus(idx)
+    .call()
+    .then((result) => {
+      console.log('[Idx:',idx,'] Status: ',result)
+    })
+    .catch((error) => {
+      console.log('[Idx:',address,']',checkDevApprovalByIdx.name,error)
+    })
+}
+
+async function checkDevApprovalByAddr(address) {
+  console.log('[Addr: ',address,'] Checking approval status ...')
+  let idx
+  registries.get('dev').methods.owns(address)
+    .call()
+    .then((idx) => {
+      return registries.get('dev').methods.approvalStatus(idx).call()
+    })
+    .then((result) => {
+      console.log('[Addr: ',address,'] Status:',result)
+    })
+    .catch((error) => {
+      console.log('[Addr: ',address,']',checkDevApprovalByAddr.name,error)
+    })
+}
+
+function ownerOfEntry(idx) {
+  let addr = registries.get('dev').methods.ownerOfEntry(idx[0])
+    .call()
+    .then((addr) => {
+      console.log('Entry:', idx[0], 'Addr:', addr)
+    })
+    .catch((error) => {
+      console.log('Entry:', idx[0], 'Get Owner Error:\n',error)
+    })
+}
+
+async function registration(args) {
+  let success = false;
+  switch(args['registration']) {
+    case 'approve':
+      approveDeveloper(arg.password[0], arg.address[0])
+      break;
+    case 'check-approval':
+      if (arg.address) checkDevApprovalByAddr(arg.address[0])
+      if (arg.index)   checkDevApprovalByIdx(arg.index[0])
+      break;
+    case 'revoke-approval':
+      success = revokeApproval(arg.password[0], arg.address[0])
+      break;
+    case 'get-owner':
+      let success = ownerOfEntry(args.index)
+      break;
+    case '':
+      console.log('No valid registration command found.')
+      break;
+  }
+}
+
+async function deploy(args) {
+  switch(args['deploy']) {
+    case 'registry':
+      deployImplementation(args.type[0], cfg.mgmtAddr, 7900000, args.password[0])
+      break;
+    case 'storage':
+      deployImplementation(args.type[0], cfg.mgmtAddr, 7900000, args.password[0])
+      break;
+  }
+}
+
+switch(arg.subcommand_name) {
+  case 'get':
+    console.log('Command: '+arg.subcommand_name)
+    // run get handler
+    break;
+  case 'update':
+    console.log('Command: '+arg.subcommand_name)
+    // run update handler
+    break;
+  case 'deploy':
+    console.log('Command: '+arg.subcommand_name)
+    deploy(arg)
+    // run deploy handler
+    break;
+  case 'registration':
+    console.log('Command: '+arg.subcommand_name)
+    registration(arg)
+    // run registration handler
+    break;
+}
+
