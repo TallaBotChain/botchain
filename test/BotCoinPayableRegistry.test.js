@@ -11,17 +11,18 @@ const PublicStorage = artifacts.require('./PublicStorage.sol')
 const BotCoin = artifacts.require('BotCoin')
 const MockBotCoinPayableRegistry = artifacts.require('MockBotCoinPayableRegistry')
 
-const { accounts } = web3.eth
 const zeroAddr = '0x0000000000000000000000000000000000000000'
 const tallaWalletAddress = '0x1ae554eea0dcfdd72dcc3fa4034761cf6d041bf3'
 const entryPrice = 100
 
 contract('BotCoinPayableRegistry', () => {
   let botCoinPayableRegistry, botCoin
+  let accounts
 
   beforeEach(async () => {
     const publicStorage = await PublicStorage.new()
     botCoin = await BotCoin.new()
+    accounts = await web3.eth.getAccounts()
     await botCoin.transfer(accounts[1], entryPrice)
     botCoinPayableRegistry = await MockBotCoinPayableRegistry.new(
       publicStorage.address,
