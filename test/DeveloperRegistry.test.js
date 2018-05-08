@@ -7,18 +7,18 @@ import { hasEvent } from './helpers/event'
 import newDeveloperRegistry from './helpers/newDeveloperRegistry'
 const BotCoin = artifacts.require('BotCoin')
 
-const { accounts } = web3.eth
 const zeroHash = '0x0000000000000000000000000000000000000000000000000000000000000000'
 const tallaWalletAddress = '0x1ae554eea0dcfdd72dcc3fa4034761cf6d041bf3'
 
 const entryPrice = 100
-const dataHash = web3.sha3('some data to hash')
-const url = web3.fromAscii('www.google.com')
+const dataHash = web3.utils.sha3('some data to hash')
+const url = web3.utils.fromAscii('www.google.com')
 
 contract('DeveloperRegistry', () => {
-  let bc, botCoin
+  let bc, botCoin, accounts
 
   beforeEach(async () => {
+    accounts = await web3.eth.getAccounts()
     botCoin = await BotCoin.new()
     bc = await newDeveloperRegistry(botCoin.address, tallaWalletAddress, entryPrice)
     await botCoin.transfer(accounts[2], entryPrice)
@@ -44,7 +44,7 @@ contract('DeveloperRegistry', () => {
       })
 
       it('should set the owner address of the new developer', async () => {
-        expect(await bc.ownerOf(1)).to.equal(accounts[2])
+        expect(await bc.ownerOf(1)).to.equal(accounts[2].toLowerCase())
       })
 
       it('should map the new developer ID to the owner address', async () => {
