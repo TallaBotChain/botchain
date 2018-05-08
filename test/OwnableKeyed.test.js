@@ -4,34 +4,37 @@ import { expect } from 'chai'
 import { web3 } from './helpers/w3'
 import expectRevert from './helpers/expectRevert'
 
-const { accounts } = web3.eth
-
 const BaseStorage = artifacts.require('BaseStorage')
 const OwnableKeyed = artifacts.require('OwnableKeyed')
 
 describe('OwnableKeyed', () => {
-  let ownable
+  let ownable, accounts
 
   beforeEach(async function () {
+    accounts = await web3.eth.getAccounts()
     const storage = await BaseStorage.new()
     ownable = await OwnableKeyed.new(storage.address)
   })
 
   it('should have an owner', async () => {
-    expect(await ownable.getOwner() !== 0).to.equal(true)
+    let owner = await ownable.getOwner()
+    console.log('owner:',owner)
+    expect(owner !== 0).to.equal(true)
   })
 
   describe('transferOwnership', () => {
     it('changes owner after transfer', async () => {
       let other = accounts[1]
-      await ownable.transferOwnership(other)
-      expect(await ownable.getOwner()).to.equal(other) 
+      let owner = await ownable.getOwner()
+      console.log('owner:',owner,'other:',other)
+      await ownable.transferOwnership(other, {from: owner})
+      expect(await ownable.getOwner()).to.equal(other.toLowerCase()) 
     })
 
     it('should prevent non-owners from transfering', async () => {
       const other = accounts[2]
       const owner = await ownable.getOwner()
-      expect(owner !== other).to.equal(true)
+      expect(owner !== other.toLowerCase()).to.equal(true)
       await expectRevert(ownable.transferOwnership(other, { from: other }))
     })
   })
