@@ -8,19 +8,20 @@ const BigNumber = web3.BigNumber
 const PublicStorage = artifacts.require('PublicStorage.sol')
 const OwnableRegistry = artifacts.require('MockOwnableRegistry.sol')
 
-const { accounts } = web3.eth
 
 describe('OwnableRegistry', () => {
   let ownableRegistry = null
+  let accounts, _creator
   const _firstEntryId = 1
   const _secondEntryId = 2
   const _unknownEntryId = 3
-  const _creator = accounts[0]
   const _entryOwnerId = 4
   const ZERO_ID = '0'
 
   beforeEach(async function () {
     const storage = await PublicStorage.new()
+    accounts = await web3.eth.getAccounts()
+    _creator = accounts[0]
     ownableRegistry = await OwnableRegistry.new(storage.address, { from: _creator })
     await ownableRegistry.mint(_entryOwnerId, _firstEntryId, { from: _creator })
     await ownableRegistry.mint(_entryOwnerId, _secondEntryId, { from: _creator })

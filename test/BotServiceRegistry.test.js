@@ -6,14 +6,12 @@ import { web3 } from './helpers/w3'
 import expectRevert from './helpers/expectRevert'
 import botCoinTransferApproveSetup from './helpers/botCoinTransferApproveSetup'
 
-const { accounts } = web3.eth
-
 const botAddr1 = '0x63e230f3b57ec9d180b9403c0d8783ddc135f664'
 const zeroAddr = '0x0000000000000000000000000000000000000000'
 const tallaWalletAddress = '0x1ae554eea0dcfdd72dcc3fa4034761cf6d041bf3'
 const entryPrice = 100
 const initialBotCoinBalance = 100000000000
-const dataHash = web3.sha3('some data to hash')
+const dataHash = web3.utils.sha3('some data to hash')
 const url = 'www.google.com'
 
 const PublicStorage = artifacts.require('./PublicStorage.sol')
@@ -22,9 +20,10 @@ const BotServiceRegistry = artifacts.require('./MockBotServiceRegistry.sol')
 const BotCoin = artifacts.require('BotCoin')
 
 contract('BotServiceRegistry', () => {
-  let botServiceRegistry, botCoin, ownerRegistry
+  let botServiceRegistry, botCoin, ownerRegistry, accounts
 
   beforeEach(async () => {
+    accounts = await web3.eth.getAccounts()
     botCoin = await BotCoin.new()
     ownerRegistry = await MockOwnerRegistry.new()
     botServiceRegistry = await newMockRegistry(

@@ -7,7 +7,6 @@ const { accounts } = web3.eth
 const BaseStorage = artifacts.require('BaseStorage')
 
 const KEY = 'record'
-const ADDRESS = accounts[5]
 const NULL_ADDRESS = '0x0000000000000000000000000000000000000000'
 const NUM = 5
 const LONG_STRING = 'some super super super super super super super super long string'
@@ -17,16 +16,19 @@ const NEGATIVE_NUM = -5
 
 describe('BaseStorage', () => {
   let baseStorage
+  let ADDRESS
   
   beforeEach(async () => {
     baseStorage = await BaseStorage.new()
+    let accounts = await web3.eth.getAccounts()
+    ADDRESS = accounts[5]
   })
 
   describe('when address is set', () => {
     it('can be retrieved', async () => {
       await baseStorage.setAddress(KEY, ADDRESS)
       const record = await baseStorage.getAddress(KEY)
-      expect(record).to.equal(ADDRESS)
+      expect(record).to.equal(ADDRESS.toLowerCase())
     })
 
     it('can be deleted', async () => {
@@ -71,14 +73,14 @@ describe('BaseStorage', () => {
     it('can be retrieved', async () => {
       await baseStorage.setBytes(KEY, LONG_STRING)
       const record = await baseStorage.getBytes(KEY)
-      expect(web3.toAscii(record)).to.equal(LONG_STRING)
+      expect(web3.utils.toAscii(record)).to.equal(LONG_STRING)
     })
 
     it('can be deleted', async () => {
       await baseStorage.setBytes(KEY, LONG_STRING)
       await baseStorage.deleteBytes(KEY)
       const record = await baseStorage.getBytes(KEY)
-      expect(web3.toAscii(record)).to.equal('')
+      expect(web3.utils.toAscii(record)).to.equal('')
     })
   })
 
