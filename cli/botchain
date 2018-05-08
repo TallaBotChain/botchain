@@ -18,11 +18,6 @@ if (cfg.error) {
   process.exit()
 }
 
-if (!arg.rpc.includes('//')) {
-  console.log('The supplied RPC URL needs to contain the protocol.\n  Example: \'http://my.ethereum.node\'')
-  process.exit()
-}
-
 // Construct provider hostname/port and subscribe
 const rpc_host_and_port = arg.rpc + (arg.port ? arg.port : '')
 const web3 = new Web3(new Web3.providers.HttpProvider(rpc_host_and_port))
@@ -30,8 +25,11 @@ const web3 = new Web3(new Web3.providers.HttpProvider(rpc_host_and_port))
 // Read Encrypted keystore from file and decrypt is a key is provided.
 // Decryption isn't necessary for reading state from the blockchain.
 const keystore = fs.readFileSync('./testKeystore.json', 'utf-8')
-console.log(arg.password)
 const decryptedAccount = arg.password ? web3.eth.accounts.decrypt(keystore, arg.password[0]) : {}
+if (!arg.rpc.includes('//')) {
+  console.log('The supplied RPC URL needs to contain the protocol.\n  Example: \'http://my.ethereum.node\'')
+  process.exit()
+}
 
 // Expansion of the fee for botchain transactions
 const approve_cost_base = 1;
@@ -72,7 +70,7 @@ const Registry = new Map()
 const registries = new Map()
 .set('dev',      new web3.eth.Contract(devRegistryDelegateJSON.abi, cfg.devProxyAddr))
 .set('bot',      new web3.eth.Contract(botRegistryDelegateJSON.abi, cfg.botProxyAddr))
-.set('service',  new web3.eth.Contract(serviceRegistryDelegateJSON.abi,  cfg.serviceProxyAddr))
+.set('service',  new web3.eth.Contract(serviceRegistryDelegateJSON.abi, cfg.serviceProxyAddr))
 .set('instance', new web3.eth.Contract(instanceRegistryDelegateJSON.abi, cfg.isntanceProxyAddr));
 
 // A helper function to reliably unlock accounts as needed.
@@ -83,6 +81,8 @@ function unlockAccount(account, password) {
   web3.personal.unlockAccount(account, password, arg.timeout)
     .then((response) => {
       console.log('[Addr:',account,'TTL:',arg.timeout,'] Unlock Response:',response);
+    })
+    .catch((error) => {
     })
     .catch((error) => {
       console.log('[Addr:',account,'TTL:',arg.timeout,'] Unlock Error:',error);
@@ -146,10 +146,10 @@ async function approveDeveloper(password, address) {
   }).then(() => {
     console.log('[Addr:',address,'] Approved transfer of',approve_cost_base,'Botcoin.')
     return registries.get('dev').methods.grantApproval(idx).call()
-  }).then(() => {
+  }).then((txHash) => {
     // If you check immediately it's very likely the tx hasn't propogated yet
     // so the state could be stale.
-    sleep(2000)
+    console.log('TxHash:',txHash)
     return registries.get('dev').methods.approvalStatus(idx).call()
   }).then((result) => {
     console.log('[Addr:',address,'] Approval Status: ',result)
@@ -174,56 +174,30 @@ async function revokeApproval(password, address) {
   // so the state will be stale.
   sleep(2000)
   let result = registries.get('dev').approvalStatus(idx.toNumber())
-  console.log('[Addr:',address,'] Approval Status: ',result)
-}
-
-async function checkDevApprovalByIdx(idx) {
-  console.log('[Idx:',idx,'] Checking approval status ...')
-  registries.get('dev').methods.approvalStatus(idx)
-    .call()
-    .then((result) => {
-      console.log('[Idx:',idx,'] Status: ',result)
-    })
-    .catch((error) => {
-      console.log('[Idx:',address,']',checkDevApprovalByIdx.name,error)
-    })
+  return result
 }
 
 async function checkDevApprovalByAddr(address) {
-  console.log('[Addr: ',address,'] Checking approval status ...')
-  let idx
-  registries.get('dev').methods.owns(address)
-    .call()
-    .then((idx) => {
-      return registries.get('dev').methods.approvalStatus(idx).call()
-    })
-    .then((result) => {
-      console.log('[Addr: ',address,'] Status:',result)
-    })
-    .catch((error) => {
-      console.log('[Addr: ',address,']',checkDevApprovalByAddr.name,error)
-    })
+  console.log('[Dev Addr: ',address,'] Checking approval status ...')
+  let idx = registries.get('dev').owns(address)
+  let result = registries.get('dev').approvalStatus(idx)
+  console.log('[Dev Addr: ',address,'] Status: ',result)
 }
 
 function ownerOfEntry(idx) {
-  let addr = registries.get('dev').methods.ownerOfEntry(idx[0])
-    .call()
-    .then((addr) => {
-      console.log('Entry:', idx[0], 'Addr:', addr)
-    })
-    .catch((error) => {
-      console.log('Entry:', idx[0], 'Get Owner Error:\n',error)
-    })
+  let addr = registries.get('dev').ownerOfEntry(idx)
+  console.log('Entry: ', idx, ' Addr: ', addr)
 }
 
 async function registration(args) {
   let success = false;
   switch(args['registration']) {
     case 'approve':
-      approveDeveloper(arg.password[0], arg.address[0])
+      success = approveDeveloper(arg.password[0], arg.address[0])
       break;
     case 'check-approval':
-      if (arg.address) checkDevApprovalByAddr(arg.address[0])
+      console.log(arg)
+      if (arg.address) checkDevApprovalByAddr(arg.address)
       if (arg.index)   checkDevApprovalByIdx(arg.index[0])
       break;
     case 'revoke-approval':
