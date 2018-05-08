@@ -6,18 +6,19 @@ import { web3 } from './helpers/w3'
 import expectRevert from './helpers/expectRevert'
 import { hasEvent } from './helpers/event'
 
-const { accounts } = web3.eth
-const nonOwnerAddr = accounts[3]
-
 const PublicStorage = artifacts.require('./PublicStorage.sol')
 const MockProxyInstance = artifacts.require('./MockProxyInstance.sol')
 const MockApprovableRegistryDelegate = artifacts.require('./MockApprovableRegistryDelegate.sol')
 
 contract('ApprovableRegistry', () => {
   let approvableRegistry
+  let accounts
+  let nonOwnerAddr
 
   beforeEach(async () => {
     approvableRegistry = await newApprovableRegistry()
+    accounts = await web3.eth.getAccounts()
+    nonOwnerAddr = accounts[3]
   })
 
   describe('grantApproval()', () => {
