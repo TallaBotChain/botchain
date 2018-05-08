@@ -7,7 +7,7 @@ module.exports = {
       // * run parity on mainnet: `parity`
       // * update host/port to point at parity RPC
       host: process.env.RPC_HOST || 'localhost',
-      port: process.env.RPC_PORT || 8546,
+      port: process.env.RPC_PORT || 8545,
       network_id: process.env.NETWORK_ID || 1,
       gas: process.env.GAS || 4600000,
       // `gasPrice: 5` is relatively low price and could result in long transaction times (> 30 minutes)
@@ -20,7 +20,7 @@ module.exports = {
       // * run parity on kovan testnet: `parity --chain kovan`
       // * update host/port to point at parity RPC
       host: process.env.RPC_HOST || 'localhost',
-      port: process.env.RPC_PORT || 8546,
+      port: process.env.RPC_PORT || 8545,
       network_id: process.env.NETWORK_ID || 42,
       gas: process.env.GAS || 4600000
     },
@@ -33,7 +33,7 @@ module.exports = {
     coverage: {
       host: 'localhost',
       network_id: '*',
-      port: 8546,
+      port: 8545,
       gas: 0xfffffffffff,
       gasPrice: 0x01
     },
