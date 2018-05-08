@@ -6,17 +6,17 @@ import { web3 } from './helpers/w3'
 import expectRevert from './helpers/expectRevert'
 import { hasEvent } from './helpers/event'
 
-const { accounts } = web3.eth
-
 const PublicStorage = artifacts.require('./PublicStorage.sol')
 const MockProxyInstance = artifacts.require('./MockProxyInstance.sol')
 const MockActivatableRegistryDelegate = artifacts.require('./MockActivatableRegistryDelegate.sol')
 
 contract('ActivatableRegistry', () => {
   let activatable
+  let accounts
 
   beforeEach(async () => {
     activatable = await newActivatableRegistry()
+    accounts = await web3.eth.getAccounts()
   })
 
   describe('activate()', () => {
