@@ -48,8 +48,12 @@ const instanceRegistryDelegateJSON = require('../build/contracts/BotInstanceRegi
 const token = new web3.eth.Contract(botCoinJSON.abi, cfg.botcoinAddr)
 
 const contracts = new Map()
-.set('dev',     require('../build/contracts/DeveloperRegistryDelegate.json')); 
-
+.set('dev',      require('../build/contracts/DeveloperRegistryDelegate.json')) 
+.set('bot',      require('../build/contracts/BotProductRegistryDelegate.json')) 
+.set('service',  require('../build/contracts/BotServiceRegistryDelegate.json')) 
+.set('instance', require('../build/contracts/BotInstanceRegistryDelegate.json'))
+.set('storage',  require('../build/contracts/PublicStorage.json'));
+                        
 // Upgrade Interfaces -- The "Ownable Proxies"
 // These are pointed at current proxy addresses
 const upgradeIface = new Map()
@@ -89,14 +93,14 @@ function unlockAccount(account, password) {
     });
 }
 
-async function deployImplementation(type, addr, gas, password) {
+async function deployImplementation(type, addr, gas, password, constructorArgs) {
   Registry.get(type).deploy({
-      data: contract_data.unlinked_binary,
+      data: contracts.get(type).binary,
       arguments: constructorArgs
   }).send({
       from: addr,
       gas: gas,
-      gasPrice: '80000000'
+      gasPrice: '79000000'
   }, function (error, transactionHash) {
   
   }).on('error', function (error) {
@@ -185,8 +189,14 @@ async function checkDevApprovalByAddr(address) {
 }
 
 function ownerOfEntry(idx) {
-  let addr = registries.get('dev').ownerOfEntry(idx)
-  console.log('Entry: ', idx, ' Addr: ', addr)
+  registries.get('dev').methods.ownerOfEntry(idx[0])
+    .call()
+    .then((addr) => {
+      console.log('Entry:', idx[0], 'Addr:', addr)
+    })
+    .catch((error) => {
+      console.log('Entry:', idx[0], 'Get Owner Error:\n',error)
+    })
 }
 
 async function registration(args) {
