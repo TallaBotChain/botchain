@@ -10,7 +10,7 @@ jobs:
       - AWS_ACCOUNT: "500651484941"
       - AWS_DEFAULT_REGION: "us-east-1"
       - ECS_CLUSTER: "main"
-      - NAME_PREFIX: "dev-botchain-"
+      - NAME_PREFIX: "dev-"
       - ABI_BUCKET: "talla-botchain-dev-abi"
 
     steps:
