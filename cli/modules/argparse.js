@@ -64,6 +64,16 @@ regCommands.addParser('get-owner',{
   addHelp: true
 });
 
+regCommands.addParser('get-id',{
+  description:'Get the address stored at the provided index.',
+  addHelp: true
+});
+
+regCommands.addParser('get-url',{
+  description:'Get the address stored at the provided index.',
+  addHelp: true
+});
+
 regCommands.addParser('revoke-approval',{
   description:'Revoke approval for the developer at the provided address.',
   addHelp: true
@@ -87,6 +97,24 @@ regCommands.choices['approve'].addArgument(
   [ '-p', '--password' ],
   {
     help: 'Password for the Network Management Address.',
+    nargs: 1,
+    required: true
+  }
+);
+
+regCommands.choices['get-id'].addArgument(
+  [ '-a', '--address' ],
+  {
+    help: 'Address of the desired developer.',
+    nargs: 1,
+    required: true
+  }
+);
+
+regCommands.choices['get-url'].addArgument(
+  [ '-i', '--index' ],
+  {
+    help: 'Index of the desired address.',
     nargs: 1,
     required: true
   }
