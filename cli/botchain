@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 
-require('babel-register')({
-    presets: [ 'env' ]
-})
+require("babel-polyfill");
 
 // Node packages
 const fs   = require('fs');
@@ -10,7 +8,7 @@ const Web3 = require('web3');
 const lw   = require('eth-lightwallet');
 const bunyan = require('bunyan');
 
-// Local modules
+// Local config related modules
 const cfg  = require('./modules/config.js')
 const arg  = require('./modules/argparse.js')
 
@@ -18,7 +16,7 @@ if (cfg.error) {
   process.exit()
 }
 
-// Construct provider hostname/port and subscribe
+// Variables required to setup libraries
 const rpc_host_and_port = arg.rpc + (arg.port ? arg.port : '')
 const web3 = new Web3(new Web3.providers.HttpProvider(rpc_host_and_port))
 
@@ -26,15 +24,15 @@ const web3 = new Web3(new Web3.providers.HttpProvider(rpc_host_and_port))
 // Decryption isn't necessary for reading state from the blockchain.
 const keystore = fs.readFileSync('./testKeystore.json', 'utf-8')
 const decryptedAccount = arg.password ? web3.eth.accounts.decrypt(keystore, arg.password[0]) : {}
+web3.eth.defaultAccount = decryptedAccount.address
+console.log(decryptedAccount)
 if (!arg.rpc.includes('//')) {
   console.log('The supplied RPC URL needs to contain the protocol.\n  Example: \'http://my.ethereum.node\'')
   process.exit()
 }
 
-// Expansion of the fee for botchain transactions
-const approve_cost_base = 1;
-const approve_cost_exponent = 10 ** 18;
-const approve_cost = approve_cost_base * approve_cost_exponent;
+// Local libraries
+const reg  = require('./modules/registry.js')(web3, cfg)
 
 // Load all relevant contract JSON 
 const botCoinJSON                  = require('../build/contracts/BotCoin.json')
@@ -70,13 +68,6 @@ const Registry = new Map()
 .set('service',  new web3.eth.Contract(serviceRegistryDelegateJSON.abi))
 .set('instance', new web3.eth.Contract(instanceRegistryDelegateJSON.abi));
 
-// Registry Interfaces -- ABIs of the delegates pointed at the Proxy Addresses
-const registries = new Map()
-.set('dev',      new web3.eth.Contract(devRegistryDelegateJSON.abi, cfg.devProxyAddr))
-.set('bot',      new web3.eth.Contract(botRegistryDelegateJSON.abi, cfg.botProxyAddr))
-.set('service',  new web3.eth.Contract(serviceRegistryDelegateJSON.abi, cfg.serviceProxyAddr))
-.set('instance', new web3.eth.Contract(instanceRegistryDelegateJSON.abi, cfg.isntanceProxyAddr));
-
 // A helper function to reliably unlock accounts as needed.
 // This sets a timeout (defaulted by the argument parser)
 // so accounts won't accidentally be left open.
@@ -94,6 +85,7 @@ function unlockAccount(account, password) {
 }
 
 async function deployImplementation(type, addr, gas, password, constructorArgs) {
+  console.log('[Mgmt Addr:',addr,'Gas:',gas,'Type:',type,'] Setting up deployment ...');
   Registry.get(type).deploy({
       data: contracts.get(type).binary,
       arguments: constructorArgs
@@ -102,7 +94,7 @@ async function deployImplementation(type, addr, gas, password, constructorArgs) 
       gas: gas,
       gasPrice: '79000000'
   }, function (error, transactionHash) {
-  
+    console.log('[Mgmt Addr:',addr,'Gas:',gas,'Type:',type,'] Deployment sent, txHash:',transactionHash) 
   }).on('error', function (error) {
       console.log('error', error);
   }).on('transactionHash', function (transactionHash) {
@@ -113,7 +105,6 @@ async function deployImplementation(type, addr, gas, password, constructorArgs) 
       console.log('confirmation', confirmationNumber);
   });
 
-  console.log('[Mgmt Addr:',addr,'Gas:',gas,'Type:',type,'] Setting up deployment ...');
   unlockAccount(addr, password)
   contract = Registry.get(type).new({from: addr, gas: gas, data: devRegistryDelegateJSON.bytecode});
   await checkDeployment(contract)
@@ -140,81 +131,28 @@ async function checkDeployment(contract) {
   }
 }
 
-async function approveDeveloper(password, address) {
-  console.log('[Addr:',address,'] Initiating Approval Process ...')
-  let idx 
-  registries.get('dev').methods.owns(address).call().then((_idx) => {
-    idx = _idx
-    console.log('[Addr:',address,'] Developer owns ID #',_idx.toString())
-    return token.methods.approve(cfg.devProxyAddr, approve_cost).call()
-  }).then(() => {
-    console.log('[Addr:',address,'] Approved transfer of',approve_cost_base,'Botcoin.')
-    return registries.get('dev').methods.grantApproval(idx).call()
-  }).then((txHash) => {
-    // If you check immediately it's very likely the tx hasn't propogated yet
-    // so the state could be stale.
-    console.log('TxHash:',txHash)
-    return registries.get('dev').methods.approvalStatus(idx).call()
-  }).then((result) => {
-    console.log('[Addr:',address,'] Approval Status: ',result)
-    return true
-  }).catch((error) => {
-    console.log('[Addr:',address,'] Approval Error: ',error)
-    return false
-  })
-}
-
-async function revokeApproval(password, address) {
-  console.log('[Addr:',address,'] Revoking approval ...')
-  let idx = registries.get('dev').owns(address)
-  console.log('[Addr:',address,'] Developer owns ID #',idx.toString())
-  unlockAccount(cfg.mgmtAddr, password)
-  token.approve(cfg.devProxyAddr, approve_cost, {from: cfg.mgmtAddr})
-  console.log('[Addr:',address,'] Approved transfer of',approve_cost_base,'Botcoin.')
-  unlockAccount(cfg.mgmtAddr, password)
-  registries.get('dev').revokeApproval(idx.toNumber(), {from: cfg.mgmtAddr})
-
-  // If you check immediately it's very likely the tx hasn't propogated yet
-  // so the state will be stale.
-  sleep(2000)
-  let result = registries.get('dev').approvalStatus(idx.toNumber())
-  return result
-}
-
-async function checkDevApprovalByAddr(address) {
-  console.log('[Dev Addr: ',address,'] Checking approval status ...')
-  let idx = registries.get('dev').owns(address)
-  let result = registries.get('dev').approvalStatus(idx)
-  console.log('[Dev Addr: ',address,'] Status: ',result)
-}
-
-function ownerOfEntry(idx) {
-  registries.get('dev').methods.ownerOfEntry(idx[0])
-    .call()
-    .then((addr) => {
-      console.log('Entry:', idx[0], 'Addr:', addr)
-    })
-    .catch((error) => {
-      console.log('Entry:', idx[0], 'Get Owner Error:\n',error)
-    })
-}
-
 async function registration(args) {
   let success = false;
   switch(args['registration']) {
     case 'approve':
-      success = approveDeveloper(arg.password[0], arg.address[0])
+      reg.approveDeveloper(arg.address[0], decryptedAccount)
       break;
     case 'check-approval':
       console.log(arg)
-      if (arg.address) checkDevApprovalByAddr(arg.address)
-      if (arg.index)   checkDevApprovalByIdx(arg.index[0])
+      if (arg.address) reg.checkDevApprovalByAddr(arg.address[0])
+      if (arg.index)   reg.checkDevApprovalById(arg.index[0])
       break;
     case 'revoke-approval':
-      success = revokeApproval(arg.password[0], arg.address[0])
+      success = reg.revokeApproval(arg.password[0], arg.address[0])
       break;
     case 'get-owner':
-      let success = ownerOfEntry(args.index)
+      let success = reg.ownerOfEntry(args.index[0])
+      break;
+    case 'get-id':
+      reg.getId(arg.address[0])
+      break;
+    case 'get-url':
+      getDeveloperUrl(arg.index[0])
       break;
     case '':
       console.log('No valid registration command found.')
