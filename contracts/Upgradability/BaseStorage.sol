@@ -11,32 +11,32 @@ contract BaseStorage is KeyValueStorage {
 
   /**** Get Methods ***********/
 
-  function getAddress(bytes32 key) public view isAllowed returns (address) {
-      return _addressStorage[scopedKey(key)];
+  function getAddress(bytes32 key, bool scoped) public view isAllowed returns (address) {
+      return _addressStorage[scoped?scopedKey(key):key];
   }
 
-  function getUint(bytes32 key) public view isAllowed returns (uint) {
-      return _uintStorage[scopedKey(key)];
+  function getUint(bytes32 key, bool scoped) public view isAllowed returns (uint) {
+      return _uintStorage[scoped?scopedKey(key):key];
   }
 
-  function getString(bytes32 key) public view isAllowed returns (string) {
-      return _stringStorage[scopedKey(key)];
+  function getString(bytes32 key, bool scoped) public view isAllowed returns (string) {
+      return _stringStorage[scoped?scopedKey(key):key];
   }
 
-  function getBytes(bytes32 key) public view isAllowed returns (bytes) {
-      return _bytesStorage[scopedKey(key)];
+  function getBytes(bytes32 key, bool scoped) public view isAllowed returns (bytes) {
+      return _bytesStorage[scoped?scopedKey(key):key];
   }
 
-  function getBytes32(bytes32 key) public view isAllowed returns (bytes32) {
-      return _bytes32Storage[scopedKey(key)];
+  function getBytes32(bytes32 key, bool scoped) public view isAllowed returns (bytes32) {
+      return _bytes32Storage[scoped?scopedKey(key):key];
   }
 
-  function getBool(bytes32 key) public view isAllowed returns (bool) {
-      return _boolStorage[scopedKey(key)];
+  function getBool(bytes32 key, bool scoped) public view isAllowed returns (bool) {
+      return _boolStorage[scoped?scopedKey(key):key];
   }
 
-  function getInt(bytes32 key) public view isAllowed returns (int) {
-      return _intStorage[scopedKey(key)];
+  function getInt(bytes32 key, bool scoped) public view isAllowed returns (int) {
+      return _intStorage[scoped?scopedKey(key):key];
   }
 
   /**** Set Methods ***********/
