@@ -2,6 +2,8 @@ pragma solidity ^0.4.18;
 
 import "../Upgradability/OwnableKeyed.sol";
 import "../Upgradability/ArbiterKeyed.sol";
+import '../Vault/IncentiveMap.sol';
+import 'zeppelin-solidity/contracts/token/ERC20/StandardToken.sol';
 
 /**
 * @title IncentiveMap
@@ -11,17 +13,21 @@ contract TokenVaultDelegate is IncentiveMap {
 
   /**
   * @dev Creates an map of balances for 
-  * @param storage_ The BaseStorage contract that stores ApprovableRegistry's state
+  * @param _storage The BaseStorage contract that stores ApprovableRegistry's state
   */
   function TokenVaultDelegate(BaseStorage _storage, address _arbiter)
-    IncentiveMap(BaseStorage _storage, address _arbiter)
+    IncentiveMap(_storage,_arbiter)
     ArbiterKeyed(_storage,_arbiter)
     public
     {}
 
+	function botcoin() public view returns (StandardToken) {
+   	return StandardToken(_storage.getAddress("botCoinAddress"));
+  }
+
   /**
   * @dev 
-  * @param _entryId The ID of the entry
+  * @param addr The ID of the entry
   * @return true if entry id has approval status
   */
   function applyCuratorReward(address addr) onlyArbiter public {
@@ -29,19 +35,19 @@ contract TokenVaultDelegate is IncentiveMap {
     //       It can't currently be done this way because storage getters don't support
     //       alternative scoping for fetches.
     reserveTokens(curatorRewardRate());
-    setBalance(balance(addr) + curatorRewardRate());
+    setBalance(addr, this.balance() + curatorRewardRate());
   }
 
-  function applyDeveloperReward() onlyArbiter public {
-    require(devRewardRate() >= availableBalance());
-    botcoin.transfer(tx.origin, devRewardRate());
-  }
+  //function applyDeveloperReward() onlyArbiter public {
+  //  require(devRewardRate() >= availableBalance());
+  //  botcoin().transfer(tx.origin, devRewardRate());
+  //}
 
   function availableBalance() public returns (uint) {
     return _storage.getUint(keccak256('availableBalance'));
   }
 
-  function reservedTokens() public return (uint) {
+  function reservedTokens() public returns (uint) {
     return botcoin().balanceOf(address(this)) - availableBalance();
   }
 
@@ -51,7 +57,7 @@ contract TokenVaultDelegate is IncentiveMap {
     _storage.setUint(keccak256('availableBalance'), available - amount);
   }
 
-  function curatorRewardRate() private {
+  function curatorRewardRate() private returns (uint) {
     return _storage.getUint(keccak256('curatorEmissionRate'));
   }
 
@@ -59,7 +65,7 @@ contract TokenVaultDelegate is IncentiveMap {
     _storage.setUint(keccak256('curatorEmissionRate'), rate);
   }
 
-  function devRewardRate() private {
+  function devRewardRate() private returns (uint) {
     return _storage.getUint(keccak256('devEmissionRate'));
   }
 
@@ -67,17 +73,13 @@ contract TokenVaultDelegate is IncentiveMap {
     _storage.setUint(keccak256('devEmissionRate'), rate);
   }
 
-	function botCoin() public view returns (StandardToken) {
-   	return StandardToken(_storage.getAddress("botCoinAddress"));
-  }
-
   function vaultBalance() internal returns (uint) {
-    return botCoin().balanceOf(address(this));
+    return botcoin().balanceOf(address(this));
   }
 
 	function collectCuratorReward() internal {
-    uint balance = balance();
-    require(balance <= vaultBalance());
-   	require(botCoin().transfer(tx.origin, balance));
+    uint _balance = this.balance();
+    require(_balance <= vaultBalance());
+   	require(botcoin().transfer(tx.origin, _balance));
   }
 }

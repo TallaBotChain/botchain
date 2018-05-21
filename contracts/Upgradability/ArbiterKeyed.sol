@@ -40,7 +40,7 @@ contract ArbiterKeyed is OwnableKeyed {
 
   /**
    * @dev Allows the current owner to change the arbiter of the contract.
-   * @param newOwner The address to transfer ownership to.
+   * @param newArbiter The address to transfer ownership to.
    */
   function changeArbiter(address newArbiter) public onlyOwner {
     require(newArbiter != address(0));
