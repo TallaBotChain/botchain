@@ -16,6 +16,8 @@
     "eth-lightwallet": "^3.0.1",
     "ethjs": "^0.3.3",
     "moment": "^2.18.1",
+    "npm": "^6.0.1",
+    "sha3": "^1.2.2",
     "toml": "^2.3.3",
     "truffle-blockchain-utils": "^0.0.3",
     "truffle-hdwallet-provider": "^0.0.3",
