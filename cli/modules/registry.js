@@ -202,14 +202,14 @@ module.exports = function (web3, cfg) {
   module.checkDevApprovalByAddr = async function checkDevApprovalByAddr(address) {
     await web3.utils.isAddress(address)
 
-    return registries.get('dev').owns(address)
+    return registries.get('dev').methods.owns(address)
       .call()
       .then((idx) => {
         console.log('[Addr: ',address,'] ID Found:',idx)
-        return registries.get('dev').approvalStatus(idx)
+        return registries.get('dev').methods.approvalStatus(idx).call()
       })
       .then((result) => {
-        console.log('[Addr: ',address,'] Status: ',result)
+        console.log('[Addr: ',address,'] Status:',result)
         return result
       })
   }
