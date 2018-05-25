@@ -35,7 +35,7 @@ contract CurationCouncilRegistryDelegate is CurationCouncilRegistry, OwnerRegist
   )
     public
   {
-    super.leaveCouncil(memberAddress, stakeAmount)
+    super.leaveCouncil(memberAddress)
   }
 
   function createRegistrationVote(address developerAddress) public {
