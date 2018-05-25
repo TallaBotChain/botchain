@@ -60,6 +60,20 @@ contract CurationCouncilRegistry is OwnableRegistry {
     _storage.setUint(keccak256("registrationVoteNayCount", registrationVoteId), currentNayCount + 1)
   }
 
+  function joinCouncil(address memberAddress, uint256 stakeAmount) public {
+    botCoin().transferFrom(msg.sender, this.address, stakeAmount);
+    _storage.setUint(keccak256("stakeAmount", memberAddress), stakeAmount);
+  }
+
+  function leaveCouncil(address memberAddress) public {
+    botCoin().transferFrom(this.address, msg.sender, getStakeAmount(memberAddress))
+    _storage.setUint(keccak256("stakeAmount", memberAddress), 0)
+  }
+
+  function getStakeAmount(address memberAddress) public {
+    return _storage.getUint((keccak256("stakeAmount", memberAddress))
+  }
+
   /**
   * @dev Creates a new registration vote.
   * @param developerAddress address of developer requesting registration approval
