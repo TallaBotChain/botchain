@@ -74,6 +74,14 @@ contract CurationCouncilRegistry is OwnableRegistry {
     return _storage.getUint((keccak256("stakeAmount", memberAddress))
   }
 
+  function getVoteInitialBlock(uint256 registrationVoteId) public {
+    return _storage.getUint(keccak256("registrationVoteInitialBlock", registrationVoteId));
+  }
+
+  function getVoteFinalBlock(uint256 registrationVoteId) public {
+    return _storage.getUint(keccak256("registrationVoteFinalBlock", registrationVoteId));
+  }
+
   /**
   * @dev Creates a new registration vote.
   * @param developerAddress address of developer requesting registration approval
@@ -93,8 +101,8 @@ contract CurationCouncilRegistry is OwnableRegistry {
 
     _mint(developerAddress, registrationVoteId);
     _storage.setAddress(keccak256("registrationVoteDeveloperAddress", registrationVoteId), developerAddress);
-    _storage.setUint(keccak256("registrationVoteiInitialBlock", registrationVoteId), initialBlock);
-    _storage.setUint(keccak256("registrationVoteiFinalBlock", registrationVoteId), finalBlock);
+    _storage.setUint(keccak256("registrationVoteInitialBlock", registrationVoteId), initialBlock);
+    _storage.setUint(keccak256("registrationVoteFinalBlock", registrationVoteId), finalBlock);
     _storage.setUint(keccak256("registrationVoteYayCount", registrationVoteId), 0);
     _storage.setUint(keccak256("registrationVoteNayCount", registrationVoteId), 0);
 
