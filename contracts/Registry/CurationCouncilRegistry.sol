@@ -42,20 +42,20 @@ contract CurationCouncilRegistry is OwnableRegistry {
     public
   {}
 
-  function getYayCount(uint256 registrationVoteId) public  {
+  function getYayCount(uint256 registrationVoteId) public view returns {
     return _storage.getUint(keccak256("registrationVoteYayCount", registrationVoteId))
   }
 
-  function getNayCount(uint256 registrationVoteId) public  {
+  function getNayCount(uint256 registrationVoteId) public view returns {
     return _storage.getUint(keccak256("registrationVoteNayCount", registrationVoteId))
   }
 
-  function increaseYayCount(uint256 registrationVoteId) private  {
+  function increaseYayCount(uint256 registrationVoteId) private {
     uint256 currentYayCount = getYayCount(registrationVoteId)
     _storage.setUint(keccak256("registrationVoteYayCount", registrationVoteId), currentYayCount + 1)
   }
 
-  function increaseNayCount(uint256 registrationVoteId) private  {
+  function increaseNayCount(uint256 registrationVoteId) private {
     uint256 currentNayCount = getNayCount(registrationVoteId)
     _storage.setUint(keccak256("registrationVoteNayCount", registrationVoteId), currentNayCount + 1)
   }
@@ -70,15 +70,15 @@ contract CurationCouncilRegistry is OwnableRegistry {
     _storage.setUint(keccak256("stakeAmount", memberAddress), 0)
   }
 
-  function getStakeAmount(address memberAddress) public {
+  function getStakeAmount(address memberAddress) public view returns {
     return _storage.getUint((keccak256("stakeAmount", memberAddress))
   }
 
-  function getVoteInitialBlock(uint256 registrationVoteId) public {
+  function getVoteInitialBlock(uint256 registrationVoteId) public view returns {
     return _storage.getUint(keccak256("registrationVoteInitialBlock", registrationVoteId));
   }
 
-  function getVoteFinalBlock(uint256 registrationVoteId) public {
+  function getVoteFinalBlock(uint256 registrationVoteId) public view returns {
     return _storage.getUint(keccak256("registrationVoteFinalBlock", registrationVoteId));
   }
 
