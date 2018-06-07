@@ -42,43 +42,43 @@ contract CurationCouncilRegistry is OwnableRegistry {
     public
   {}
 
-  function getYayCount(uint256 registrationVoteId) public view returns {
-    return _storage.getUint(keccak256("registrationVoteYayCount", registrationVoteId))
+  function getYayCount(uint256 registrationVoteId) public view returns (uint256) {
+    return _storage.getUint(keccak256("registrationVoteYayCount", registrationVoteId));
   }
 
-  function getNayCount(uint256 registrationVoteId) public view returns {
-    return _storage.getUint(keccak256("registrationVoteNayCount", registrationVoteId))
+  function getNayCount(uint256 registrationVoteId) public view returns (uint256) {
+    return _storage.getUint(keccak256("registrationVoteNayCount", registrationVoteId));
   }
 
   function increaseYayCount(uint256 registrationVoteId) private {
-    uint256 currentYayCount = getYayCount(registrationVoteId)
-    _storage.setUint(keccak256("registrationVoteYayCount", registrationVoteId), currentYayCount + 1)
+    uint256 currentYayCount = getYayCount(registrationVoteId);
+    _storage.setUint(keccak256("registrationVoteYayCount", registrationVoteId), currentYayCount + 1);
   }
 
   function increaseNayCount(uint256 registrationVoteId) private {
-    uint256 currentNayCount = getNayCount(registrationVoteId)
-    _storage.setUint(keccak256("registrationVoteNayCount", registrationVoteId), currentNayCount + 1)
+    uint256 currentNayCount = getNayCount(registrationVoteId);
+    _storage.setUint(keccak256("registrationVoteNayCount", registrationVoteId), currentNayCount + 1);
   }
 
   function joinCouncil(address memberAddress, uint256 stakeAmount) public {
-    botCoin().transferFrom(msg.sender, this.address, stakeAmount);
+    botCoin().transferFrom(tx.origin, this, stakeAmount);
     _storage.setUint(keccak256("stakeAmount", memberAddress), stakeAmount);
   }
 
   function leaveCouncil(address memberAddress) public {
-    botCoin().transferFrom(this.address, msg.sender, getStakeAmount(memberAddress))
-    _storage.setUint(keccak256("stakeAmount", memberAddress), 0)
+    botCoin().transferFrom(this, tx.origin, getStakeAmount(memberAddress));
+    _storage.setUint(keccak256("stakeAmount", memberAddress), 0);
   }
 
-  function getStakeAmount(address memberAddress) public view returns {
-    return _storage.getUint((keccak256("stakeAmount", memberAddress))
+  function getStakeAmount(address memberAddress) public view returns (uint256) {
+    return _storage.getUint(keccak256("stakeAmount", memberAddress));
   }
 
-  function getVoteInitialBlock(uint256 registrationVoteId) public view returns {
+  function getVoteInitialBlock(uint256 registrationVoteId) public view returns (uint256) {
     return _storage.getUint(keccak256("registrationVoteInitialBlock", registrationVoteId));
   }
 
-  function getVoteFinalBlock(uint256 registrationVoteId) public view returns {
+  function getVoteFinalBlock(uint256 registrationVoteId) public view returns (uint256) {
     return _storage.getUint(keccak256("registrationVoteFinalBlock", registrationVoteId));
   }
 
@@ -95,8 +95,8 @@ contract CurationCouncilRegistry is OwnableRegistry {
     // Need clarification on how to handle developers who have been denied 
     // require(!registrationVoteExists(developerAddress));
 
-    uint256 initialBlock = block.number
-    uint256 finalBlock = initialBlock + 100000
+    uint256 initialBlock = block.number;
+    uint256 finalBlock = initialBlock + 100000;
     uint256 registrationVoteId = totalSupply().add(1);
 
     _mint(developerAddress, registrationVoteId);
@@ -110,12 +110,12 @@ contract CurationCouncilRegistry is OwnableRegistry {
   }
 
   function castRegistrationVote(uint256 registrationVoteId, bool vote) public {
-    uint256 currentYayCount = getYayCount(registrationVoteId)
-    uint256 currentNayCount = getNayCount(registrationVoteId)
-    if vote {
-      incrementYayCount(registrationVoteId, getStakeAmount(msg.sender))
+    uint256 currentYayCount = getYayCount(registrationVoteId);
+    uint256 currentNayCount = getNayCount(registrationVoteId);
+    if (vote) {
+      increaseYayCount(registrationVoteId, getStakeAmount(msg.sender));
     } else {
-      incrementNayCount(registrationVoteId, getStakeAmount(msg.sender))
+      increaseNayCount(registrationVoteId, getStakeAmount(msg.sender));
     }
   }
 

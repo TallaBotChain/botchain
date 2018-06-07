@@ -26,7 +26,7 @@ contract CurationCouncilRegistryDelegate is CurationCouncilRegistry, OwnerRegist
   )
     public
   {
-    joinCouncil(memberAddress, stakeAmount)
+    joinCouncil(memberAddress, stakeAmount);
   }
 
   function leaveCouncil(
@@ -35,11 +35,11 @@ contract CurationCouncilRegistryDelegate is CurationCouncilRegistry, OwnerRegist
   )
     public
   {
-    leaveCouncil(memberAddress)
+    leaveCouncil(memberAddress);
   }
 
   function createRegistrationVote(address developerAddress) public {
-    createRegistrationVote(developerAddress)
+    createRegistrationVote(developerAddress);
   }
 
   function castRegistrationVote(
@@ -48,14 +48,14 @@ contract CurationCouncilRegistryDelegate is CurationCouncilRegistry, OwnerRegist
   )
     public
   {
-    castRegistrationVote(registrationVoteId, vote)
+    castRegistrationVote(registrationVoteId, vote);
   }
 
-  function getVoteInitialBlock(uint256 registrationVoteId) public view returns {
+  function getVoteInitialBlock(uint256 registrationVoteId) public view returns (uint256) {
     return getVoteInitialBlock(registrationVoteId);
   }
 
-  function getVoteFinalBlock(uint256 registrationVoteId) public view returns {
+  function getVoteFinalBlock(uint256 registrationVoteId) public view returns (uint256) {
     return getVoteFinalBlock(registrationVoteId);
   }
 
