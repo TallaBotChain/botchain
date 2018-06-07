@@ -1,13 +1,12 @@
 pragma solidity ^0.4.18;
 
 import "../Registry/CurationCouncilRegistry.sol";
-import "../Registry/OwnerRegistry.sol";
 
 /**
  * @title CurationCouncilRegistryDelegate
  * @dev Delegate contract for functionality that handles curation of developers on the platform.
  */
-contract CurationCouncilRegistryDelegate is CurationCouncilRegistry, OwnerRegistry {
+contract CurationCouncilRegistryDelegate is CurationCouncilRegistry {
 
   string public constant name = "CurationCouncilRegistry";
 

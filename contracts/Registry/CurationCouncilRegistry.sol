@@ -10,7 +10,7 @@ import './BotCoinPayableRegistry.sol';
 /**
 * @title CurationCouncilRegistry
 */
-contract CurationCouncilRegistry is OwnableRegistry {
+contract CurationCouncilRegistry is BotCoinPayableRegistry, OwnableRegistry {
   using SafeMath for uint256;
 
   /**
