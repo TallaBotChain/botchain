@@ -1,6 +1,6 @@
 # BotChain
 
-Smart contracts for the Talla BotChain.
+Platform smart contracts for BotChain.
 
 ## Setup
 
