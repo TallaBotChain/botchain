@@ -1,16 +1,16 @@
 pragma solidity ^0.4.18;
 
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
-import "./OwnableRegistry.sol";
 import "./OwnerRegistry.sol";
 import "./ActivatableRegistry.sol";
 import "./ApprovableRegistry.sol";
 import './BotCoinPayableRegistry.sol';
+import "../Upgradability/ERC721TokenKeyed.sol";
 
 /**
 * @title CurationCouncilRegistry
 */
-contract CurationCouncilRegistry is BotCoinPayableRegistry, OwnableRegistry {
+contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyed {
   using SafeMath for uint256;
 
   /**
@@ -36,9 +36,7 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, OwnableRegistry {
   /** @dev Constructor for CurationCouncilRegistry */
   function CurationCouncilRegistry(BaseStorage storage_)
     BotCoinPayableRegistry(storage_)
-    OwnableRegistry(storage_)
-    ApprovableRegistry(storage_)
-    ActivatableRegistry(storage_)
+    ERC721TokenKeyed(storage_)
     public
   {}
 
@@ -50,14 +48,14 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, OwnableRegistry {
     return _storage.getUint(keccak256("registrationVoteNayCount", registrationVoteId));
   }
 
-  function increaseYayCount(uint256 registrationVoteId) private {
+  function increaseYayCount(uint256 registrationVoteId, uint256 stakeAmount) private {
     uint256 currentYayCount = getYayCount(registrationVoteId);
-    _storage.setUint(keccak256("registrationVoteYayCount", registrationVoteId), currentYayCount + 1);
+    _storage.setUint(keccak256("registrationVoteYayCount", registrationVoteId), currentYayCount + stakeAmount);
   }
 
-  function increaseNayCount(uint256 registrationVoteId) private {
+  function increaseNayCount(uint256 registrationVoteId, uint256 stakeAmount) private {
     uint256 currentNayCount = getNayCount(registrationVoteId);
-    _storage.setUint(keccak256("registrationVoteNayCount", registrationVoteId), currentNayCount + 1);
+    _storage.setUint(keccak256("registrationVoteNayCount", registrationVoteId), currentNayCount + stakeAmount);
   }
 
   function joinCouncil(address memberAddress, uint256 stakeAmount) public {
@@ -106,7 +104,7 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, OwnableRegistry {
     _storage.setUint(keccak256("registrationVoteYayCount", registrationVoteId), 0);
     _storage.setUint(keccak256("registrationVoteNayCount", registrationVoteId), 0);
 
-    RegistrationVoteCreated(registrationVoteId, initialBlock, finalBlock, 0, 0, false);
+    RegistrationVoteCreated(registrationVoteId, initialBlock, finalBlock, developerAddress, 0, 0, false);
   }
 
   function castRegistrationVote(uint256 registrationVoteId, bool vote) public {
