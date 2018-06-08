@@ -23,7 +23,6 @@ contract TokenVault is IncentiveMap {
 
   /**
   * @dev Applies a reward to the balance of a curator address.
-  * @param addr The address of the curator to give a reward to. 
   */
   function applyCuratorReward() onlyArbiter public; 
 
