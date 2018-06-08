@@ -15,6 +15,7 @@ export default async function newDeveloperRegistry (botCoinAddress, tallaWalletA
     developerRegistryDelegate.address,
     botCoinAddress
   )
+
   developerRegistry = _.extend(
     developerRegistry,
     await DeveloperRegistryDelegate.at(developerRegistry.address)
