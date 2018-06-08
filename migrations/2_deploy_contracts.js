@@ -6,7 +6,6 @@ const DeveloperRegistryDelegate = artifacts.require('./DeveloperRegistryDelegate
 const BotProductRegistryDelegate = artifacts.require('./BotProductRegistryDelegate.sol')
 const BotServiceRegistryDelegate = artifacts.require('./BotServiceRegistryDelegate.sol')
 const BotInstanceRegistryDelegate = artifacts.require('./BotInstanceRegistryDelegate.sol')
-const TokenVaultDelegate = artifacts.require('./TokenVaultDelegate.sol')
 
 const BotEntryRegistry = artifacts.require('./BotEntryRegistry.sol')
 const DeveloperRegistry = artifacts.require('./DeveloperRegistry.sol')
