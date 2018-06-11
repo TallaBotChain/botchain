@@ -88,7 +88,7 @@ function deployDeveloperRegistry (
 ) {
   console.log('')
   console.log(`deploying contracts for developer registry`)
-  return DeveloperRegistryDelegate.new().then((developerRegistryDelegate) => {
+  return DeveloperRegistryDelegate.new(storageAddress).then((developerRegistryDelegate) => {
     console.log(`deployed developer registry delegate: ${developerRegistryDelegate.address}`)
     addToJSON("DeveloperRegistryDelegate", developerRegistryDelegate.address)
     return DeveloperRegistry.new(
@@ -114,7 +114,7 @@ function deployRegistry (
 ) {
   console.log('')
   console.log(`deploying contracts for ${name} `)
-  return delegateArtifact.new().then((registryDelegate) => {
+  return delegateArtifact.new(storageAddress).then((registryDelegate) => {
     console.log(`deployed ${name} registry delegate: ${registryDelegate.address}`)
     delegateName = displayName + "Delegate"
     addToJSON(delegateName, registryDelegate.address)

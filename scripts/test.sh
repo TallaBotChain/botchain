@@ -3,7 +3,7 @@
 output=$(nc -z localhost 8545; echo $?)
 [ $output -eq "0" ] && trpc_running=true
 if [ ! $trpc_running ]; then
-  echo "Starting our own testrpc node instance"
+  echo "Starting our own ganache-cli node instance"
   # we give each account 1M ether, needed for high-value tests
   ganache-cli \
     --account="0x2bdd21761a483f71054e14f5b827213567971c676928d9a1808cbfa4b7501200,1000000000000000000000000"  \
