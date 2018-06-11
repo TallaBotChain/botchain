@@ -10,6 +10,7 @@ const TokenVaultDelegate = artifacts.require('./TokenVaultDelegate.sol')
 
 const BotEntryRegistry = artifacts.require('./BotEntryRegistry.sol')
 const DeveloperRegistry = artifacts.require('./DeveloperRegistry.sol')
+const TokenVaultProxy = artifacts.require('./TokenVaultProxy.sol')
 
 const tallaWalletAddress = '0xc3f61fca6bd491424bc19e844c6847c9c9ab3d2c'
 const entryPrice = 1 * 10 ** 18
@@ -72,6 +73,8 @@ module.exports = function (deployer) {
     botInstanceRegistry = _botInstanceRegistry
     return configureRegistry('developer', developerRegistry, tallaWalletAddress, entryPrice)
   }).then(() => {
+    return deployTokenVault(storage.address, storage.address)
+  }).then(() => {
     return configureRegistry('bot product', botProductRegistry, tallaWalletAddress, entryPrice)
   }).then(() => {
     return configureRegistry('bot service', botServiceRegistry, tallaWalletAddress, entryPrice)
@@ -80,6 +83,27 @@ module.exports = function (deployer) {
   })
   .catch((err) => {
     console.error(err)
+  })
+}
+
+function deployTokenVault (
+  storageAddress,
+  arbiterAddress
+) {
+  console.log(`deploying contracts for token vault`)
+  console.dir(TokenVaultDelegate)
+  return TokenVaultDelegate.new(storageAddress,arbiterAddress).then((tokenVaultDelegate) => {
+    console.log(`deployed token vault delegate: ${tokenVaultDelegate.address}`)
+    addToJSON("TokenVaultDelegate", tokenVaultDelegate.address)
+    return TokenVaultProxy.new(
+      storageAddress,
+      tokenVaultDelegate.address,
+      botCoinAddress
+    )
+  }).then((tokenVaultProxy) => {
+    console.log(`deployed token vault proxy instance: ${tokenVaultProxy.address}`)
+    addToJSON("TokenVaultProxy", tokenVaultProxy.address)
+    return TokenVaultDelegate.at(tokenVaultProxy.address)
   })
 }
 

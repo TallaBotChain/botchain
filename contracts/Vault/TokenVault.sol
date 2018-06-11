@@ -2,6 +2,7 @@ pragma solidity ^0.4.18;
 
 import "../Upgradability/OwnableKeyed.sol";
 import "../Upgradability/ArbiterKeyed.sol";
+import '../Upgradability/BaseStorage.sol';
 import './IncentiveMap.sol';
 
 /**
@@ -17,7 +18,6 @@ contract TokenVault is IncentiveMap {
   */
   function TokenVault(BaseStorage _storage, address _arbiter)
     IncentiveMap(_storage,_arbiter)
-    ArbiterKeyed(_storage,_arbiter)
     public
     {}
 

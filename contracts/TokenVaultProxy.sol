@@ -3,10 +3,10 @@ pragma solidity ^0.4.18;
 import "./Upgradability/OwnableProxy.sol";
 import "./Upgradability/PublicStorage.sol";
 
-contract TokenVault is OwnableProxy {
+contract TokenVaultProxy is OwnableProxy {
 
-  /** @dev Creates developer registry*/
-  function TokenVault(
+  /** @dev Creates token vault proxy */
+  function TokenVaultProxy(
     PublicStorage storage_,
     address tokenVaultDelegateAddress,
     address botCoinAddress
