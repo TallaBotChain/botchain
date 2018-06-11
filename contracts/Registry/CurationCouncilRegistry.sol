@@ -1,9 +1,6 @@
 pragma solidity ^0.4.18;
 
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
-import "./OwnerRegistry.sol";
-import "./ActivatableRegistry.sol";
-import "./ApprovableRegistry.sol";
 import './BotCoinPayableRegistry.sol';
 import "../Upgradability/ERC721TokenKeyed.sol";
 
