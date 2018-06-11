@@ -1,6 +1,7 @@
 pragma solidity ^0.4.18;
 
 import "../Upgradability/ArbiterKeyed.sol";
+import '../Upgradability/BaseStorage.sol';
 
 /**
 * @title IncentiveMap

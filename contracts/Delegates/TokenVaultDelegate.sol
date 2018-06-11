@@ -1,6 +1,7 @@
 pragma solidity ^0.4.18;
 
 import '../Vault/TokenVault.sol';
+import '../Upgradability/BaseStorage.sol';
 import 'zeppelin-solidity/contracts/token/ERC20/StandardToken.sol';
 
 contract TokenVaultDelegate is TokenVault {
@@ -53,6 +54,10 @@ contract TokenVaultDelegate is TokenVault {
   }
 
   function setCuratorRewardRate(uint rate) onlyOwner public {
+    _storage.setUint(keccak256('curatorEmissionRate'), rate);
+  }
+
+  function setDevRewardRate(uint rate) onlyOwner public {
     _storage.setUint(keccak256('curatorEmissionRate'), rate);
   }
 
