@@ -77,6 +77,14 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyed {
     return _storage.getUint(keccak256("registrationVoteFinalBlock", registrationVoteId));
   }
 
+  function getVotedOnStatus(uint256 registrationVoteId, address memberAddress) public view returns (bool) {
+    return _storage.getBool(keccak256("votedOn", registrationVoteId, memberAddress))
+  }
+
+  function setVotedOnStatus(uint256 registrationVoteId) public {
+    _storage.setBool(keccak256("votedOn", registrationVoteId, tx.origin), true)
+  }
+
   /**
   * @dev Creates a new registration vote.
   * @param developerAddress address of developer requesting registration approval
@@ -105,13 +113,18 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyed {
   }
 
   function castRegistrationVote(uint256 registrationVoteId, bool vote) public {
+    require(getVotedOnStatus(registrationVoteId, tx.origin));
+
     uint256 currentYayCount = getYayCount(registrationVoteId);
     uint256 currentNayCount = getNayCount(registrationVoteId);
+    
     if (vote) {
       increaseYayCount(registrationVoteId, getStakeAmount(msg.sender));
     } else {
       increaseNayCount(registrationVoteId, getStakeAmount(msg.sender));
     }
+
+    setVotedOnStatus(registrationVoteId);
   }
 
 
