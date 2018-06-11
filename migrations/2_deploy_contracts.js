@@ -20,7 +20,7 @@ const contractsOutputFile = 'build/contracts.json'
 let jsonOutput = {}
 
 module.exports = function (deployer) {
-  let storage, botCoin
+  let storage, botcoin
   let developerRegistry, botProductRegistry, botServiceRegistry, botInstanceRegistry
 
   deployer.then(() => {
@@ -29,12 +29,14 @@ module.exports = function (deployer) {
     storage = _storage
     addToJSON("PublicStorage", storage.address)
     return BotCoin.new()
-  }).then((_botCoin) => {
-    botCoin = _botCoin
-    addToJSON("BotCoin", botCoin.address)
+  }).then((_botcoin) => {
+    botcoin = _botcoin
+    addToJSON("BotCoin", botcoin.address)
+//    return deployTokenVault(storage.address,tallaWalletAddress,botcoin.address)
+//  }).then(() => {
     return deployDeveloperRegistry(
       storage.address,
-      botCoin.address
+      botcoin.address
     )
   }).then((_developerRegistry) => {
     developerRegistry = _developerRegistry
@@ -43,7 +45,7 @@ module.exports = function (deployer) {
       'BotProductRegistry',
       developerRegistry.address,
       storage.address,
-      botCoin.address,
+      botcoin.address,
       BotEntryRegistry,
       BotProductRegistryDelegate
     )
@@ -54,7 +56,7 @@ module.exports = function (deployer) {
       'BotServiceRegistry',
       developerRegistry.address,
       storage.address,
-      botCoin.address,
+      botcoin.address,
       BotEntryRegistry,
       BotServiceRegistryDelegate
     )
@@ -65,7 +67,7 @@ module.exports = function (deployer) {
       'BotInstanceRegistry',
       botProductRegistry.address,
       storage.address,
-      botCoin.address,
+      botcoin.address,
       BotEntryRegistry,
       BotInstanceRegistryDelegate
     )
@@ -73,7 +75,6 @@ module.exports = function (deployer) {
     botInstanceRegistry = _botInstanceRegistry
     return configureRegistry('developer', developerRegistry, tallaWalletAddress, entryPrice)
   }).then(() => {
-    return deployTokenVault(storage.address, storage.address)
   }).then(() => {
     return configureRegistry('bot product', botProductRegistry, tallaWalletAddress, entryPrice)
   }).then(() => {
@@ -88,19 +89,20 @@ module.exports = function (deployer) {
 
 function deployTokenVault (
   storageAddress,
-  arbiterAddress
+  arbiterAddress,
+  botcoinAddress
 ) {
   console.log(`deploying contracts for token vault`)
-  console.dir(TokenVaultDelegate)
   return TokenVaultDelegate.new(storageAddress,arbiterAddress).then((tokenVaultDelegate) => {
     console.log(`deployed token vault delegate: ${tokenVaultDelegate.address}`)
     addToJSON("TokenVaultDelegate", tokenVaultDelegate.address)
     return TokenVaultProxy.new(
       storageAddress,
       tokenVaultDelegate.address,
-      botCoinAddress
+      botcoinAddress
     )
-  }).then((tokenVaultProxy) => {
+  })
+  .then((tokenVaultProxy) => {
     console.log(`deployed token vault proxy instance: ${tokenVaultProxy.address}`)
     addToJSON("TokenVaultProxy", tokenVaultProxy.address)
     return TokenVaultDelegate.at(tokenVaultProxy.address)
@@ -109,7 +111,7 @@ function deployTokenVault (
 
 function deployDeveloperRegistry (
   storageAddress,
-  botCoinAddress
+  botcoinAddress
 ) {
   console.log('')
   console.log(`deploying contracts for developer registry`)
@@ -119,7 +121,7 @@ function deployDeveloperRegistry (
     return DeveloperRegistry.new(
       storageAddress,
       developerRegistryDelegate.address,
-      botCoinAddress
+      botcoinAddress
     )
   }).then((developerRegistry) => {
     console.log(`deployed developer registry instance: ${developerRegistry.address}`)
@@ -133,7 +135,7 @@ function deployRegistry (
   displayName,
   ownerRegistryAddress,
   storageAddress,
-  botCoinAddress,
+  botcoinAddress,
   registryArtifact,
   delegateArtifact
 ) {
@@ -147,7 +149,7 @@ function deployRegistry (
       ownerRegistryAddress,
       storageAddress,
       registryDelegate.address,
-      botCoinAddress
+      botcoinAddress
     )
   }).then((registry) => {
     console.log(`deployed ${name} registry instance: ${registry.address}`)

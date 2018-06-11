@@ -50,7 +50,7 @@ contract ArbiterKeyed is OwnableKeyed {
     return _storage.getAddress("arbiter");
   }
 
-  function setArbiter(address arbiter) internal {
+  function setArbiter(address arbiter) private {
     _storage.setAddress("arbiter", arbiter);
   }
 }
