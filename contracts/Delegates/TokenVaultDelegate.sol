@@ -5,6 +5,10 @@ import 'zeppelin-solidity/contracts/token/ERC20/StandardToken.sol';
 
 contract TokenVaultDelegate is TokenVault {
 
+  function TokenVaultDelegate(BaseStorage _storage, address _arbiter)
+    TokenVault(_storage,_arbiter)
+    public
+    {}
   /**
   *  @dev Retreives the address of the EIP-20 from storage and instanties a StandardToken interface for it.
   *  @return StandardToken interface to the EIP-20 token contract.
