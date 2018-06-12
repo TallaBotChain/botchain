@@ -107,7 +107,7 @@ contract('ActivatableRegistry', () => {
 
 async function newActivatableRegistry () {
   const publicStorage = await PublicStorage.new()
-  const activatableRegistry = await MockActivatableRegistryDelegate.new()
+  const activatableRegistry = await MockActivatableRegistryDelegate.new(publicStorage.address)
   const activatable = await MockProxyInstance.new(
     publicStorage.address,
     activatableRegistry.address
