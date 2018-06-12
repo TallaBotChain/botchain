@@ -78,11 +78,11 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyed {
   }
 
   function getVotedOnStatus(uint256 registrationVoteId, address memberAddress) public view returns (bool) {
-    return _storage.getBool(keccak256("votedOn", registrationVoteId, memberAddress))
+    return _storage.getBool(keccak256("votedOn", registrationVoteId, memberAddress));
   }
 
   function setVotedOnStatus(uint256 registrationVoteId) public {
-    _storage.setBool(keccak256("votedOn", registrationVoteId, tx.origin), true)
+    _storage.setBool(keccak256("votedOn", registrationVoteId, tx.origin), true);
   }
 
   /**
