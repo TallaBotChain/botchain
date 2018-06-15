@@ -106,7 +106,7 @@ contract('ApprovableRegistry', () => {
 
 async function newApprovableRegistry () {
   const publicStorage = await PublicStorage.new()
-  const approvableRegistryDelegate = await MockApprovableRegistryDelegate.new()
+  const approvableRegistryDelegate = await MockApprovableRegistryDelegate.new(publicStorage.address)
   const approvableRegistry = await MockProxyInstance.new(
     publicStorage.address,
     approvableRegistryDelegate.address

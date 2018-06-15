@@ -8,13 +8,14 @@ const DeveloperRegistryDelegate = artifacts.require('./DeveloperRegistryDelegate
 
 export default async function newDeveloperRegistry (botCoinAddress, tallaWalletAddress, entryPrice) {
   const publicStorage = await PublicStorage.new()
-  const developerRegistryDelegate = await DeveloperRegistryDelegate.new()
+  const developerRegistryDelegate = await DeveloperRegistryDelegate.new(publicStorage.address)
 
   let developerRegistry = await DeveloperRegistry.new(
     publicStorage.address,
     developerRegistryDelegate.address,
     botCoinAddress
   )
+
   developerRegistry = _.extend(
     developerRegistry,
     await DeveloperRegistryDelegate.at(developerRegistry.address)

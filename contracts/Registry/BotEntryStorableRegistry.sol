@@ -157,7 +157,7 @@ contract BotEntryStorableRegistry is BotCoinPayableRegistry, ApprovableRegistry,
   * @param url An url associated with the bot entry
   */
   function setBotEntryUrl(uint256 botEntryId, bytes32 url) private {
-    _storage.setBytes32(keccak256("botEntryId", botEntryId), url);
+    _storage.setBytes32(keccak256("botEntryUrl", botEntryId), url);
   }
 
   /**
@@ -166,7 +166,7 @@ contract BotEntryStorableRegistry is BotCoinPayableRegistry, ApprovableRegistry,
   * @return true if msg.sender owns the given bot entry
   */
   function checkEntryOwnership(uint256 _botEntryId) private view returns (bool) {
-    ownerOfEntry(_botEntryId) == msg.sender;
+    return ownerOfEntry(_botEntryId) == msg.sender;
   }
 
   /**
