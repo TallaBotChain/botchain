@@ -7,15 +7,13 @@ contract CurationCouncil is OwnableProxy {
 
   /** @dev Creates curation council */
   function CurationCouncil(
-    address ownerRegistryAddress,
     PublicStorage storage_,
-    address delegate,
+    address curationCouncilRegistryDelegateAddress,
     address botCoinAddress
   )
-    OwnableProxy(storage_, delegate)
+    OwnableProxy(storage_, curationCouncilRegistryDelegateAddress)
     public
   {
-    storage_.setAddress("ownerRegistryAddress", ownerRegistryAddress);
     storage_.setAddress("botCoinAddress", botCoinAddress);
   }
 

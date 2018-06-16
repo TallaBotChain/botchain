@@ -21,4 +21,4 @@ if [ ! $trpc_running ]; then
   trpc_pid=$!
 fi
 npm run test:truffle
-kill -9 $trpc_pid
+# kill -9 $trpc_pid

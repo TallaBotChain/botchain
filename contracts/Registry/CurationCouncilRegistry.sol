@@ -55,14 +55,14 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyed {
     _storage.setUint(keccak256("registrationVoteNayCount", registrationVoteId), currentNayCount + stakeAmount);
   }
 
-  function joinCouncil(address memberAddress, uint256 stakeAmount) public {
-    botCoin().transferFrom(tx.origin, this, stakeAmount);
-    _storage.setUint(keccak256("stakeAmount", memberAddress), stakeAmount);
+  function joinCouncil(uint256 stakeAmount) public {
+    botCoin().transferFrom(msg.sender, this, stakeAmount);
+    _storage.setUint(keccak256("stakeAmount", msg.sender), stakeAmount);
   }
 
-  function leaveCouncil(address memberAddress) public {
-    botCoin().transferFrom(this, tx.origin, getStakeAmount(memberAddress));
-    _storage.setUint(keccak256("stakeAmount", memberAddress), 0);
+  function leaveCouncil() public {
+    botCoin().transfer(msg.sender, getStakeAmount(msg.sender));
+    _storage.setUint(keccak256("stakeAmount", msg.sender), 0);
   }
 
   function getStakeAmount(address memberAddress) public view returns (uint256) {
@@ -113,7 +113,7 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyed {
   }
 
   function castRegistrationVote(uint256 registrationVoteId, bool vote) public {
-    require(getVotedOnStatus(registrationVoteId, tx.origin));
+    require(!getVotedOnStatus(registrationVoteId, tx.origin));
 
     uint256 currentYayCount = getYayCount(registrationVoteId);
     uint256 currentNayCount = getNayCount(registrationVoteId);

@@ -19,26 +19,20 @@ contract CurationCouncilRegistryDelegate is CurationCouncilRegistry {
     public
   {}
 
-  function joinCouncil(
-    address memberAddress,
-    uint256 stakeAmount
-  )
+  function joinCouncil(uint256 stakeAmount)
     public
   {
-    joinCouncil(memberAddress, stakeAmount);
+    super.joinCouncil(stakeAmount);
   }
 
-  function leaveCouncil(
-    address memberAddress,
-    uint256 stakeAmount
-  )
+  function leaveCouncil()
     public
   {
-    leaveCouncil(memberAddress);
+    super.leaveCouncil();
   }
 
   function createRegistrationVote(address developerAddress) public {
-    createRegistrationVote(developerAddress);
+    super.createRegistrationVote(developerAddress);
   }
 
   function castRegistrationVote(
@@ -47,15 +41,15 @@ contract CurationCouncilRegistryDelegate is CurationCouncilRegistry {
   )
     public
   {
-    castRegistrationVote(registrationVoteId, vote);
+    super.castRegistrationVote(registrationVoteId, vote);
   }
 
   function getVoteInitialBlock(uint256 registrationVoteId) public view returns (uint256) {
-    return getVoteInitialBlock(registrationVoteId);
+    return super.getVoteInitialBlock(registrationVoteId);
   }
 
   function getVoteFinalBlock(uint256 registrationVoteId) public view returns (uint256) {
-    return getVoteFinalBlock(registrationVoteId);
+    return super.getVoteFinalBlock(registrationVoteId);
   }
 
 }
