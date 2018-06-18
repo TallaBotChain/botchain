@@ -56,12 +56,12 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyed {
   }
 
   function joinCouncil(uint256 stakeAmount) public {
-    botCoin().transferFrom(msg.sender, this, stakeAmount);
+    require(botCoin().transferFrom(msg.sender, this, stakeAmount));
     _storage.setUint(keccak256("stakeAmount", msg.sender), stakeAmount);
   }
 
   function leaveCouncil() public {
-    botCoin().transfer(msg.sender, getStakeAmount(msg.sender));
+    require(botCoin().transfer(msg.sender, getStakeAmount(msg.sender)));
     _storage.setUint(keccak256("stakeAmount", msg.sender), 0);
   }
 
