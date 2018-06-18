@@ -31,7 +31,7 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyed {
   );
 
   /** @dev Constructor for CurationCouncilRegistry */
-  function CurationCouncilRegistry(BaseStorage storage_)
+  constructor(BaseStorage storage_)
     BotCoinPayableRegistry(storage_)
     ERC721TokenKeyed(storage_)
     public
@@ -52,7 +52,7 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyed {
 
   function increaseNayCount(uint256 registrationVoteId, uint256 stakeAmount) private {
     uint256 currentNayCount = getNayCount(registrationVoteId);
-    _storage.setUint(keccak256("registrationVoteNayCount", registrationVoteId), currentNayCount + stakeAmount);
+    _storage.setUint(keccak256("registrationVoteNayCount", registrationVoteId), (currentNayCount + stakeAmount));
   }
 
   function joinCouncil(uint256 stakeAmount) public {
@@ -82,41 +82,40 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyed {
   }
 
   function setVotedOnStatus(uint256 registrationVoteId) public {
-    _storage.setBool(keccak256("votedOn", registrationVoteId, tx.origin), true);
+    _storage.setBool(keccak256("votedOn", registrationVoteId, msg.sender), true);
+  }
+
+  function registrationVoteExists(address developerAddress) public view returns (bool) {
+    return _storage.getBool(keccak256("registrationVoteExists", developerAddress));
   }
 
   /**
-  * @dev Creates a new registration vote.
-  * @param developerAddress address of developer requesting registration approval
+  * @dev Creates a new registration vote
   */
-  function createRegistrationVote(
-    address developerAddress
-  )
-    public 
-  {
-    require(developerAddress != 0x0);
-    // Need clarification on how to handle developers who have been denied 
-    // require(!registrationVoteExists(developerAddress));
+  function createRegistrationVote() public {
+    require(msg.sender != 0x0);
+    require(!registrationVoteExists(msg.sender));
 
     uint256 initialBlock = block.number;
     uint256 finalBlock = initialBlock + 100000;
     uint256 registrationVoteId = totalSupply().add(1);
 
-    _mint(developerAddress, registrationVoteId);
-    _storage.setAddress(keccak256("registrationVoteDeveloperAddress", registrationVoteId), developerAddress);
+    _mint(msg.sender, registrationVoteId);
+    _storage.setBool(keccak256("registrationVoteExists", msg.sender), true);
+    _storage.setAddress(keccak256("registrationVoteDeveloperAddress", registrationVoteId), msg.sender);
     _storage.setUint(keccak256("registrationVoteInitialBlock", registrationVoteId), initialBlock);
     _storage.setUint(keccak256("registrationVoteFinalBlock", registrationVoteId), finalBlock);
     _storage.setUint(keccak256("registrationVoteYayCount", registrationVoteId), 0);
     _storage.setUint(keccak256("registrationVoteNayCount", registrationVoteId), 0);
 
-    RegistrationVoteCreated(registrationVoteId, initialBlock, finalBlock, developerAddress, 0, 0, false);
+    emit RegistrationVoteCreated(registrationVoteId, initialBlock, finalBlock, msg.sender, 0, 0, false);
   }
 
+  /**
+  * @dev Casts registration vote
+  */
   function castRegistrationVote(uint256 registrationVoteId, bool vote) public {
-    require(!getVotedOnStatus(registrationVoteId, tx.origin));
-
-    uint256 currentYayCount = getYayCount(registrationVoteId);
-    uint256 currentNayCount = getNayCount(registrationVoteId);
+    require(!getVotedOnStatus(registrationVoteId, msg.sender));
     
     if (vote) {
       increaseYayCount(registrationVoteId, getStakeAmount(msg.sender));

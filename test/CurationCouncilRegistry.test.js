@@ -7,8 +7,6 @@ import { hasEvent } from './helpers/event'
 import newCurationCouncil from './helpers/newCurationCouncil'
 const BotCoin = artifacts.require('BotCoin')
 
-const zeroHash = '0x0000000000000000000000000000000000000000000000000000000000000000'
-
 contract('CurationCouncilRegistry', () => {
   let cc, botCoin, accounts
 
@@ -35,5 +33,38 @@ contract('CurationCouncilRegistry', () => {
       expect(data.toNumber()).to.equal(0)
     })
   })
-  
+
+  describe('registrationVote', () => {
+    let createVoteTxResult
+    beforeEach(async () => {
+      createVoteTxResult = await cc.createRegistrationVote({ from: accounts[3]} )
+    })
+
+    describe('createRegistrationVote()', () => {
+      it('should log RegistrationVoteCreated event', async () => {
+        expect(hasEvent(createVoteTxResult, 'RegistrationVoteCreated')).to.equal(true)
+      })
+
+      it('registrationVoteExists() should return true', async() => {
+        expect(await cc.registrationVoteExists(accounts[3], {from: accounts[3]})).to.equal(true)
+      })
+    })
+
+    describe('castRegistrationVote()', () => {
+      let castVoteTxResult
+      beforeEach(async () => {
+        await botCoin.approve(cc.address, 500, { from: accounts[2]} )
+        await cc.joinCouncil(500, { from: accounts[2] })
+        castVoteTxResult = await cc.castRegistrationVote(1, true, { from: accounts[2]} )
+      })
+      it('should setVotedOnStatus to true', async () => {
+        expect(await cc.getVotedOnStatus(1, accounts[2], {from: accounts[2]})).to.equal(true)
+      })
+
+      it('should increase yay count by stake amount', async () => {
+        const data = await cc.getYayCount(1, {from: accounts[2]})
+        expect(data.toNumber()).to.equal(500)
+      })
+    })
+  })
 })
