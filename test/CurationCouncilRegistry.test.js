@@ -50,7 +50,7 @@ contract('CurationCouncilRegistry', () => {
       })
     })
 
-    describe('castRegistrationVote()', () => {
+    describe('castRegistrationVote() yay', () => {
       let castVoteTxResult
       beforeEach(async () => {
         await botCoin.approve(cc.address, 500, { from: accounts[2]} )
@@ -63,6 +63,23 @@ contract('CurationCouncilRegistry', () => {
 
       it('should increase yay count by stake amount', async () => {
         const data = await cc.getYayCount(1, {from: accounts[2]})
+        expect(data.toNumber()).to.equal(500)
+      })
+    })
+
+    describe('castRegistrationVote() nay', () => {
+      let castVoteTxResult
+      beforeEach(async () => {
+        await botCoin.approve(cc.address, 500, { from: accounts[2]} )
+        await cc.joinCouncil(500, { from: accounts[2] })
+        castVoteTxResult = await cc.castRegistrationVote(1, false, { from: accounts[2]} )
+      })
+      it('should setVotedOnStatus to true', async () => {
+        expect(await cc.getVotedOnStatus(1, accounts[2], {from: accounts[2]})).to.equal(true)
+      })
+
+      it('should increase nay count by stake amount', async () => {
+        const data = await cc.getNayCount(1, {from: accounts[2]})
         expect(data.toNumber()).to.equal(500)
       })
     })
