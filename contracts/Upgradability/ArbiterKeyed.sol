@@ -30,7 +30,7 @@ contract ArbiterKeyed is OwnableKeyed {
     _;
   }
 
-  function ArbiterKeyed(BaseStorage _storage, address _arbiter) public OwnableKeyed(_storage) {
+  function ArbiterKeyed(BaseStorage _storage, address _arbiter) OwnableKeyed(_storage) public {
     if (_arbiter != 0x0) {
       setArbiter(_arbiter);
     }

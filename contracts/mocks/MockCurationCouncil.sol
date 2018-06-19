@@ -1,7 +1,7 @@
 pragma solidity ^0.4.18;
 
-import "../../contracts/Upgradability/PublicStorage.sol";
-import '../../contracts/Vault/TokenVault.sol';
+import "../Upgradability/PublicStorage.sol";
+import '../Vault/TokenVault.sol';
 
 contract MockCurationCouncil {
 
@@ -14,7 +14,7 @@ contract MockCurationCouncil {
   }
   
   function vote() public {
-    tokenVault.setDevRewardRate(1);
+    tokenVault.applyCuratorReward();
   }
 
   function changeTokenVault(address addr) public {

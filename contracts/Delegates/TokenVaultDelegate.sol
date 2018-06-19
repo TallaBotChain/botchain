@@ -2,20 +2,23 @@ pragma solidity ^0.4.18;
 
 import '../Vault/TokenVault.sol';
 import '../Upgradability/BaseStorage.sol';
+import '../Upgradability/StorageConsumer.sol';
 import 'zeppelin-solidity/contracts/token/ERC20/StandardToken.sol';
 
 contract TokenVaultDelegate is TokenVault {
 
   function TokenVaultDelegate(BaseStorage _storage, address _arbiter)
     TokenVault(_storage,_arbiter)
+    StorageConsumer(_storage)
     public
     {}
+
   /**
   *  @dev Retreives the address of the EIP-20 from storage and instanties a StandardToken interface for it.
   *  @return StandardToken interface to the EIP-20 token contract.
   */
-	function botcoin() public view returns (StandardToken) {
-   	return StandardToken(_storage.getAddress("botCoinAddress"));
+  function botcoin() public returns (StandardToken) {
+    return StandardToken(_storage.getAddress("botCoinAddress"));
   }
 
   /**
@@ -36,7 +39,7 @@ contract TokenVaultDelegate is TokenVault {
   }
 
   function availableBalance() public returns (uint) {
-    return _storage.getUint(keccak256('availableBalance'));
+    return _storage.getUint('availableBalance');
   }
 
   function reservedTokens() public returns (uint) {
@@ -46,33 +49,33 @@ contract TokenVaultDelegate is TokenVault {
   function reserveTokens(uint amount) private {
     uint available = availableBalance();
     require(available >= amount);
-    _storage.setUint(keccak256('availableBalance'), available - amount);
+    _storage.setUint('availableBalance', available - amount);
   }
 
-  function curatorRewardRate() private returns (uint) {
-    return _storage.getUint(keccak256('curatorEmissionRate'));
+  function curatorRewardRate() public returns (uint) {
+    return _storage.getUint('curatorEmissionRate');
   }
 
   function setCuratorRewardRate(uint rate) onlyOwner public {
-    _storage.setUint(keccak256('curatorEmissionRate'), rate);
+    _storage.setUint('curatorEmissionRate', rate);
   }
 
   function setDevRewardRate(uint rate) onlyOwner public {
-    _storage.setUint(keccak256('curatorEmissionRate'), rate);
+    _storage.setUint('curatorEmissionRate', rate);
   }
 
   function devRewardRate() private returns (uint) {
-    return _storage.getUint(keccak256('devEmissionRate'));
+    return _storage.getUint('devEmissionRate');
   }
 
   function vaultBalance() internal returns (uint) {
     return botcoin().balanceOf(address(this));
   }
 
-	function collectCuratorReward() internal {
+  function collectCuratorReward() internal {
     uint _balance = this.balance();
     require(_balance <= vaultBalance());
-   	require(botcoin().transfer(tx.origin, _balance));
+    require(botcoin().transfer(tx.origin, _balance));
     BalanceUpdate(this.balance());
   }
 }

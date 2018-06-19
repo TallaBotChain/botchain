@@ -38,5 +38,5 @@ contract TokenVault is IncentiveMap {
 
   function vaultBalance() internal returns (uint); 
 
-	function collectCuratorReward() internal; 
+  function collectCuratorReward() internal; 
 }

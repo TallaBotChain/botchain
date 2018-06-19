@@ -9,14 +9,15 @@ import newDeveloperRegistry from './helpers/newDeveloperRegistry'
 
 const PublicStorage = artifacts.require('PublicStorage')
 const BotCoin = artifacts.require('BotCoin')
-const TokenVault = artifacts.require('TokenVaultDelegate')
+const TokenVault = artifacts.require('MockTokenVault')
 const CurationCouncil = artifacts.require('MockCurationCouncil')
 
 const zeroAddr = '0x0000000000000000000000000000000000000000'
 const entryPrice = 100
+const botcoinDecimals = 18
 
 contract('TokenVault', () => {
-  let tokenVault, botcoin, publicStorage, curationCouncil
+  let tokenVault, tokenVaultDelegate, botcoin, publicStorage, curationCouncil
   let accounts, arbiter, owner, curator, voter
 
   before(async () => {
@@ -27,10 +28,14 @@ contract('TokenVault', () => {
     arbiter = accounts[1]
     curator = accounts[2]
     voter = accounts[3]
-    publicStorage = await PublicStorage.new()
-    botcoin = await BotCoin.new()
-    curationCouncil = await CurationCouncil.new(publicStorage.address)
-    tokenVault = await TokenVault.new(publicStorage.address, arbiter)
+    publicStorage = await PublicStorage.new({from: owner})
+    botcoin = await BotCoin.new({from:owner})
+    curationCouncil = await CurationCouncil.new(publicStorage.address, {from:owner})
+    tokenVault = await TokenVault.new(
+	    publicStorage.address, 
+	    curationCouncil.address, 
+	    botcoin.address,{from:owner}
+    )
   })
 
   describe('publicStorage', () => {
@@ -46,6 +51,7 @@ contract('TokenVault', () => {
     it('can add token vault', async () => {
       await curationCouncil.changeTokenVault(tokenVault.address, {from:owner})
       let ctv = await curationCouncil.tokenVault()
+      console.log(ctv)
       expect(ctv).to.equal(tokenVault.address)
     })
   })
@@ -56,16 +62,26 @@ contract('TokenVault', () => {
   })
 
   describe('tokenVault', () => {
+
     it('address should be 0xb12d6112d64b213880fa53f815af1f29c91cace9', async () => {
+      console.log(tokenVault.address)
       expect(tokenVault.address).to.equal('0xb12d6112d64b213880fa53f815af1f29c91cace9')
     })
+
+    it('owner can set curator reward rate', async () => {
+      await tokenVault.setCuratorRewardRate(1, {from:owner})
+      let rate = await tokenVault.curatorRewardRate()
+      console.log('rate:',rate)
+      expect(rate).to.equal(1)
+    })
+
     it('curationCouncil can apply reward for curator', async () => {
       let init_balance = await tokenVault.balance({from: voter})
-      console.log('initial balance:',init_balance)
+      console.log('initial balance:',init_balance.toNumber())
       await curationCouncil.vote({from: voter})
       let final_balance = await tokenVault.balance({from: voter})
-      console.log('final balance:',final_balance)
-      expect(init_balance).to.be.lessThan(final_balance)
+      console.log('final balance:',final_balance.toNumber())
+      expect(init_balance.toNumber()).to.be.lessThan(final_balance.toNumber())
     })
   })
 })
