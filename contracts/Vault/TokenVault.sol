@@ -28,9 +28,7 @@ contract TokenVault is IncentiveMap {
 
   function applyDeveloperReward() onlyArbiter public; 
 
-  function availableBalance() public returns (uint); 
-
-  function reservedTokens() public returns (uint); 
+  function reservedBalance() public returns (uint); 
 
   function setCuratorRewardRate(uint rate) onlyOwner public; 
 

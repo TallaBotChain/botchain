@@ -9,7 +9,6 @@ contract TokenVaultDelegate is TokenVault {
 
   function TokenVaultDelegate(BaseStorage _storage, address _arbiter)
     TokenVault(_storage,_arbiter)
-    StorageConsumer(_storage)
     public
     {}
 
@@ -34,22 +33,22 @@ contract TokenVaultDelegate is TokenVault {
   }
 
   function applyDeveloperReward() onlyArbiter public {
-    require(devRewardRate() >= availableBalance());
+    require(devRewardRate() <= availableBalance());
     botcoin().transfer(tx.origin, devRewardRate());
   }
 
-  function availableBalance() public returns (uint) {
-    return _storage.getUint('availableBalance');
+  function availableBalance() private returns (uint) {
+    return vaultBalance() - reservedBalance();
   }
 
-  function reservedTokens() public returns (uint) {
-    return botcoin().balanceOf(address(this)) - availableBalance();
+  function reservedBalance() public returns (uint) {
+    return _storage.getUint('reservedBalance');
   }
 
   function reserveTokens(uint amount) private {
-    uint available = availableBalance();
-    require(available >= amount);
-    _storage.setUint('availableBalance', available - amount);
+    uint new_reserve = amount + reservedBalance();
+    require(new_reserve <= vaultBalance());
+    _storage.setUint('reserveBalance', new_reserve);
   }
 
   function curatorRewardRate() public returns (uint) {
