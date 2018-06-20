@@ -65,6 +65,10 @@ contract('CurationCouncilRegistry', () => {
         const data = await cc.getYayCount(1, {from: accounts[2]})
         expect(data.toNumber()).to.equal(500)
       })
+
+      it('should revert if council member attempts to vote twice', async () => {
+        await expectRevert(cc.castRegistrationVote(1, true, { from: accounts[2]} ))
+      })
     })
 
     describe('castRegistrationVote() nay', () => {
@@ -81,6 +85,10 @@ contract('CurationCouncilRegistry', () => {
       it('should increase nay count by stake amount', async () => {
         const data = await cc.getNayCount(1, {from: accounts[2]})
         expect(data.toNumber()).to.equal(500)
+      })
+
+      it('should revert if council member attempts to vote twice', async () => {
+        await expectRevert(cc.castRegistrationVote(1, false, { from: accounts[2]} ))
       })
     })
   })
