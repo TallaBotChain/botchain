@@ -48,7 +48,7 @@ contract CurationCouncilRegistryDelegate is CurationCouncilRegistry {
   /**
   * @dev Casts registration vote
   * @param registrationVoteId The ID of the developer registration vote
-  * @param true for yay false for nay
+  * @param vote true for yay false for nay
   */
   function castRegistrationVote(
     uint256 registrationVoteId,
