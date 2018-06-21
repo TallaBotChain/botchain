@@ -19,22 +19,37 @@ contract CurationCouncilRegistryDelegate is CurationCouncilRegistry {
     public
   {}
 
+  /**
+  * @dev Join council by staking BOTC 
+  * @param stakeAmount amount of BOTC in wei
+  */
   function joinCouncil(uint256 stakeAmount)
     public
   {
     super.joinCouncil(stakeAmount);
   }
 
+  /**
+  * @dev Leave council staked BOTC will be returned by contract
+  */
   function leaveCouncil()
     public
   {
     super.leaveCouncil();
   }
 
+  /**
+  * @dev Creates a new registration vote
+  */
   function createRegistrationVote() public {
     super.createRegistrationVote();
   }
 
+  /**
+  * @dev Casts registration vote
+  * @param registrationVoteId The ID of the developer registration vote
+  * @param true for yay false for nay
+  */
   function castRegistrationVote(
     uint256 registrationVoteId,
     bool vote
@@ -44,10 +59,20 @@ contract CurationCouncilRegistryDelegate is CurationCouncilRegistry {
     super.castRegistrationVote(registrationVoteId, vote);
   }
 
+  /**
+  * @dev Get initial block height where the vote starts
+  * @param registrationVoteId The ID of the developer registration vote
+  * @return uint256 ETH block height where the vote starts
+  */
   function getVoteInitialBlock(uint256 registrationVoteId) public view returns (uint256) {
     return super.getVoteInitialBlock(registrationVoteId);
   }
 
+  /**
+  * @dev Get final block height where the vote ends
+  * @param registrationVoteId The ID of the developer registration vote
+  * @return uint256 ETH block height where the vote ends
+  */
   function getVoteFinalBlock(uint256 registrationVoteId) public view returns (uint256) {
     return super.getVoteFinalBlock(registrationVoteId);
   }

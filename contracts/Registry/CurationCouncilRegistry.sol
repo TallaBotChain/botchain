@@ -37,54 +37,111 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyed {
     public
   {}
 
+  /**
+  * @dev Gets the Yay count for a specific developer registration vote
+  * @param registrationVoteId The ID of the developer registration vote
+  * @return uint256 Count of Yay votes
+  */
   function getYayCount(uint256 registrationVoteId) public view returns (uint256) {
     return _storage.getUint(keccak256("registrationVoteYayCount", registrationVoteId));
   }
 
+  /**
+  * @dev Gets the Nay count for a specific developer registration vote
+  * @param registrationVoteId The ID of the developer registration vote
+  * @return uint256 Count of Nay votes
+  */
   function getNayCount(uint256 registrationVoteId) public view returns (uint256) {
     return _storage.getUint(keccak256("registrationVoteNayCount", registrationVoteId));
   }
 
+  /**
+  * @dev Increase Yay count for a particular vote by the stake amount
+  * @param registrationVoteId The ID of the developer registration vote
+  * @param stakeAmount the stake amount of the council member that will be applied to this vote
+  */
   function increaseYayCount(uint256 registrationVoteId, uint256 stakeAmount) private {
     uint256 currentYayCount = getYayCount(registrationVoteId);
     _storage.setUint(keccak256("registrationVoteYayCount", registrationVoteId), currentYayCount + stakeAmount);
   }
 
+  /**
+  * @dev Increase Nay count for a particular vote by the stake amount
+  * @param registrationVoteId The ID of the developer registration vote
+  * @param stakeAmount The stake amount of the council member that will be applied to this vote
+  */
   function increaseNayCount(uint256 registrationVoteId, uint256 stakeAmount) private {
     uint256 currentNayCount = getNayCount(registrationVoteId);
     _storage.setUint(keccak256("registrationVoteNayCount", registrationVoteId), (currentNayCount + stakeAmount));
   }
 
+  /**
+  * @dev Join council by staking BOTC 
+  * @param stakeAmount amount of BOTC in wei
+  */
   function joinCouncil(uint256 stakeAmount) public {
     require(botCoin().transferFrom(msg.sender, this, stakeAmount));
     _storage.setUint(keccak256("stakeAmount", msg.sender), stakeAmount);
   }
 
+  /**
+  * @dev Leave council staked BOTC will be returned by contract
+  */
   function leaveCouncil() public {
     require(botCoin().transfer(msg.sender, getStakeAmount(msg.sender)));
     _storage.setUint(keccak256("stakeAmount", msg.sender), 0);
   }
 
+  /**
+  * @dev Get current stake amount for council member 
+  * @param memberAddress ETH address of council member
+  * @return uint256 Amount of BOTC staked by council member
+  */
   function getStakeAmount(address memberAddress) public view returns (uint256) {
     return _storage.getUint(keccak256("stakeAmount", memberAddress));
   }
 
+  /**
+  * @dev Get initial block height where the vote starts
+  * @param registrationVoteId The ID of the developer registration vote
+  * @return uint256 ETH block height where the vote starts
+  */
   function getVoteInitialBlock(uint256 registrationVoteId) public view returns (uint256) {
     return _storage.getUint(keccak256("registrationVoteInitialBlock", registrationVoteId));
   }
 
+  /**
+  * @dev Get final block height where the vote ends
+  * @param registrationVoteId The ID of the developer registration vote
+  * @return uint256 ETH block height where the vote ends
+  */
   function getVoteFinalBlock(uint256 registrationVoteId) public view returns (uint256) {
     return _storage.getUint(keccak256("registrationVoteFinalBlock", registrationVoteId));
   }
 
+  /**
+  * @dev Check to see if council member has already voted
+  * @param registrationVoteId The ID of the developer registration vote
+  * @param memberAddress ETH address of the council member
+  * @return bool true if voted already submitted, otherwise false
+  */
   function getVotedOnStatus(uint256 registrationVoteId, address memberAddress) public view returns (bool) {
     return _storage.getBool(keccak256("votedOn", registrationVoteId, memberAddress));
   }
 
+  /**
+  * @dev Sets voted on status for council member
+  * @param registrationVoteId The ID of the developer registration vote
+  */
   function setVotedOnStatus(uint256 registrationVoteId) public {
     _storage.setBool(keccak256("votedOn", registrationVoteId, msg.sender), true);
   }
 
+  /**
+  * @dev Check to see if developer already has a vote
+  * @param developerAddress ETH address of the developer
+  * @return bool true if developer already exists, otherwise false
+  */
   function registrationVoteExists(address developerAddress) public view returns (bool) {
     return _storage.getBool(keccak256("registrationVoteExists", developerAddress));
   }
@@ -113,6 +170,8 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyed {
 
   /**
   * @dev Casts registration vote
+  * @param registrationVoteId The ID of the developer registration vote
+  * @param true for yay false for nay
   */
   function castRegistrationVote(uint256 registrationVoteId, bool vote) public {
     require(!getVotedOnStatus(registrationVoteId, msg.sender));
