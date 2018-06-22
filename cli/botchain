@@ -32,7 +32,7 @@ if (!arg.rpc.includes('//')) {
 }
 
 // Local libraries
-const reg  = require('./modules/registry.js')(web3, cfg)
+const reg = require('./modules/registry.js')(web3, cfg)
 
 // Load all relevant contract JSON 
 const botCoinJSON                  = require('../build/contracts/BotCoin.json')
