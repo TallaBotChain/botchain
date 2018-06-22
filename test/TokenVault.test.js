@@ -41,16 +41,7 @@ contract('TokenVault', () => {
   beforeEach(async () => { })
   afterEach(async () => { })
 
-  describe('publicStorage', () => {
-    it('address should be 0x3d627fe11843ef6b3d5ec6683d53bd9822696ef6', async () => {
-      expect(publicStorage.address).to.equal('0x3d627fe11843ef6b3d5ec6683d53bd9822696ef6')
-    })
-  })
-
   describe('curationCouncil', () => {
-    it('address should be 0x0237443359ab0b11ecdc41a7af1c90226a88c70f', async () => {
-      expect(curationCouncil.address).to.equal('0x0237443359ab0b11ecdc41a7af1c90226a88c70f')
-    })
     it('TokenVault should be 0x0000000000000000000000000000000000000000', async () => {
       return curationCouncil.tokenVault.call({from: owner})
         .then((ctv) => {
@@ -67,18 +58,8 @@ contract('TokenVault', () => {
     })
   })
 
-  describe('botcoin', () => {
-    it('address should be 0x28b291e74bce603004b52921ec9ad3ddb6f85e44', async () => {
-      expect(botcoin.address).to.equal('0x28b291e74bce603004b52921ec9ad3ddb6f85e44')
-    })
-  })
-
   describe('tokenVault', () => {
-
-    it('address should be 0xb12d6112d64b213880fa53f815af1f29c91cace9', async () => {
-      expect(tokenVault.address).to.equal('0xb12d6112d64b213880fa53f815af1f29c91cace9')
-    })
-
+	  
     it('owner can set curator reward rate', async () => {
       return tokenVault.setCuratorRewardRate(reward_rate, {from:owner})
         .then(() => {
