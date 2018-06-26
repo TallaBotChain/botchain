@@ -1,0 +1,6 @@
+---
+id: Registry_Registry
+title: Registry
+---
+
+<div class="contract-doc"><div class="contract"><h2 class="contract-header"><span class="contract-kind">contract</span> Registry</h2><p class="description">Interface for a registry.</p><div class="source">Source: <a href="https://github.com/TallaBotChain/botchain/blob/v0.1.0/contracts/Registry/Registry.sol" target="_blank">Registry/Registry.sol</a></div></div><div class="index"><h2>Index</h2><ul><li><a href="Registry_Registry.html#ownerOfEntry">ownerOfEntry</a></li></ul></div><div class="reference"><h2>Reference</h2><div class="functions"><h3>Functions</h3><ul><li><div class="item function"><span id="ownerOfEntry" class="anchor-marker"></span><h4 class="name">ownerOfEntry</h4><div class="body"><code class="signature"><span>abstract </span>function <strong>ownerOfEntry</strong><span>(uint256 _entryId) </span><span>public </span><span>view </span><span>returns  (address) </span></code><hr/><div class="description"><p>Returns address of owner of entry.</p></div><dl><dt><span class="label-parameters">Parameters:</span></dt><dd><div><code>_entryId</code> - An id associated with the entry</div></dd><dt><span class="label-return">Returns:</span></dt><dd>address of owner of entry</dd></dl></div></div></li></ul></div></div></div>

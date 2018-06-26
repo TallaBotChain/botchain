@@ -1,0 +1,6 @@
+---
+id: mocks_MockTokenVault
+title: MockTokenVault
+---
+
+<div class="contract-doc"><div class="contract"><h2 class="contract-header"><span class="contract-kind">contract</span> MockTokenVault</h2><p class="base-contracts"><span>is</span> <a href="Delegates_TokenVaultDelegate.html">TokenVaultDelegate</a></p><div class="source">Source: <a href="https://github.com/TallaBotChain/botchain/blob/v0.1.0/contracts/mocks/MockTokenVault.sol" target="_blank">mocks/MockTokenVault.sol</a></div></div><div class="index"><h2>Index</h2><ul><li><a href="mocks_MockTokenVault.html#MockTokenVault">MockTokenVault</a></li></ul></div><div class="reference"><h2>Reference</h2><div class="functions"><h3>Functions</h3><ul><li><div class="item function"><span id="MockTokenVault" class="anchor-marker"></span><h4 class="name">MockTokenVault</h4><div class="body"><code class="signature">function <strong>MockTokenVault</strong><span>(PublicStorage storage_, address arbiter, address botcoinAddr) </span><span>public </span></code><hr/><dl><dt><span class="label-modifiers">Modifiers:</span></dt><dd></dd><dt><span class="label-parameters">Parameters:</span></dt><dd><div><code>storage_</code> - PublicStorage</div><div><code>arbiter</code> - address</div><div><code>botcoinAddr</code> - address</div></dd></dl></div></div></li></ul></div></div></div>
