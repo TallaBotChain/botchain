@@ -6,15 +6,22 @@ import expectRevert from './helpers/expectRevert'
 import { hasEvent } from './helpers/event'
 import newCurationCouncil from './helpers/newCurationCouncil'
 const BotCoin = artifacts.require('BotCoin')
+const TokenVault = artifacts.require('MockTokenVault')
+const PublicStorage = artifacts.require('PublicStorage')
 
 contract('CurationCouncilRegistry', () => {
-  let cc, botCoin, accounts
+  let cc, botCoin, accounts, tv, publicStorage
 
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
     botCoin = await BotCoin.new()
-    cc = await newCurationCouncil(botCoin.address)
+    publicStorage = await PublicStorage.new()
+    tv = await TokenVault.new(publicStorage.address, 0x0, botCoin.address)
+    cc = await newCurationCouncil(botCoin.address, publicStorage.address, tv.address)
+    await tv.changeArbiter(cc.address)
+    await tv.setCuratorRewardRate(165)
     await botCoin.transfer(accounts[2], 10000000000)
+    await botCoin.transfer(tv.address, 10000000)
   })
 
   describe('joinCouncil() with valid botCoin stake amount', () => {
@@ -64,6 +71,11 @@ contract('CurationCouncilRegistry', () => {
       it('should increase yay count by stake amount', async () => {
         const data = await cc.getYayCount(1, {from: accounts[2]})
         expect(data.toNumber()).to.equal(500)
+        // await tv.applyCuratorReward({from: accounts[2]})
+        const newBal = await tv.balance({from: accounts[2]})
+        const _curatorReward = await tv.reservedBalance.call()
+        console.log(_curatorReward.toNumber())
+        console.log(newBal.toNumber())
       })
 
       it('should revert if council member attempts to vote twice', async () => {

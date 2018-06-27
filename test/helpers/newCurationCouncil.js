@@ -2,16 +2,14 @@
 
 import _ from 'lodash'
 
-const PublicStorage = artifacts.require('./PublicStorage.sol')
 const CurationCouncil = artifacts.require('./CurationCouncil.sol')
 const CurationCouncilRegistryDelegate = artifacts.require('./CurationCouncilRegistryDelegate.sol')
 
-export default async function newCurationCouncil (botCoinAddress) {
-  const publicStorage = await PublicStorage.new()
-  const curationCouncilRegistryDelegate = await CurationCouncilRegistryDelegate.new(publicStorage.address)
+export default async function newCurationCouncil (botCoinAddress, publicStorageAddress, tokenVaultAddress) {
+  const curationCouncilRegistryDelegate = await CurationCouncilRegistryDelegate.new(publicStorageAddress, tokenVaultAddress)
 
   let curationCouncil = await CurationCouncil.new(
-    publicStorage.address,
+    publicStorageAddress,
     curationCouncilRegistryDelegate.address,
     botCoinAddress
   )

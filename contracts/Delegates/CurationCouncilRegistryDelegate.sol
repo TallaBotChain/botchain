@@ -9,15 +9,23 @@ import "../Registry/CurationCouncilRegistry.sol";
 contract CurationCouncilRegistryDelegate is CurationCouncilRegistry {
 
   string public constant name = "CurationCouncilRegistry";
+  address tokenVaultAddress;
 
   /**
   * @dev Constructor for CurationCouncilRegistryDelegate
   * @param storage_ address of a BaseStorage contract
   */
-  function CurationCouncilRegistryDelegate(BaseStorage storage_)
+  constructor(BaseStorage storage_, address tokenVaultAddress_)
     CurationCouncilRegistry(storage_)
     public
-  {}
+  {
+    tokenVaultAddress = tokenVaultAddress_;
+  }
+
+  function applyCuratorReward_Signature() private returns (bool) {
+    require(tokenVaultAddress.call(bytes4(keccak256("applyCuratorReward()"))));
+    return true;
+  }
 
   /**
   * @dev Join council by staking BOTC 
@@ -57,6 +65,7 @@ contract CurationCouncilRegistryDelegate is CurationCouncilRegistry {
     public
   {
     super.castRegistrationVote(registrationVoteId, vote);
+    applyCuratorReward_Signature();
   }
 
   /**
