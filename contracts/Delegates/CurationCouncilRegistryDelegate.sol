@@ -1,6 +1,7 @@
 pragma solidity ^0.4.18;
 
 import "../Registry/CurationCouncilRegistry.sol";
+import "./TokenVaultDelegate.sol";
 
 /**
  * @title CurationCouncilRegistryDelegate
@@ -9,22 +10,28 @@ import "../Registry/CurationCouncilRegistry.sol";
 contract CurationCouncilRegistryDelegate is CurationCouncilRegistry {
 
   string public constant name = "CurationCouncilRegistry";
-  address tokenVaultAddress;
 
   /**
   * @dev Constructor for CurationCouncilRegistryDelegate
   * @param storage_ address of a BaseStorage contract
   */
-  constructor(BaseStorage storage_, address tokenVaultAddress_)
+  constructor(BaseStorage storage_)
     CurationCouncilRegistry(storage_)
     public
   {
-    tokenVaultAddress = tokenVaultAddress_;
   }
 
-  function applyCuratorReward_Signature() private returns (bool) {
-    require(tokenVaultAddress.call(bytes4(keccak256("applyCuratorReward()"))));
-    return true;
+  function tokenVault() public view returns (TokenVault) {
+    return TokenVault(_storage.getAddress('tokenVaultAddress'));
+  }
+
+  function tokenVaultAddress() public view returns (address) {
+    return _storage.getAddress('tokenVaultAddress');
+  }
+
+  function changeTokenVault(address addr) onlyOwner public {
+    require(addr != 0x0);
+    _storage.setAddress('tokenVaultAddress', addr);
   }
 
   /**
@@ -65,7 +72,7 @@ contract CurationCouncilRegistryDelegate is CurationCouncilRegistry {
     public
   {
     super.castRegistrationVote(registrationVoteId, vote);
-    applyCuratorReward_Signature();
+    tokenVault().applyCuratorReward();
   }
 
   /**
