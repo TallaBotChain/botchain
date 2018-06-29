@@ -6,7 +6,7 @@ import expectRevert from './helpers/expectRevert'
 import { hasEvent } from './helpers/event'
 import newCurationCouncil from './helpers/newCurationCouncil'
 const BotCoin = artifacts.require('BotCoin')
-const TokenVaultDelegate = artifacts.require('TokenVaultDelegate')
+const MockTokenVault = artifacts.require('MockTokenVault')
 const PublicStorage = artifacts.require('PublicStorage')
 
 contract('CurationCouncilRegistry', () => {
@@ -17,7 +17,7 @@ contract('CurationCouncilRegistry', () => {
     botCoin = await BotCoin.new()
     publicStorage = await PublicStorage.new()
     cc = await newCurationCouncil(botCoin.address, publicStorage.address)
-    tv = await TokenVaultDelegate.new(publicStorage.address, cc.address)
+    tv = await MockTokenVault.new(publicStorage.address, cc.address, botCoin.address)
     await cc.changeTokenVault(tv.address)
     await tv.setCuratorRewardRate(165)
     await botCoin.transfer(accounts[2], 1000000)
@@ -71,17 +71,11 @@ contract('CurationCouncilRegistry', () => {
       it('should increase yay count by stake amount', async () => {
         const data = await cc.getYayCount(1, {from: accounts[2]})
         expect(data.toNumber()).to.equal(500)
-        // const newBal = await tv.balance({from: accounts[2]})
-        // const _curatorReward = await tv.curatorRewardRate
-        // const _vaultBalance = await botCoin.balanceOf(tv.address)
-        // const _reserveBalance = await tv.reserveBalance
-        // const _tokenVaultAddress = await cc.tokenVaultAddress.call()
-        // console.log(_curatorReward.toNumber())
-        // console.log(_vaultBalance.toNumber())
-        // console.log(_reserveBalance.toNumber())
-        // console.log(_tokenVaultAddress)
-        // console.log(tv.address)
-        // console.log(newBal.toNumber())
+      })
+
+      it('should increase balance by curation reward rate', async () => {
+        const newBal = await tv.balance({from: accounts[2]})
+        expect(newBal.toNumber()).to.equal(165)
       })
 
       it('should revert if council member attempts to vote twice', async () => {
@@ -103,6 +97,11 @@ contract('CurationCouncilRegistry', () => {
       it('should increase nay count by stake amount', async () => {
         const data = await cc.getNayCount(1, {from: accounts[2]})
         expect(data.toNumber()).to.equal(500)
+      })
+
+      it('should increase balance by curation reward rate', async () => {
+        const newBal = await tv.balance({from: accounts[2]})
+        expect(newBal.toNumber()).to.equal(165)
       })
 
       it('should revert if council member attempts to vote twice', async () => {
