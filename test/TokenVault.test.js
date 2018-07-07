@@ -100,11 +100,9 @@ contract('TokenVault', () => {
           return curationCouncil.vote({from: voter})
         })
         .then(() => {
-          console.log('bullshit')
           return tokenVault.balance.call({from: voter})
         })
         .then((final_balance) => {
-          console.log('bullshit2:',final_balance)
           expect(initial_balance.toNumber()).to.be.lessThan(final_balance.toNumber())
         })
     })
