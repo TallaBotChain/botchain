@@ -28,15 +28,15 @@ module.exports = {
       host: process.env.RPC_HOST || 'localhost',
       port: process.env.RPC_PORT || 8545,
       network_id: process.env.NETWORK_ID || '*',
-      gas: process.env.GAS || 46000000000,
-      gasPrice: 500
+      gas: process.env.GAS || 460000000,
+      gasPrice: 5
     },
     coverage: {
       host: 'localhost',
       network_id: '*',
       port: 8545,
-      gas: 0xfffffffffff,
-      gasPrice: 0x01
+      gas: 460000000,
+      gasPrice: 5
     },
     rinkeby_infura: getInfuraConfig('rinkeby', 4),
     kovan_infura: getInfuraConfig('kovan', 42)
