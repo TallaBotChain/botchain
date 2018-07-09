@@ -7,10 +7,12 @@ const BotProductRegistryDelegate = artifacts.require('./BotProductRegistryDelega
 const BotServiceRegistryDelegate = artifacts.require('./BotServiceRegistryDelegate.sol')
 const BotInstanceRegistryDelegate = artifacts.require('./BotInstanceRegistryDelegate.sol')
 const TokenVaultDelegate = artifacts.require('./TokenVaultDelegate.sol')
+const CurationCouncilRegistryDelegate = artifacts.require('./CurationCouncilRegistryDelegate.sol')
 
 const BotEntryRegistry = artifacts.require('./BotEntryRegistry.sol')
 const DeveloperRegistry = artifacts.require('./DeveloperRegistry.sol')
 const TokenVaultProxy = artifacts.require('./TokenVaultProxy.sol')
+const CurationCouncil = artifacts.require('./CurationCouncil.sol')
 
 const tallaWalletAddress = '0xc3f61fca6bd491424bc19e844c6847c9c9ab3d2c'
 const entryPrice = 1 * 10 ** 18
@@ -32,8 +34,8 @@ module.exports = function (deployer) {
   }).then((_botcoin) => {
     botcoin = _botcoin
     addToJSON("BotCoin", botcoin.address)
-//    return deployTokenVault(storage.address,tallaWalletAddress,botcoin.address)
-//  }).then(() => {
+    _curationCouncil = deployCurationCouncil(storage.address, botcoin.address)
+    _tokenVault = deployTokenVault(storage.address, _curationCouncil.address, botcoin.address)
     return deployDeveloperRegistry(
       storage.address,
       botcoin.address
@@ -106,6 +108,27 @@ function deployTokenVault (
     console.log(`deployed token vault proxy instance: ${tokenVaultProxy.address}`)
     addToJSON("TokenVaultProxy", tokenVaultProxy.address)
     return TokenVaultDelegate.at(tokenVaultProxy.address)
+  })
+}
+
+function deployCurationCouncil (
+  storageAddress,
+  botcoinAddress
+) {
+  console.log(`deploying contracts for curation council`)
+  return CurationCouncilRegistryDelegate.new(storageAddress).then((curationCouncilRegistryDelegate) => {
+    console.log(`deployed curation council registry delegate: ${curationCouncilRegistryDelegate.address}`)
+    addToJSON("CurationCouncilRegistryDelegate", curationCouncilRegistryDelegate.address)
+    return CurationCouncil.new(
+      storageAddress,
+      curationCouncilRegistryDelegate.address,
+      botcoinAddress
+    )
+  })
+  .then((curationCouncil) => {
+    console.log(`deployed curation council proxy instance: ${curationCouncil.address}`)
+    addToJSON("CurationCouncil", curationCouncil.address)
+    return CurationCouncilRegistryDelegate.at(curationCouncil.address)
   })
 }
 
