@@ -1,6 +1,7 @@
 pragma solidity ^0.4.18;
 
 import "../Registry/CurationCouncilRegistry.sol";
+import "./TokenVaultDelegate.sol";
 
 /**
  * @title CurationCouncilRegistryDelegate
@@ -14,10 +15,24 @@ contract CurationCouncilRegistryDelegate is CurationCouncilRegistry {
   * @dev Constructor for CurationCouncilRegistryDelegate
   * @param storage_ address of a BaseStorage contract
   */
-  function CurationCouncilRegistryDelegate(BaseStorage storage_)
+  constructor(BaseStorage storage_)
     CurationCouncilRegistry(storage_)
     public
-  {}
+  {
+  }
+
+  function tokenVault() public view returns (TokenVault) {
+    return TokenVault(_storage.getAddress('tokenVaultAddress'));
+  }
+
+  function tokenVaultAddress() public view returns (address) {
+    return _storage.getAddress('tokenVaultAddress');
+  }
+
+  function changeTokenVault(address addr) onlyOwner public {
+    require(addr != 0x0);
+    _storage.setAddress('tokenVaultAddress', addr);
+  }
 
   /**
   * @dev Join council by staking BOTC 
@@ -57,6 +72,7 @@ contract CurationCouncilRegistryDelegate is CurationCouncilRegistry {
     public
   {
     super.castRegistrationVote(registrationVoteId, vote);
+    tokenVault().applyCuratorReward();
   }
 
   /**

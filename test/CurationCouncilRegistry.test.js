@@ -6,15 +6,22 @@ import expectRevert from './helpers/expectRevert'
 import { hasEvent } from './helpers/event'
 import newCurationCouncil from './helpers/newCurationCouncil'
 const BotCoin = artifacts.require('BotCoin')
+const MockTokenVault = artifacts.require('MockTokenVault')
+const PublicStorage = artifacts.require('PublicStorage')
 
 contract('CurationCouncilRegistry', () => {
-  let cc, botCoin, accounts
+  let cc, botCoin, accounts, tv, publicStorage
 
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
     botCoin = await BotCoin.new()
-    cc = await newCurationCouncil(botCoin.address)
-    await botCoin.transfer(accounts[2], 10000000000)
+    publicStorage = await PublicStorage.new()
+    cc = await newCurationCouncil(botCoin.address, publicStorage.address)
+    tv = await MockTokenVault.new(publicStorage.address, cc.address, botCoin.address)
+    await cc.changeTokenVault(tv.address)
+    await tv.setCuratorRewardRate(165)
+    await botCoin.transfer(accounts[2], 1000000)
+    await botCoin.transfer(tv.address, 10000000)
   })
 
   describe('joinCouncil() with valid botCoin stake amount', () => {
@@ -66,6 +73,11 @@ contract('CurationCouncilRegistry', () => {
         expect(data.toNumber()).to.equal(500)
       })
 
+      it('should increase balance by curation reward rate', async () => {
+        const newBal = await tv.balance({from: accounts[2]})
+        expect(newBal.toNumber()).to.equal(165)
+      })
+
       it('should revert if council member attempts to vote twice', async () => {
         await expectRevert(cc.castRegistrationVote(1, true, { from: accounts[2]} ))
       })
@@ -85,6 +97,11 @@ contract('CurationCouncilRegistry', () => {
       it('should increase nay count by stake amount', async () => {
         const data = await cc.getNayCount(1, {from: accounts[2]})
         expect(data.toNumber()).to.equal(500)
+      })
+
+      it('should increase balance by curation reward rate', async () => {
+        const newBal = await tv.balance({from: accounts[2]})
+        expect(newBal.toNumber()).to.equal(165)
       })
 
       it('should revert if council member attempts to vote twice', async () => {
