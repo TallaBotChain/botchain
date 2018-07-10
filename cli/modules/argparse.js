@@ -33,6 +33,21 @@ deployCommands.addParser('registry',{
   addHelp: true
 });
 
+deployCommands.addParser('storage',{
+  description:'Deploy a public storage contract.',
+  addHelp: true
+});
+
+deployCommands.addParser('curation',{
+  description:'Deploy a curation council delegate contract.',
+  addHelp: true
+});
+
+deployCommands.addParser('vault',{
+  description:'Deploy a token vault delegate contract.',
+  addHelp: true
+});
+
 const get = commands.addParser('get',{
   desciption:'All actions related to reading the current state of the contracts.',
   addHelp: true

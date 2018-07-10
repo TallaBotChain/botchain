@@ -8,7 +8,9 @@ if (   !_config.devProxyAddr
     || !_config.instanceProxyAddr
     || !_config.publicStorageAddr
     || !_config.mgmtAddr
-    || !_config.botcoinAddr) {
+    || !_config.botcoinAddr
+    || !_config.vaultProxyAddr
+    || !_config.curationProxyAddr) {
   console.log('Config is missing fields.')
   exports.error = true
 }
@@ -24,6 +26,8 @@ else {
     + '\nPublic Storage Address:  ' + _config.publicStorageAddr
     + '\nManagement Address:      ' + _config.mgmtAddr
     + '\nBotcoin Address:         ' + _config.botcoinAddr
+    + '\nVault Proxy Address:     ' + _config.vaultProxyAddr
+    + '\nCuration Proxy Address:  ' + _config.curationProxyAddr
     + '\n'
   )
 
@@ -34,4 +38,6 @@ else {
   exports.publicStorageAddr = _config.publicStorageAddr
   exports.mgmtAddr = _config.mgmtAddr
   exports.botcoinAddr = _config.botcoinAddr
+  exports.vaultProxyAddr = _config.vaultProxyAddr
+  exports.curationProxyAddr = _config.curationProxyAddr
 }
