@@ -50,15 +50,19 @@ const contracts = new Map()
 .set('bot',      require('../build/contracts/BotProductRegistryDelegate.json')) 
 .set('service',  require('../build/contracts/BotServiceRegistryDelegate.json')) 
 .set('instance', require('../build/contracts/BotInstanceRegistryDelegate.json'))
+.set('curation', require('../build/contracts/CurationCouncilDelegate.json'))
+.set('vault',    require('../build/contracts/TokenVaultDelegate.json'))
 .set('storage',  require('../build/contracts/PublicStorage.json'));
-                        
+  
 // Upgrade Interfaces -- The "Ownable Proxies"
 // These are pointed at current proxy addresses
 const upgradeIface = new Map()
 .set('dev',      new web3.eth.Contract(ownableProxyJSON.abi, cfg.devProxyAddr))
 .set('bot',      new web3.eth.Contract(ownableProxyJSON.abi, cfg.botProxyAddr))
 .set('service',  new web3.eth.Contract(ownableProxyJSON.abi, cfg.serviceProxyAddr))
-.set('instance', new web3.eth.Contract(ownableProxyJSON.abi, cfg.isntanceProxyAddr));
+.set('instance', new web3.eth.Contract(ownableProxyJSON.abi, cfg.instanceProxyAddr))
+.set('curation', new web3.eth.Contract(ownableProxyJSON.abi, cfg.curationProxyAddr))
+.set('vault',    new web3.eth.Contract(ownableProxyJSON.abi, cfg.vaultProxyAddr));
 
 // Registry Contract Objects
 // Used to create a new Contract for deployment
@@ -166,6 +170,12 @@ async function deploy(args) {
       deployImplementation(args.type[0], cfg.mgmtAddr, 7900000, args.password[0])
       break;
     case 'storage':
+      deployImplementation(args.type[0], cfg.mgmtAddr, 7900000, args.password[0])
+      break;
+    case 'curation':
+      deployImplementation(args.type[0], cfg.mgmtAddr, 7900000, args.password[0])
+      break;
+    case 'vault':
       deployImplementation(args.type[0], cfg.mgmtAddr, 7900000, args.password[0])
       break;
   }
