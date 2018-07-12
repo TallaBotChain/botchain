@@ -25,9 +25,18 @@ contract('CurationCouncilRegistry', () => {
   })
 
   describe('joinCouncil() with valid botCoin stake amount', () => {
-    it('stake amount should be added', async () => {
+    beforeEach(async () => {
       await botCoin.approve(cc.address, 500, { from: accounts[2]} )
       await cc.joinCouncil(500, { from: accounts[2] })
+    })
+    it('stake amount should be added', async () => {
+      const data = await cc.getStakeAmount(accounts[2])
+      expect(data.toNumber()).to.equal(500)
+    })
+
+    it('should revert if council member attempts to joinCouncil twice', async () => {
+      await botCoin.approve(cc.address, 50, { from: accounts[2]} )
+      await expectRevert(cc.joinCouncil(50, { from: accounts[2] }))
       const data = await cc.getStakeAmount(accounts[2])
       expect(data.toNumber()).to.equal(500)
     })
