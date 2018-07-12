@@ -76,23 +76,6 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyed {
   }
 
   /**
-  * @dev Join council by staking BOTC 
-  * @param stakeAmount amount of BOTC in wei
-  */
-  function joinCouncil(uint256 stakeAmount) public {
-    require(botCoin().transferFrom(msg.sender, this, stakeAmount));
-    _storage.setUint(keccak256("stakeAmount", msg.sender), stakeAmount);
-  }
-
-  /**
-  * @dev Leave council staked BOTC will be returned by contract
-  */
-  function leaveCouncil() public {
-    require(botCoin().transfer(msg.sender, getStakeAmount(msg.sender)));
-    _storage.setUint(keccak256("stakeAmount", msg.sender), 0);
-  }
-
-  /**
   * @dev Get current stake amount for council member 
   * @param memberAddress ETH address of council member
   * @return uint256 Amount of BOTC staked by council member
@@ -144,6 +127,24 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyed {
   */
   function registrationVoteExists(address developerAddress) public view returns (bool) {
     return _storage.getBool(keccak256("registrationVoteExists", developerAddress));
+  }
+
+  /**
+  * @dev Join council by staking BOTC 
+  * @param stakeAmount amount of BOTC in wei
+  */
+  function joinCouncil(uint256 stakeAmount) public {
+    require(getStakeAmount(msg.sender) == 0);
+    require(botCoin().transferFrom(msg.sender, this, stakeAmount));
+    _storage.setUint(keccak256("stakeAmount", msg.sender), stakeAmount);
+  }
+
+  /**
+  * @dev Leave council staked BOTC will be returned by contract
+  */
+  function leaveCouncil() public {
+    require(botCoin().transfer(msg.sender, getStakeAmount(msg.sender)));
+    _storage.setUint(keccak256("stakeAmount", msg.sender), 0);
   }
 
   /**
