@@ -24,8 +24,8 @@ const web3 = new Web3(new Web3.providers.HttpProvider(rpc_host_and_port))
 // Decryption isn't necessary for reading state from the blockchain.
 const keystore = fs.readFileSync('./testKeystore.json', 'utf-8')
 const decryptedAccount = arg.password ? web3.eth.accounts.decrypt(keystore, arg.password[0]) : {}
+console.log(keystore['address'])
 web3.eth.defaultAccount = decryptedAccount.address
-console.log(decryptedAccount)
 if (!arg.rpc.includes('//')) {
   console.log('The supplied RPC URL needs to contain the protocol.\n  Example: \'http://my.ethereum.node\'')
   process.exit()
@@ -33,6 +33,7 @@ if (!arg.rpc.includes('//')) {
 
 // Local libraries
 const reg = require('./modules/registry.js')(web3, cfg)
+const cur = require('./modules/curation.js')(web3, cfg)
 
 // Load all relevant contract JSON 
 const botCoinJSON                  = require('../build/contracts/BotCoin.json')
@@ -50,7 +51,7 @@ const contracts = new Map()
 .set('bot',      require('../build/contracts/BotProductRegistryDelegate.json')) 
 .set('service',  require('../build/contracts/BotServiceRegistryDelegate.json')) 
 .set('instance', require('../build/contracts/BotInstanceRegistryDelegate.json'))
-.set('curation', require('../build/contracts/CurationCouncilDelegate.json'))
+.set('curation', require('../build/contracts/CurationCouncilRegistryDelegate.json'))
 .set('vault',    require('../build/contracts/TokenVaultDelegate.json'))
 .set('storage',  require('../build/contracts/PublicStorage.json'));
   
@@ -135,6 +136,19 @@ async function checkDeployment(contract) {
   }
 }
 
+async function curation(args) {
+  let success = false;
+  switch(args['curation']) {
+    case 'get-stake-amount':
+      console.log(args.address)
+      success = cur.getStakeAmount(args.address[0])
+      break;
+    case 'join-council':
+      success = cur.joinCouncil(decryptedAccount, arg.stake_amount[0])
+      break;
+  }
+}
+
 async function registration(args) {
   let success = false;
   switch(args['registration']) {
@@ -193,6 +207,11 @@ switch(arg.subcommand_name) {
   case 'deploy':
     console.log('Command: '+arg.subcommand_name)
     deploy(arg)
+    // run deploy handler
+    break;
+  case 'curation':
+    console.log('Command: '+arg.subcommand_name)
+    curation(arg)
     // run deploy handler
     break;
   case 'registration':
