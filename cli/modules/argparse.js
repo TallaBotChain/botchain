@@ -17,6 +17,56 @@ const commands = topLevelParser.addSubparsers({
   dest: 'subcommand_name'
 })
 
+const curation = commands.addParser('curation',{
+  desciption:'All actions related to curation on BotChain contract to Ethereum.',
+  addHelp: true
+});
+
+const curationCommands = curation.addSubparsers({
+  title: 'Curation Commands',
+  parents: [curation],
+  dest: 'curation'
+})
+
+curationCommands.addParser('get-stake-amount',{
+  description:'Get the total number of Botcoin stake against the Curation Council.',
+  addHelp: true
+});
+
+curationCommands.choices['get-stake-amount'].addArgument(
+  [ '-a', '--address' ],
+  {
+    help: 'Address of the staker.',
+    defaultValue: '0x0',
+    required: true,
+    nargs: 1
+  }
+);
+
+curationCommands.addParser('join-council',{
+  description:'Join the Curation Council.',
+  addHelp: true
+});
+
+curationCommands.choices['join-council'].addArgument(
+  [ '-a', '--stake-amount' ],
+  {
+    help: 'Approve a developer at the provided address.',
+    defaultValue: '0',
+    type: 'int',
+    nargs: 1
+  }
+);
+
+curationCommands.choices['join-council'].addArgument(
+  [ '-p', '--password' ],
+  {
+    help: 'Password for the Network Management Address.',
+    nargs: 1,
+    required: true
+  }
+);
+
 const deploy = commands.addParser('deploy',{
   desciption:'All actions related to deploying a BotChain contract to Ethereum.',
   addHelp: true
