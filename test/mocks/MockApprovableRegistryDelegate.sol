@@ -7,7 +7,7 @@ import "../../contracts/Registry/ApprovableRegistry.sol";
 contract MockApprovableRegistryDelegate is ApprovableRegistry, ERC721TokenKeyed {
 
   function MockApprovableRegistryDelegate(PublicStorage storage_)
-    ApprovableRegistry(storage_)
+    ApprovableRegistry(storage_, this)
     ERC721TokenKeyed(storage_)
     public
   { }

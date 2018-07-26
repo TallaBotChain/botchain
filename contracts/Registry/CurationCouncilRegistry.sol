@@ -3,6 +3,7 @@ pragma solidity ^0.4.18;
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
 import './BotCoinPayableRegistry.sol';
 import "../Upgradability/ERC721TokenKeyed.sol";
+import "../DeveloperRegistryInterface.sol";
 
 /**
 * @title CurationCouncilRegistry
@@ -36,6 +37,19 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyed {
     ERC721TokenKeyed(storage_)
     public
   {}
+
+  function developerRegistry() public view returns (DeveloperRegistryInterface) {
+    return DeveloperRegistryInterface(_storage.getAddress('developerRegistryAddress'));
+  }
+
+  function developerRegistryAddress() public view returns (address) {
+    return _storage.getAddress('developerRegistryAddress');
+  }
+
+  function changeDeveloperRegistry(address addr) onlyOwner public {
+    require(addr != 0x0);
+    _storage.setAddress('developerRegistryAddress', addr);
+  }
 
   /**
   * @dev Gets the Yay count for a specific developer registration vote
@@ -152,6 +166,7 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyed {
   */
   function createRegistrationVote() public {
     require(msg.sender != 0x0);
+    developerRegistry().owns(msg.sender);
     require(!registrationVoteExists(msg.sender));
 
     uint256 initialBlock = block.number;
@@ -184,7 +199,24 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyed {
       increaseNayCount(registrationVoteId, getStakeAmount(msg.sender));
     }
 
+    checkAutoApprove(registrationVoteId);
+
     setVotedOnStatus(registrationVoteId);
+  }
+
+  function getAutoApproveThreshold() public view returns (uint256) {
+    _storage.getUint(keccak256("autoApproveThreshold"));
+  }
+
+  function setAutoApproveThreshold(uint256 threshold) public onlyOwner {
+    _storage.setUint(keccak256("autoApproveThreshold"), threshold);
+  }
+
+  function checkAutoApprove(uint256 registrationVoteId) internal {
+    uint256 developerId = developerRegistry().owns(msg.sender);
+    if (getYayCount(registrationVoteId) >= getAutoApproveThreshold()) {
+      developerRegistry().grantApproval(developerId);
+    }
   }
 
 

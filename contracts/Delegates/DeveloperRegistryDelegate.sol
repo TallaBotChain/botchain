@@ -27,7 +27,7 @@ contract DeveloperRegistryDelegate is ApprovableRegistry, OwnerRegistry, BotCoin
   * @param storage_ address of a BaseStorage contract
   */
   function DeveloperRegistryDelegate(BaseStorage storage_) 
-    ApprovableRegistry(storage_)
+    ApprovableRegistry(storage_, this)
     BotCoinPayableRegistry(storage_)
     ERC721TokenKeyed(storage_)
     public 

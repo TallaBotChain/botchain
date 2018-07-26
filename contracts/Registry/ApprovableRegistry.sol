@@ -1,12 +1,12 @@
 pragma solidity ^0.4.18;
 
-import "../Upgradability/OwnableKeyed.sol";
+import "../Upgradability/ArbiterKeyed.sol";
 
 /**
 * @title ApprovableRegistry 
 * @dev Contract for creating a registry of approvable entries
 */
-contract ApprovableRegistry is OwnableKeyed {
+contract ApprovableRegistry is ArbiterKeyed {
 
   /**
   * @dev Event for when approval is granted
@@ -24,8 +24,8 @@ contract ApprovableRegistry is OwnableKeyed {
   * @dev Creates a registry of approvable entries
   * @param storage_ The BaseStorage contract that stores ApprovableRegistry's state
   */
-  function ApprovableRegistry(BaseStorage storage_)
-    OwnableKeyed(storage_)
+  function ApprovableRegistry(BaseStorage storage_, address _arbiter)
+    ArbiterKeyed(storage_, _arbiter)
     public
     {}
 
@@ -42,7 +42,7 @@ contract ApprovableRegistry is OwnableKeyed {
   * @dev Grants approval for an existing entry. Only callable by owner.
   * @param _entryId The ID of the entry to grant approval for.
   */
-  function grantApproval(uint256 _entryId) onlyOwner public {
+  function grantApproval(uint256 _entryId) onlyArbOrOwner public {
     require(entryExists(_entryId));
     require(!approvalStatus(_entryId));
 
