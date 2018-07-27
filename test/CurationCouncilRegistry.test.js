@@ -5,22 +5,27 @@ import { web3 } from './helpers/w3'
 import expectRevert from './helpers/expectRevert'
 import { hasEvent } from './helpers/event'
 import newCurationCouncil from './helpers/newCurationCouncil'
+import newDeveloperRegistry from './helpers/newDeveloperRegistry'
 const BotCoin = artifacts.require('BotCoin')
 const MockTokenVault = artifacts.require('MockTokenVault')
 const PublicStorage = artifacts.require('PublicStorage')
 
 contract('CurationCouncilRegistry', () => {
-  let cc, botCoin, accounts, tv, publicStorage
+  let cc, botCoin, accounts, tv, publicStorage, developerRegistry
 
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
     botCoin = await BotCoin.new()
     publicStorage = await PublicStorage.new()
+    developerRegistry = await newDeveloperRegistry(botCoin.address, accounts[0], 10000)
     cc = await newCurationCouncil(botCoin.address, publicStorage.address)
+    await cc.changeDeveloperRegistry(developerRegistry.address)
+    await developerRegistry.changeArbiter(cc.address)
     tv = await MockTokenVault.new(publicStorage.address, cc.address, botCoin.address)
     await cc.changeTokenVault(tv.address)
     await tv.setCuratorRewardRate(165)
     await botCoin.transfer(accounts[2], 1000000)
+    await botCoin.transfer(accounts[3], 2000000)
     await botCoin.transfer(tv.address, 10000000)
   })
 
@@ -51,8 +56,10 @@ contract('CurationCouncilRegistry', () => {
   })
 
   describe('registrationVote', () => {
-    let createVoteTxResult
+    let createVoteTxResult, id, devAddress, _totalSupply
     beforeEach(async () => {
+      await botCoin.approve(developerRegistry.address, 10000, { from: accounts[3]} )
+      await developerRegistry.addDeveloper("{data: 'somedata'}", 'https://example.com', { from: accounts[3]} )
       createVoteTxResult = await cc.createRegistrationVote({ from: accounts[3]} )
     })
 

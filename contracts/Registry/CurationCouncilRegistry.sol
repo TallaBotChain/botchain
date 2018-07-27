@@ -175,7 +175,6 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyed {
 
     _mint(msg.sender, registrationVoteId);
     _storage.setBool(keccak256("registrationVoteExists", msg.sender), true);
-    _storage.setAddress(keccak256("registrationVoteDeveloperAddress", registrationVoteId), msg.sender);
     _storage.setUint(keccak256("registrationVoteInitialBlock", registrationVoteId), initialBlock);
     _storage.setUint(keccak256("registrationVoteFinalBlock", registrationVoteId), finalBlock);
     _storage.setUint(keccak256("registrationVoteYayCount", registrationVoteId), 0);
@@ -213,7 +212,7 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyed {
   }
 
   function checkAutoApprove(uint256 registrationVoteId) internal {
-    uint256 developerId = developerRegistry().owns(msg.sender);
+    uint256 developerId = developerRegistry().owns(ownerOf(registrationVoteId));
     if (getYayCount(registrationVoteId) >= getAutoApproveThreshold()) {
       developerRegistry().grantApproval(developerId);
     }
