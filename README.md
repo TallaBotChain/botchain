@@ -10,7 +10,7 @@ node 8
 
 TestRPC 6: `npm install -g ethereumjs-testrpc`
 
-Then run `npm install`
+Then run `npm install && npm run build`
 
 ### Compile
 
