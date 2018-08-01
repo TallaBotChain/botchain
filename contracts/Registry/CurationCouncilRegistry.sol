@@ -176,7 +176,8 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyed {
   */
   function castRegistrationVote(uint256 registrationVoteId, bool vote) public {
     require(!getVotedOnStatus(registrationVoteId, msg.sender));
-    
+    require(getVoteFinalBlock(registrationVoteId) >= block.number);
+
     if (vote) {
       increaseYayCount(registrationVoteId, getStakeAmount(msg.sender));
     } else {
