@@ -89,4 +89,6 @@ contract DeveloperRegistryInterface {
 
   function grantApproval(uint256 _entryId) public;
 
+  function approvalStatus(uint256 _entryId) public view returns (bool);
+
 }

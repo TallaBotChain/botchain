@@ -166,7 +166,7 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyed {
   */
   function createRegistrationVote() public {
     require(msg.sender != 0x0);
-    developerRegistry().owns(msg.sender);
+    require(developerRegistry().owns(msg.sender) != 0);
     require(!registrationVoteExists(msg.sender));
 
     uint256 initialBlock = block.number;
@@ -199,12 +199,11 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyed {
     }
 
     checkAutoApprove(registrationVoteId);
-
     setVotedOnStatus(registrationVoteId);
   }
 
   function getAutoApproveThreshold() public view returns (uint256) {
-    _storage.getUint(keccak256("autoApproveThreshold"));
+    return _storage.getUint(keccak256("autoApproveThreshold"));
   }
 
   function setAutoApproveThreshold(uint256 threshold) public onlyOwner {

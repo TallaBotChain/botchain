@@ -74,37 +74,57 @@ contract('CurationCouncilRegistry', () => {
     })
 
     describe('castRegistrationVote() yay', () => {
-      let castVoteTxResult
       beforeEach(async () => {
         await botCoin.approve(cc.address, 500, { from: accounts[2]} )
         await cc.joinCouncil(500, { from: accounts[2] })
-        castVoteTxResult = await cc.castRegistrationVote(1, true, { from: accounts[2]} )
+        await cc.setAutoApproveThreshold(200, { from: accounts[0]} )
       })
       it('should setVotedOnStatus to true', async () => {
+        await cc.castRegistrationVote(1, true, { from: accounts[2]} )
         expect(await cc.getVotedOnStatus(1, accounts[2], {from: accounts[2]})).to.equal(true)
       })
 
       it('should increase yay count by stake amount', async () => {
+        await cc.castRegistrationVote(1, true, { from: accounts[2]} )
         const data = await cc.getYayCount(1, {from: accounts[2]})
         expect(data.toNumber()).to.equal(500)
       })
 
       it('should increase balance by curation reward rate', async () => {
+        await cc.castRegistrationVote(1, true, { from: accounts[2]} )
         const newBal = await tv.balance({from: accounts[2]})
         expect(newBal.toNumber()).to.equal(165)
       })
 
       it('should revert if council member attempts to vote twice', async () => {
+        await cc.castRegistrationVote(1, true, { from: accounts[2]} )
         await expectRevert(cc.castRegistrationVote(1, true, { from: accounts[2]} ))
+      })
+
+      it('should approve developer if threshold is met', async () => {
+        await cc.castRegistrationVote(1, true, { from: accounts[2]} )
+        const developerAddress = await cc.ownerOf(1)
+        const entryId = await developerRegistry.owns(developerAddress)
+        const approvalStatus = await developerRegistry.approvalStatus(entryId)
+        expect(approvalStatus).to.equal(true)
+      })
+
+      it('should not approve developer if threshold is not met', async() => {
+        await cc.setAutoApproveThreshold(700, { from: accounts[0]} )
+        await cc.castRegistrationVote(1, true, { from: accounts[2]} )
+        const developerAddress = await cc.ownerOf(1)
+        const entryId = await developerRegistry.owns(developerAddress)
+        const approvalStatus = await developerRegistry.approvalStatus(entryId)
+        expect(approvalStatus).to.equal(false)
       })
     })
 
     describe('castRegistrationVote() nay', () => {
-      let castVoteTxResult
       beforeEach(async () => {
         await botCoin.approve(cc.address, 500, { from: accounts[2]} )
         await cc.joinCouncil(500, { from: accounts[2] })
-        castVoteTxResult = await cc.castRegistrationVote(1, false, { from: accounts[2]} )
+        await cc.setAutoApproveThreshold(200)
+        await cc.castRegistrationVote(1, false, { from: accounts[2]} )
       })
       it('should setVotedOnStatus to true', async () => {
         expect(await cc.getVotedOnStatus(1, accounts[2], {from: accounts[2]})).to.equal(true)
