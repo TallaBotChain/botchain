@@ -32,16 +32,18 @@ if (!arg.rpc.includes('//')) {
 }
 
 // Local libraries
-const reg = require('./modules/registry.js')(web3, cfg)
-const cur = require('./modules/curation.js')(web3, cfg)
+const botchain = require('./modules/botchain-0.1.0.js');
+
+const reg = new botchain.Registry(web3);
+const cur = new botchain.Curation(web3);
 
 // Load all relevant contract JSON 
-const botCoinJSON                  = require('../build/contracts/BotCoin.json')
-const ownableProxyJSON             = require('../build/contracts/OwnableProxy.json')
-const devRegistryDelegateJSON      = require('../build/contracts/DeveloperRegistryDelegate.json')
-const botRegistryDelegateJSON      = require('../build/contracts/BotProductRegistryDelegate.json')
-const serviceRegistryDelegateJSON  = require('../build/contracts/BotServiceRegistryDelegate.json')
-const instanceRegistryDelegateJSON = require('../build/contracts/BotInstanceRegistryDelegate.json')
+const botCoinJSON                  = require('../build/contracts/BotCoin.json');
+const ownableProxyJSON             = require('../build/contracts/OwnableProxy.json');
+const devRegistryDelegateJSON      = require('../build/contracts/DeveloperRegistryDelegate.json');
+const botRegistryDelegateJSON      = require('../build/contracts/BotProductRegistryDelegate.json');
+const serviceRegistryDelegateJSON  = require('../build/contracts/BotServiceRegistryDelegate.json');
+const instanceRegistryDelegateJSON = require('../build/contracts/BotInstanceRegistryDelegate.json');
 
 // Botcoin Interface
 const token = new web3.eth.Contract(botCoinJSON.abi, cfg.botcoinAddr)
@@ -65,9 +67,9 @@ const upgradeIface = new Map()
 .set('curation', new web3.eth.Contract(ownableProxyJSON.abi, cfg.curationProxyAddr))
 .set('vault',    new web3.eth.Contract(ownableProxyJSON.abi, cfg.vaultProxyAddr));
 
-// Registry Contract Objects
+// tegistry Contract Objects
 // Used to create a new Contract for deployment
-const Registry = new Map()
+const RegistryMap = new Map()
 .set('dev',      new web3.eth.Contract(devRegistryDelegateJSON.abi))
 .set('bot',      new web3.eth.Contract(botRegistryDelegateJSON.abi))
 .set('service',  new web3.eth.Contract(serviceRegistryDelegateJSON.abi))
@@ -91,7 +93,7 @@ function unlockAccount(account, password) {
 
 async function deployImplementation(type, addr, gas, password, constructorArgs) {
   console.log('[Mgmt Addr:',addr,'Gas:',gas,'Type:',type,'] Setting up deployment ...');
-  Registry.get(type).deploy({
+  RegistryMap.get(type).deploy({
       data: contracts.get(type).binary,
       arguments: constructorArgs
   }).send({
@@ -111,7 +113,7 @@ async function deployImplementation(type, addr, gas, password, constructorArgs) 
   });
 
   unlockAccount(addr, password)
-  contract = Registry.get(type).new({from: addr, gas: gas, data: devRegistryDelegateJSON.bytecode});
+  contract = RegistryMap.get(type).new({from: addr, gas: gas, data: devRegistryDelegateJSON.bytecode});
   await checkDeployment(contract)
   console.dir(contract)
   return contract
@@ -157,7 +159,7 @@ async function registration(args) {
       break;
     case 'check-approval':
       console.log(arg)
-      if (arg.address) reg.checkDevApprovalByAddr(arg.address[0])
+      //if (arg.address) reg.checkDevApprovalByAddr(arg.address[0])
       if (arg.index)   reg.checkDevApprovalById(arg.index[0])
       break;
     case 'revoke-approval':
@@ -170,7 +172,7 @@ async function registration(args) {
       reg.getId(arg.address[0])
       break;
     case 'get-url':
-      getDeveloperUrl(arg.index[0])
+      reg.getDeveloperUrl(arg.index[0])
       break;
     case '':
       console.log('No valid registration command found.')
