@@ -35,7 +35,7 @@ contract BotEntryStorableRegistry is BotCoinPayableRegistry, ApprovableRegistry,
   function BotEntryStorableRegistry(BaseStorage storage_)
     BotCoinPayableRegistry(storage_)
     OwnableRegistry(storage_)
-    ApprovableRegistry(storage_)
+    ApprovableRegistry(storage_, this)
     ActivatableRegistry(storage_)
     public
   {}

@@ -3,6 +3,7 @@ pragma solidity ^0.4.18;
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
 import './BotCoinPayableRegistry.sol';
 import "../Upgradability/ERC721TokenKeyed.sol";
+import "../DeveloperRegistryInterface.sol";
 
 /**
 * @title CurationCouncilRegistry
@@ -36,6 +37,19 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyed {
     ERC721TokenKeyed(storage_)
     public
   {}
+
+  function developerRegistry() public view returns (DeveloperRegistryInterface) {
+    return DeveloperRegistryInterface(_storage.getAddress('developerRegistryAddress'));
+  }
+
+  function developerRegistryAddress() public view returns (address) {
+    return _storage.getAddress('developerRegistryAddress');
+  }
+
+  function changeDeveloperRegistry(address addr) onlyOwner public {
+    require(addr != 0x0);
+    _storage.setAddress('developerRegistryAddress', addr);
+  }
 
   /**
   * @dev Gets the Yay count for a specific developer registration vote
@@ -152,6 +166,7 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyed {
   */
   function createRegistrationVote() public {
     require(msg.sender != 0x0);
+    require(developerRegistry().owns(msg.sender) != 0);
     require(!registrationVoteExists(msg.sender));
 
     uint256 initialBlock = block.number;
@@ -160,7 +175,6 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyed {
 
     _mint(msg.sender, registrationVoteId);
     _storage.setBool(keccak256("registrationVoteExists", msg.sender), true);
-    _storage.setAddress(keccak256("registrationVoteDeveloperAddress", registrationVoteId), msg.sender);
     _storage.setUint(keccak256("registrationVoteInitialBlock", registrationVoteId), initialBlock);
     _storage.setUint(keccak256("registrationVoteFinalBlock", registrationVoteId), finalBlock);
     _storage.setUint(keccak256("registrationVoteYayCount", registrationVoteId), 0);
@@ -184,7 +198,23 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyed {
       increaseNayCount(registrationVoteId, getStakeAmount(msg.sender));
     }
 
+    checkAutoApprove(registrationVoteId);
     setVotedOnStatus(registrationVoteId);
+  }
+
+  function getAutoApproveThreshold() public view returns (uint256) {
+    return _storage.getUint(keccak256("autoApproveThreshold"));
+  }
+
+  function setAutoApproveThreshold(uint256 threshold) public onlyOwner {
+    _storage.setUint(keccak256("autoApproveThreshold"), threshold);
+  }
+
+  function checkAutoApprove(uint256 registrationVoteId) internal {
+    uint256 developerId = developerRegistry().owns(ownerOf(registrationVoteId));
+    if (getYayCount(registrationVoteId) >= getAutoApproveThreshold()) {
+      developerRegistry().grantApproval(developerId);
+    }
   }
 
 
