@@ -61,7 +61,7 @@ Registry.prototype.approveTokenTransfer = async function(to, decryptedAcct, amou
   // Transaction to approve token transfer
   let rawTokenTx = {
     'from': decryptedAcct.address,
-    'to': cfg.botcoinAddr,
+    'to': contractAddrs.BotCoin,
     'nonce': nonce,
     'gasPrice': this.web3.utils.toHex(3 * 1e9),
     'gasLimit': this.web3.utils.toHex(3000000),
@@ -92,6 +92,55 @@ Registry.prototype.approveTokenTransfer = async function(to, decryptedAcct, amou
 }
 
 /**
+ * Add the ID of a Developer to the registry.
+ *
+ * @param {string} data the SHA-256 hash of the ID information for the developer.
+ * @param {string} url the location of the JSON object containing the ID info.
+ * @param {Object} The decrypted account of the wallet being used locally. Refer to web3.eth.accounts.decrypt.
+ * @return {Object} Details about the state of the approval operation.
+ */
+Registry.prototype.addDeveloper = async function(data, url, decryptedAcct) {
+  console.log('[Addr:',decryptedAcct.address,'] Initiating Registration Process ...')
+
+  let address = decryptedAcct.address
+
+  let rawApproveTx = {
+    'from': address,
+    'contractAddress': contractAddrs.DeveloperRegistry,
+    'nonce': 0, // Just a placeholder, needs to be update before sending.
+    'gasPrice': this.web3.utils.toHex(3 * 1e9),
+    'gasLimit': this.web3.utils.toHex(3000000),
+    'value': '0x0',
+    'data': this.abi.get('dev').methods.addDeveloper(data, url).encodeABI()
+  }
+
+  return this.approveTokenTransfer(contractAddrs.DeveloperRegistry, decryptedAcct, approve_cost)
+    .then((tokenTxInfo) => {
+      if (tokenTxInfo.success) {
+        return this.web3.eth.getTransactionCount(decryptedAcct.address)
+      }
+      else throw tokenTxInfo.error
+    })
+    .then((nonce) => {
+        rawApproveTx.nonce = nonce
+        return decryptedAcct.signTransaction(rawApproveTx)
+    })
+    .then((addTx) => {
+      console.log('[Addr:',address,'] Signed add transaction.')
+      return this.web3.eth.sendSignedTransaction(addTx.rawTransaction)
+    })
+    .then((addReceipt) => {
+      console.log('[Addr:',address,'] Developer',idx,'Added to Registry (Approval Pending).')
+      console.log(addReceipt)
+      return { 'success': true, 'receipt': addReceipt }
+    })
+    .catch((error) => {
+      console.log('[Addr:',address,'] addDeveloper',error)
+      return { 'success': false, 'error': error }
+    })
+}
+
+/**
  * Approve the ID of a Developer present in the registry.
  *
  * @param {string} Address of the developer to approve (should be a hex value: 0x0...)
@@ -108,7 +157,7 @@ Registry.prototype.approveDeveloper = async function(address, decryptedAcct) {
 
   let rawApproveTx = {
     'from': decryptedAcct.address,
-    'contractAddress': cfg.devProxyAddr,
+    'contractAddress': contractAddrs.DeveloperRegistry,
     'nonce': 0, // Just a placeholder, needs to be update before sending.
     'gasPrice': this.web3.utils.toHex(3 * 1e9),
     'gasLimit': this.web3.utils.toHex(3000000),
@@ -116,7 +165,7 @@ Registry.prototype.approveDeveloper = async function(address, decryptedAcct) {
     'data': this.abi.get('dev').methods.grantApproval(idx).encodeABI()
   }
 
-  return this.approveTokenTransfer(cfg.devProxyAddr, decryptedAcct, approve_cost)
+  return this.approveTokenTransfer(contractAddrs.DeveloperRegistry, decryptedAcct, approve_cost)
     .then((tokenTxInfo) => {
       if (tokenTxInfo.success) {
         return this.web3.eth.getTransactionCount(decryptedAcct.address)
@@ -159,7 +208,7 @@ Registry.prototype.revokeApproval = async function(address, decryptedAcct) {
 
   let rawRevokeTx = {
     'from': decryptedAcct.address,
-    'contractAddress': cfg.devProxyAddr,
+    'contractAddress': contractAddrs.DeveloperRegistry,
     'nonce': 0, // Just a placeholder, needs to be update before sending.
     'gasPrice': this.web3.utils.toHex(3 * 1e9),
     'gasLimit': this.web3.utils.toHex(3000000),
@@ -167,7 +216,7 @@ Registry.prototype.revokeApproval = async function(address, decryptedAcct) {
     'data': this.abi.get('dev').methods.revokeApproval(idx).encodeABI()
   }
 
-  return this.approveTokenTransfer(cfg.devProxyAddr, decryptedAcct, approve_cost)
+  return this.approveTokenTransfer(contractAddrs.DeveloperRegistry, decryptedAcct, approve_cost)
     .then((tokenTxInfo) => {
       if (tokenTxInfo.success) {
         return this.web3.eth.getTransactionCount(decryptedAcct.address)
