@@ -47,7 +47,7 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyedScop
   }
 
   function getJoinedCouncilBlockHeight(address memberAddress) public view returns (uint256) {
-    return _storage.getUint(keccak256("joinedCouncilBlockHeight", msg.sender))
+    return _storage.getUint(keccak256("joinedCouncilBlockHeight", msg.sender));
   }
 
   /**
