@@ -93,4 +93,8 @@ contract CurationCouncilRegistryDelegate is CurationCouncilRegistry {
     return super.getVoteFinalBlock(registrationVoteId);
   }
 
+  function getVoteTotalSupply() public view returns (uint256) {
+    return super.getVoteTotalSupply();
+  }
+
 }
