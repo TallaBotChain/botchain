@@ -26,6 +26,7 @@ contract('CurationCouncilRegistry', () => {
     await tv.setCuratorRewardRate(165)
     await botCoin.transfer(accounts[2], 1000000)
     await botCoin.transfer(accounts[3], 2000000)
+    await botCoin.transfer(accounts[4], 2000000)
     await botCoin.transfer(tv.address, 10000000)
   })
 
@@ -44,6 +45,19 @@ contract('CurationCouncilRegistry', () => {
       await expectRevert(cc.joinCouncil(50, { from: accounts[2] }))
       const data = await cc.getStakeAmount(accounts[2])
       expect(data.toNumber()).to.equal(500)
+    })
+
+    it('ERC721 totalSupply() on curationCouncil should return 2 and VoteTotalSupply should return 0', async () => {
+      const data = await cc.tokenType
+      console.log(data)
+      console.log(data)
+      await botCoin.approve(cc.address, 10000, { from: accounts[4]} )
+      await cc.joinCouncil(10000, { from: accounts[4] })
+      const memberTotalSupply = await cc.totalSupply()
+      expect(memberTotalSupply.toNumber()).to.equal(2)
+      const voteTotalSupply = await cc.getVoteTotalSupply()
+      // expect(voteTotalSupply.toNumber()).to.equal(0)
+      console.log(data)
     })
   })
 
@@ -71,6 +85,8 @@ contract('CurationCouncilRegistry', () => {
       it('registrationVoteExists() should return true', async() => {
         expect(await cc.registrationVoteExists(accounts[3], {from: accounts[3]})).to.equal(true)
       })
+
+
     })
 
     describe('castRegistrationVote() yay', () => {
