@@ -1,12 +1,12 @@
 pragma solidity ^0.4.18;
 
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
-import "../Upgradability/ERC721TokenKeyedScoped.sol";
+import "../Upgradability/StorageConsumer.sol";
 
 /**
 * @title VoteRegistry
 */
-contract VoteRegistry is ERC721TokenKeyedScoped {
+contract VoteRegistry is StorageConsumer {
   using SafeMath for uint256;
 
   /**
@@ -31,16 +31,23 @@ contract VoteRegistry is ERC721TokenKeyedScoped {
 
   /** @dev Constructor for CurationCouncilRegistry */
   constructor(BaseStorage storage_)
-    ERC721TokenKeyedScoped(storage_, "voteRegistry")
     public
   {}
 
-  function getVoteTotalSupply() public view returns (uint256) {
-    return totalSupply();
+  function totalVotes() public view returns (uint256) {
+    return _storage.getUint(keccak256("totalVotes"));
   }
 
-  function ownerOfVoteId(uint256 registrationVoteId) public view returns (address) {
-    return ownerOf(registrationVoteId);
+  function incrementTotalVotes() internal {
+    _storage.setUint(keccak256("totalMembers"), totalVotes().add(1));
+  }
+
+  function getRegistrationVoteAddressById(uint256 registrationVoteId) public view returns (address) {
+    return _storage.getAddress(keccak256("registrationVoteAddress", registrationVoteId));
+  }
+
+  function getRegistrationVoteIdByAddress(address registrationVoteAddress) public view returns (uint256) {
+    return _storage.getUint(keccak256("registrationVoteId", registrationVoteAddress));
   }
 
   /**
@@ -143,14 +150,16 @@ contract VoteRegistry is ERC721TokenKeyedScoped {
 
     uint256 initialBlock = block.number;
     uint256 finalBlock = initialBlock + 100000;
-    uint256 registrationVoteId = totalSupply().add(1);
+    uint256 registrationVoteId = totalVotes().add(1);
 
-    _mint(msg.sender, registrationVoteId);
+    _storage.setAddress(keccak256("registrationVoteAddress", registrationVoteId), msg.sender);
+    _storage.setUint(keccak256("registrationVoteId", msg.sender), registrationVoteId);
     _storage.setBool(keccak256("registrationVoteExists", msg.sender), true);
     _storage.setUint(keccak256("registrationVoteInitialBlock", registrationVoteId), initialBlock);
     _storage.setUint(keccak256("registrationVoteFinalBlock", registrationVoteId), finalBlock);
     _storage.setUint(keccak256("registrationVoteYayCount", registrationVoteId), 0);
     _storage.setUint(keccak256("registrationVoteNayCount", registrationVoteId), 0);
+    incrementTotalVotes();
 
     emit RegistrationVoteCreated(registrationVoteId, initialBlock, finalBlock, msg.sender, 0, 0, false);
   }

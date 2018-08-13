@@ -47,17 +47,13 @@ contract('CurationCouncilRegistry', () => {
       expect(data.toNumber()).to.equal(500)
     })
 
-    it('ERC721 totalSupply() on curationCouncil should return 2 and VoteTotalSupply should return 0', async () => {
-      const data = await cc.tokenType
-      console.log(data)
-      console.log(data)
+    it('totalMembers should return 2 and totalVotes should return 0', async () => {
       await botCoin.approve(cc.address, 10000, { from: accounts[4]} )
       await cc.joinCouncil(10000, { from: accounts[4] })
-      const memberTotalSupply = await cc.totalSupply()
+      const memberTotalSupply = await cc.totalMembers()
       expect(memberTotalSupply.toNumber()).to.equal(2)
-      const voteTotalSupply = await cc.getVoteTotalSupply()
-      // expect(voteTotalSupply.toNumber()).to.equal(0)
-      console.log(data)
+      const voteTotalSupply = await cc.totalVotes()
+      expect(voteTotalSupply.toNumber()).to.equal(0)
     })
   })
 
@@ -119,7 +115,7 @@ contract('CurationCouncilRegistry', () => {
 
       it('should approve developer if threshold is met', async () => {
         await cc.castRegistrationVote(1, true, { from: accounts[2]} )
-        const developerAddress = await cc.ownerOf(1)
+        const developerAddress = await cc.getRegistrationVoteAddressById(1)
         const entryId = await developerRegistry.owns(developerAddress)
         const approvalStatus = await developerRegistry.approvalStatus(entryId)
         expect(approvalStatus).to.equal(true)
@@ -128,7 +124,7 @@ contract('CurationCouncilRegistry', () => {
       it('should not approve developer if threshold is not met', async() => {
         await cc.setAutoApproveThreshold(700, { from: accounts[0]} )
         await cc.castRegistrationVote(1, true, { from: accounts[2]} )
-        const developerAddress = await cc.ownerOf(1)
+        const developerAddress = await cc.getRegistrationVoteAddressById(1)
         const entryId = await developerRegistry.owns(developerAddress)
         const approvalStatus = await developerRegistry.approvalStatus(entryId)
         expect(approvalStatus).to.equal(false)

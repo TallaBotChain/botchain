@@ -75,26 +75,4 @@ contract CurationCouncilRegistryDelegate is CurationCouncilRegistry {
     tokenVault().applyCuratorReward();
   }
 
-  /**
-  * @dev Get initial block height where the vote starts
-  * @param registrationVoteId The ID of the developer registration vote
-  * @return uint256 ETH block height where the vote starts
-  */
-  function getVoteInitialBlock(uint256 registrationVoteId) public view returns (uint256) {
-    return super.getVoteInitialBlock(registrationVoteId);
-  }
-
-  /**
-  * @dev Get final block height where the vote ends
-  * @param registrationVoteId The ID of the developer registration vote
-  * @return uint256 ETH block height where the vote ends
-  */
-  function getVoteFinalBlock(uint256 registrationVoteId) public view returns (uint256) {
-    return super.getVoteFinalBlock(registrationVoteId);
-  }
-
-  function getVoteTotalSupply() public view returns (uint256) {
-    return super.getVoteTotalSupply();
-  }
-
 }

@@ -2,20 +2,18 @@ pragma solidity ^0.4.18;
 
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
 import './BotCoinPayableRegistry.sol';
-import "../Upgradability/ERC721TokenKeyedScoped.sol";
 import "../DeveloperRegistryInterface.sol";
 import "./VoteRegistry.sol";
 
 /**
 * @title CurationCouncilRegistry
 */
-contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyedScoped, VoteRegistry {
+contract CurationCouncilRegistry is BotCoinPayableRegistry, VoteRegistry {
   using SafeMath for uint256;
 
   /** @dev Constructor for CurationCouncilRegistry */
   constructor(BaseStorage storage_)
     BotCoinPayableRegistry(storage_)
-    ERC721TokenKeyedScoped(storage_, "curationCouncilRegistry")
     VoteRegistry(storage_)
     public
   {}
@@ -33,10 +31,6 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyedScop
     _storage.setAddress('developerRegistryAddress', addr);
   }
 
-  function getVoteTotalSupply() public view returns (uint256) {
-    return super.getVoteTotalSupply();
-  }
-
   /**
   * @dev Get current stake amount for council member 
   * @param memberAddress ETH address of council member
@@ -50,6 +44,22 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyedScop
     return _storage.getUint(keccak256("joinedCouncilBlockHeight", msg.sender));
   }
 
+  function getMemberAddressById(uint256 memberId) public view returns (address) {
+    return _storage.getAddress(keccak256("memberAddress", memberId));
+  }
+
+  function getMemberIdByAddress(address memberAddress) public view returns (uint256) {
+    return _storage.getUint(keccak256("memberId", memberAddress));
+  }
+
+  function totalMembers() public view returns (uint256) {
+    return _storage.getUint(keccak256("totalMembers"));
+  }
+
+  function incrementTotalMembers() internal {
+    _storage.setUint(keccak256("totalMembers"), totalMembers().add(1));
+  }
+
   /**
   * @dev Join council by staking BOTC 
   * @param stakeAmount amount of BOTC in wei
@@ -57,10 +67,13 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyedScop
   function joinCouncil(uint256 stakeAmount) public {
     require(getStakeAmount(msg.sender) == 0);
     require(botCoin().transferFrom(msg.sender, this, stakeAmount));
-    uint256 memberId = totalSupply().add(1);
-    _mint(msg.sender, memberId);
+
+    uint256 memberId = totalMembers().add(1);
+    _storage.setAddress(keccak256("memberAddress", memberId), msg.sender);
+    _storage.setUint(keccak256("memberId", msg.sender), memberId);
     _storage.setUint(keccak256("stakeAmount", msg.sender), stakeAmount);
     _storage.setUint(keccak256("joinedCouncilBlockHeight", msg.sender), block.number);
+    incrementTotalMembers();
   }
 
   /**
@@ -101,7 +114,7 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, ERC721TokenKeyedScop
   }
 
   function checkAutoApprove(uint256 registrationVoteId) internal {
-    uint256 developerId = developerRegistry().owns(ownerOfVoteId(registrationVoteId));
+    uint256 developerId = developerRegistry().owns(getRegistrationVoteAddressById(registrationVoteId));
     if (getYayCount(registrationVoteId) >= getAutoApproveThreshold()) {
       developerRegistry().grantApproval(developerId);
     }
