@@ -100,7 +100,7 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, VoteRegistry {
   * @param vote true for yay false for nay
   */
   function castRegistrationVote(uint256 registrationVoteId, bool vote) public {
-    require(getJoinedCouncilBlockHeight(msg.sender) < block.number);
+    require(getJoinedCouncilBlockHeight(msg.sender) < getVoteInitialBlock(registrationVoteId));
     super.castRegistrationVote(registrationVoteId, vote);
     checkAutoApprove(registrationVoteId);
   }

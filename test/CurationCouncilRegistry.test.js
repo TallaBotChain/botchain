@@ -68,6 +68,9 @@ contract('CurationCouncilRegistry', () => {
   describe('registrationVote', () => {
     let createVoteTxResult, id, devAddress, _totalSupply
     beforeEach(async () => {
+      await botCoin.approve(cc.address, 500, { from: accounts[2]} )
+      await cc.joinCouncil(500, { from: accounts[2] })
+      await cc.setAutoApproveThreshold(200, { from: accounts[0] })
       await botCoin.approve(developerRegistry.address, 10000, { from: accounts[3]} )
       await developerRegistry.addDeveloper("{data: 'somedata'}", 'https://example.com', { from: accounts[3]} )
       createVoteTxResult = await cc.createRegistrationVote({ from: accounts[3]} )
@@ -81,16 +84,9 @@ contract('CurationCouncilRegistry', () => {
       it('registrationVoteExists() should return true', async() => {
         expect(await cc.registrationVoteExists(accounts[3], {from: accounts[3]})).to.equal(true)
       })
-
-
     })
 
     describe('castRegistrationVote() yay', () => {
-      beforeEach(async () => {
-        await botCoin.approve(cc.address, 500, { from: accounts[2]} )
-        await cc.joinCouncil(500, { from: accounts[2] })
-        await cc.setAutoApproveThreshold(200, { from: accounts[0]} )
-      })
       it('should setVotedOnStatus to true', async () => {
         await cc.castRegistrationVote(1, true, { from: accounts[2]} )
         expect(await cc.getVotedOnStatus(1, accounts[2], {from: accounts[2]})).to.equal(true)
@@ -133,9 +129,6 @@ contract('CurationCouncilRegistry', () => {
 
     describe('castRegistrationVote() nay', () => {
       beforeEach(async () => {
-        await botCoin.approve(cc.address, 500, { from: accounts[2]} )
-        await cc.joinCouncil(500, { from: accounts[2] })
-        await cc.setAutoApproveThreshold(200)
         await cc.castRegistrationVote(1, false, { from: accounts[2]} )
       })
       it('should setVotedOnStatus to true', async () => {
