@@ -28,7 +28,8 @@ module.exports = {
       host: process.env.RPC_HOST || 'localhost',
       port: process.env.RPC_PORT || 8545,
       network_id: process.env.NETWORK_ID || '*',
-      gas: process.env.GAS || 6000000,
+      gas: process.env.GAS || 6500000,
+      gasPrice: 5
     },
     coverage: {
       host: 'localhost',
