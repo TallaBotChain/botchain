@@ -14,7 +14,7 @@ contract CurationCouncil is OwnableProxy {
     OwnableProxy(storage_, curationCouncilRegistryDelegateAddress)
     public
   {
-    storage_.setAddress("botCoinAddress", botCoinAddress);
+    storage_.setAddress(BOTCOIN_ADDR, botCoinAddress);
   }
 
 }

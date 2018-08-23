@@ -1,14 +1,46 @@
-
-var shell = require('shelljs')
+let shell = require('shelljs');
+var version = require('../package.json').version;
+let fs = require('file-system');
+let fm = require('file-match');
 shell.config.fatal = true
-var version = require('../package.json').version
 
-shell.rm('-rf', 'dist')
-shell.mkdir('-p', 'dist')
+let srcFolder = '../src/';
+let m4 = '../src/constants.m4';
 
-shell.exec('npx browserify src/botchain.js --s botchain', { silent: true })
-  .to('dist/botchain-' + version + '.js').to('cli/modules/botchain-'+version+'.js')
-shell.echo('Generated file: dist/botchain-' + version + '.js.')
+var filter = fm([
+  '*.{sol}'
+]);
+
+let cwd
+
+fs.recurse('../src/', [
+  '**/',
+  '**/*.sol'
+], function(filepath, relative, filename) {  
+  if (filename) {
+    console.log('File: ', filename.slice(0,-4));
+  } else {
+    console.log('Dir: ',filepath)
+  // it's folder
+  }
+});
+
+async function applyM4(err, files) {
+  files.forEach(file => {
+    fs.stat(srcFolder + file, (err,info) => { console.log(info); })
+  });
+}
+
+// Find m4 macro file and apply expansion on all src files.
+//fs.readdir(srcFolder, applyM4);
+
+//shell.rm('-rf', 'dist')
+//shell.mkdir('-p', 'dist')
+//
+//shell.exec('npx browserify src/botchain.js --s botchain', { silent: true })
+//  .to('dist/botchain-' + version + '.js').to('cli/modules/botchain-'+version+'.js')
+//shell.echo('Generated file: dist/botchain-' + version + '.js.')
+
 
 /**
  *  Minification using uglify-js currently chokes on ES6+ async and arrow functions

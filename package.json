@@ -20,6 +20,8 @@
     "eth-lightwallet": "^3.0.1",
     "ethereumjs-wallet": "0.6.0",
     "ethjs": "^0.3.9",
+    "file-match": "^1.0.2",
+    "file-system": "^2.2.2",
     "moment": "^2.22.2",
     "toml": "^2.3.3",
     "truffle-blockchain-utils": "^0.0.3",

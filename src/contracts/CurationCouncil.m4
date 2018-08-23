@@ -1,0 +1,1 @@
+define(BOTCOIN_ADDR, 000001)
