@@ -1,0 +1,16 @@
+{
+  "PublicStorage": "0x56d048b875ad6e84213ed85aa01b5b4ad175bfdf",
+  "BotCoin": "0x4783fdbc274186ca8595315751cfe6114874a3c0",
+  "CurationCouncilRegistryDelegate": "0x6e14c8e557482b98078ad506399bdab479a0d256",
+  "TokenVaultDelegate": "0xea60d66cf4122616aab7178fe698cdd2ca597d99",
+  "DeveloperRegistryDelegate": "0x65d25f75dfdd2a42725a404748dbc05ab7182be8",
+  "CurationCouncil": "0xe2e5a2e37618375ee0df85245853cdb878ba3dd5",
+  "TokenVault": "0xc73ae292293407877f7a61e4ec1752ee45d25616",
+  "DeveloperRegistry": "0xe04c398faab094fb1bf1125ec2d75e8995747ba7",
+  "BotProductRegistryDelegate": "0x9ef0c86c351e5f86f8b13eafda269166f2ab5ec1",
+  "BotProductRegistry": "0x30adacaa40d83f3fa300051305bbbf7313ee654a",
+  "BotServiceRegistryDelegate": "0x38b4f23fdc5a4509fff43755b5841f4670e29366",
+  "BotServiceRegistry": "0x6df98c9f9799b4b726740c3e6dfebce42a080a33",
+  "BotInstanceRegistryDelegate": "0xd11b78ebd73715ff95b7a02c50b7bc754796843e",
+  "BotInstanceRegistry": "0xf3f7d92efd2e26148eba55589ced5b50739dd3e4"
+}

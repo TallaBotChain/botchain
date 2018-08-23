@@ -3,18 +3,18 @@
 import { expect } from 'chai'
 import { web3 } from './helpers/w3'
 import isNonZeroAddress from './helpers/isNonZeroAddress'
-import expectRevert from './helpers/expectRevert'
-import { hasEvent } from './helpers/event'
 
 const PublicStorage = artifacts.require('PublicStorage')
 const BotCoin = artifacts.require('BotCoin')
 const TokenVault = artifacts.require('MockTokenVault')
 const CurationCouncil = artifacts.require('MockCurationCouncil')
 
+const botchain = require('../dist/botchain-0.1.0.js')
+
 const zeroAddr = '0x0000000000000000000000000000000000000000'
 
-contract('TokenVault', () => {
-  let tokenVault, tokenVaultDelegate, botcoin, publicStorage, curationCouncil
+contract('TokenVault', (suite) => {
+  let tokenVault, tokenVaultDelegate, botcoin, publicStorage, curationCouncil, registry, curation
   let accounts, arbiter, owner, curator, voter
   let vault_balance, reward_rate
 
@@ -28,6 +28,8 @@ contract('TokenVault', () => {
     curator = accounts[2]
     voter = accounts[3]
     reward_rate = 1
+
+    // init contracts
     publicStorage = await PublicStorage.new({from: owner})
     botcoin = await BotCoin.new({from:owner})
     curationCouncil = await CurationCouncil.new(publicStorage.address, botcoin.address, {from:owner})
@@ -36,6 +38,13 @@ contract('TokenVault', () => {
 	    curationCouncil.address, 
 	    botcoin.address,{from:owner}
     )
+
+    // init javascript lib
+    config = { 
+      CurationCouncil: curationCouncil.address,
+      TokenVault: tokenVault.address
+    }
+    curation = new botchain.Curation(web3,config);
   })
 
   beforeEach(async () => { })
@@ -43,7 +52,7 @@ contract('TokenVault', () => {
 
   describe('curationCouncil', () => {
     it('TokenVault should be 0x0000000000000000000000000000000000000000', async () => {
-      return curationCouncil.tokenVault.call({from: owner})
+      return curation.tokenVault.call({from: owner})
         .then((ctv) => {
           expect(ctv).to.equal(zeroAddr)
         })

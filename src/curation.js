@@ -23,16 +23,23 @@ const contractAddrs                = require('../build/contracts.json')
 Curation.prototype.tokenVaultAddr       = contractAddrs.TokenVault;
 Curation.prototype.curationCouncilAddr  = contractAddrs.CurationCouncil;
 
-function Curation(_web3) {
+// _config is and optional parameter to allow overriding (mostly for testing).
+function Curation(_web3, _config) {
 
   // Botcoin Interface
   const token = new _web3.eth.Contract(botCoinJSON.abi, contractAddrs.BotCoin);
   const web3 = _web3;
+  
+  // Override Config
+  if (_config !== undefined) {
+    this.tokenVaultAddr = _config.TokenVault;
+    this.curationCouncilAddr = _config.CurationCouncil;
+  }
 
   // Curation Interfaces -- ABIs of the delegates pointed at the Proxy Addresses
   this.abi = new Map()
-  .set('curation',  new web3.eth.Contract(curationRegistryDelegateJSON.abi, this.curationCouncilAddr))
-  .set('vault',     new web3.eth.Contract(tokenVaultDelegateJSON.abi, this.tokenVaultAdddr));
+    .set('curation',  new web3.eth.Contract(curationRegistryDelegateJSON.abi, this.curationCouncilAddr))
+    .set('vault',     new web3.eth.Contract(tokenVaultDelegateJSON.abi, this.tokenVaultAdddr));
 }
 
 Curation.prototype.approveTokenTransfer = async function(to, decryptedAcct, amount) {
@@ -129,5 +136,42 @@ Curation.prototype.joinCouncil = async function(decryptedAcct, amount) {
       return { 'success': false, 'error': error }
     })
 }
+
+Curation.prototype.changeTokenVault = async function(decryptedAcct, tvAddr) {
+  let nonce = await web3.eth.getTransactionCount(decryptedAcct.address)
+
+  // Transaction to approve token transfer
+  let rawTx = {
+    'from': decryptedAcct.address,
+    'to': cfg.curationProxyAddr,
+    'nonce': nonce,
+    'gasPrice': web3.utils.toHex(4 * 1e8),
+    'gasLimit': web3.utils.toHex(7900000),
+    'value': '0x0',
+    'data': this.abi.get('curation').methods.changeTokenVault(tvAddr).encodeABI()
+  }
+
+    return decryptedAcct.signTransaction(rawTx)
+    .then((signedTx) => {
+      // should be DEBUG level
+      console.log('[Addr:',decryptedAcct.address,'] Signed TokenVault address change.')
+      // should be VERBOSE level
+      console.log(signedTx)
+      return web3.eth.sendSignedTransaction(signedTx.rawTransaction)
+    })
+    .then((txReceipt) => {
+      // should be DEBUG level
+      console.log('[Addr:',decryptedAcct.address,'] TokenVault address change tx issued.')
+      // should be VERBOSE level
+      console.log(txReceipt)
+      return { 'success': true, 'receipt': txReceipt }
+    })
+    .catch((error) => {
+      // should be ERROR level
+      console.log('[Addr:',decryptedAcct.address,'] TokenVault address change failed:',error)
+      return { 'success': false, 'error': error }
+    })
+}
+
 
 module.exports = Curation;
