@@ -84,6 +84,42 @@ Curation.prototype.getStakeAmount = async function(addr) {
     })
 }
 
+Curation.prototype.createRegistrationVote = async function(decryptedAcct) {
+  let nonce = await web3.eth.getTransactionCount(decryptedAcct.address)
+
+  // Transaction to approve token transfer
+  let rawTx = {
+    'from': decryptedAcct.address,
+    'to': this.curationCouncilAddr,
+    'nonce': nonce,
+    'gasPrice': web3.utils.toHex(4 * 1e8),
+    'gasLimit': web3.utils.toHex(7900000),
+    'value': '0x0',
+    'data': this.abi.get('curation').methods.createRegistrationVote().encodeABI()
+  }
+
+    return decryptedAcct.signTransaction(rawTx)
+      .then((signedTx) => {
+        // should be DEBUG level
+        console.log('[Addr:',decryptedAcct.address,'] Signed vote creation message.')
+        // should be VERBOSE level
+        console.log(signedTx)
+        return web3.eth.sendSignedTransaction(signedTx.rawTransaction)
+      })
+      .then((txReceipt) => {
+        // should be DEBUG level
+        console.log('[Addr:',decryptedAcct.address,'] Vote creation complete.')
+        // should be VERBOSE level
+        console.log(txReceipt)
+        return { 'success': true, 'receipt': txReceipt }
+      })
+      .catch((error) => {
+        // should be ERROR level
+        console.log('[Addr:',decryptedAcct.address,'] createRegistrationVote',error)
+        return { 'success': false, 'error': error }
+      })
+}
+
 Curation.prototype.joinCouncil = async function(decryptedAcct, amount) {
   let nonce = await web3.eth.getTransactionCount(decryptedAcct.address)
 
