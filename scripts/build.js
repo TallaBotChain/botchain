@@ -7,21 +7,19 @@ shell.config.fatal = true
 let srcFolder = '../src/';
 let m4 = '../src/constants.m4';
 
-var filter = fm([
-  '*.{sol}'
-]);
-
-let cwd
-
 fs.recurse('../src/', [
-  '**/',
-  '**/*.sol'
+  '**/*',
+  '!**/*.md',
+  '!**/*.js'
 ], function(filepath, relative, filename) {  
   if (filename) {
-    console.log('File: ', filename.slice(0,-4));
+    let cmd = 'm4 ../m4/constants.m4 '+filepath+' > ../'+filepath.slice(7)
+    console.log('Run:', cmd);
+    shell.exec(cmd)
   } else {
-    console.log('Dir: ',filepath)
-  // it's folder
+    let cmd = 'mkdir -p ../'+filepath.slice(7)
+    console.log('Run: ', cmd)
+    shell.exec(cmd)
   }
 });
 
