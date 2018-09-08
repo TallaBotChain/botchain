@@ -19,20 +19,17 @@ const botCoinJSON                  = require('../build/contracts/BotCoin.json')
 // Load addresses for Registry contracts
 const contractAddrs                = require('../build/contracts.json')
 
-// Store related Proxy contract sddresses.
+// Store related Proxy contract addresses.
 Curation.prototype.tokenVaultAddr       = contractAddrs.TokenVault;
 Curation.prototype.curationCouncilAddr  = contractAddrs.CurationCouncil;
 
-function Curation(_web3) {
+function Curation(_web3, _curationCouncilAddr=0, _tokenVaultAdddr=0) {
 
-  // Botcoin Interface
-  const token = new _web3.eth.Contract(botCoinJSON.abi, contractAddrs.BotCoin);
-  const web3 = _web3;
-
-  // Curation Interfaces -- ABIs of the delegates pointed at the Proxy Addresses
+  // Interfaces -- ABIs of the delegates pointed at the Proxy Addresses
   this.abi = new Map()
-  .set('curation',  new web3.eth.Contract(curationRegistryDelegateJSON.abi, this.curationCouncilAddr))
-  .set('vault',     new web3.eth.Contract(tokenVaultDelegateJSON.abi, this.tokenVaultAdddr));
+  .set('curation',  new web3.eth.Contract(curationRegistryDelegateJSON.abi, _curationCouncilAddr || this.curationCouncilAddr))
+  .set('vault',     new web3.eth.Contract(tokenVaultDelegateJSON.abi, _tokenVaultAdddr || this.tokenVaultAdddr))
+  .set('token',     new web3.eth.Contract(botCoinJSON.abi, contractAddrs.BotCoin));
 }
 
 Curation.prototype.approveTokenTransfer = async function(to, decryptedAcct, amount) {
@@ -41,12 +38,12 @@ Curation.prototype.approveTokenTransfer = async function(to, decryptedAcct, amou
   // Transaction to approve token transfer
   let rawTokenTx = {
     'from': decryptedAcct.address,
-    'to': cfg.botcoinAddr,
+    'to': contractAddrs.BotCoin,
     'nonce': nonce,
     'gasPrice': web3.utils.toHex(3 * 1e9),
     'gasLimit': web3.utils.toHex(3000000),
     'value': '0x0',
-    'data': token.methods.approve(to, amount).encodeABI()
+    'data': this.abi.get('token').methods.approve(to, amount).encodeABI()
   }
 
   return decryptedAcct.signTransaction(rawTokenTx)
@@ -126,7 +123,7 @@ Curation.prototype.joinCouncil = async function(decryptedAcct, amount) {
   // Transaction to approve token transfer
   let rawTokenTx = {
     'from': decryptedAcct.address,
-    'to': cfg.curationProxyAddr,
+    'to': contractAddrs.CurationCouncil,
     'nonce': nonce,
     'gasPrice': web3.utils.toHex(4 * 1e8),
     'gasLimit': web3.utils.toHex(7900000),
@@ -134,7 +131,7 @@ Curation.prototype.joinCouncil = async function(decryptedAcct, amount) {
     'data': this.abi.get('curation').methods.joinCouncil(amount).encodeABI()
   }
 
-  return this.approveTokenTransfer(cfg.curationProxyAddr, decryptedAcct, amount)
+  return this.approveTokenTransfer(contractAddrs.CurationCouncil, decryptedAcct, amount)
     .then((tokenTxInfo) => {
       if (tokenTxInfo.success) {
         return web3.eth.getTransactionCount(decryptedAcct.address)
