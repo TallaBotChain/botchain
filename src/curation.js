@@ -81,6 +81,58 @@ Curation.prototype.getStakeAmount = async function(addr) {
     })
 }
 
+Curation.prototype.getJoinedCouncilBlockHeight = async function(addr) {
+
+  return this.abi.get('curation').methods.getJoinedCouncilBlockHeight(addr)
+    .call()
+    .then((result) => {
+      console.log('[Addr: ',addr+'] Joined Council Block Height:',result)
+      return result
+    })
+    .catch((error) => {
+      console.log('Address:', addr, 'Joined Council Block Height',error)
+    })
+}
+
+Curation.prototype.getMemberAddressById = async function(addr) {
+
+  return this.abi.get('curation').methods.getMemberAddressById(addr)
+    .call()
+    .then((result) => {
+      console.log('[Addr: ',addr+'] Member Address by ID:',result)
+      return result
+    })
+    .catch((error) => {
+      console.log('Address:', addr, 'Member Address by ID',error)
+    })
+}
+
+Curation.prototype.getMemberIdByAddress = async function(addr) {
+
+  return this.abi.get('curation').methods.getMemberIdByAddress(addr)
+    .call()
+    .then((result) => {
+      console.log('[Addr: ',addr+'] Member ID by Address:',result)
+      return result
+    })
+    .catch((error) => {
+      console.log('Address:', addr, 'Member ID by Address',error)
+    })
+}
+
+Curation.prototype.totalMembers = async function() {
+
+  return this.abi.get('curation').methods.totalMembers()
+    .call()
+    .then((result) => {
+      console.log('[Addr: ',addr+'] Total Members:',result)
+      return result
+    })
+    .catch((error) => {
+      console.log('Address:', addr, 'Total Members',error)
+    })
+}
+
 Curation.prototype.createRegistrationVote = async function(decryptedAcct) {
   let nonce = await web3.eth.getTransactionCount(decryptedAcct.address)
 
