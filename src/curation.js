@@ -215,4 +215,76 @@ Curation.prototype.joinCouncil = async function(decryptedAcct, amount) {
     })
 }
 
+Curation.prototype.leaveCouncil = async function(decryptedAcct) {
+  let nonce = await web3.eth.getTransactionCount(decryptedAcct.address)
+
+  // Transaction to approve token transfer
+  let rawTx = {
+    'from': decryptedAcct.address,
+    'to': contractAddrs.CurationCouncil,
+    'nonce': nonce,
+    'gasPrice': web3.utils.toHex(4 * 1e8),
+    'gasLimit': web3.utils.toHex(7900000),
+    'value': '0x0',
+    'data': this.abi.get('curation').methods.leaveCouncil().encodeABI()
+  }
+
+  return decryptedAcct.signTransaction(rawTx)
+    .then((signedTx) => {
+      // should be DEBUG level
+      console.log('[Addr:',decryptedAcct.address,'] Leave council message.')
+      // should be VERBOSE level
+      console.log(signedTx)
+      return web3.eth.sendSignedTransaction(signedTx.rawTransaction)
+    })
+    .then((txReceipt) => {
+      // should be DEBUG level
+      console.log('[Addr:',decryptedAcct.address,'] Leave council complete.')
+      // should be VERBOSE level
+      console.log(txReceipt)
+      return { 'success': true, 'receipt': txReceipt }
+    })
+    .catch((error) => {
+      // should be ERROR level
+      console.log('[Addr:',decryptedAcct.address,'] leaveCouncil',error)
+      return { 'success': false, 'error': error }
+    })
+}
+
+Curation.prototype.castRegistrationVote = async function(decryptedAcct, registrationVoteId, vote) {
+  let nonce = await web3.eth.getTransactionCount(decryptedAcct.address)
+
+  // Transaction to approve token transfer
+  let rawTx = {
+    'from': decryptedAcct.address,
+    'to': contractAddrs.CurationCouncil,
+    'nonce': nonce,
+    'gasPrice': web3.utils.toHex(4 * 1e8),
+    'gasLimit': web3.utils.toHex(7900000),
+    'value': '0x0',
+    'data': this.abi.get('curation').methods.castRegistrationVote(registrationVoteId, vote).encodeABI()
+  }
+
+  return decryptedAcct.signTransaction(rawTx)
+    .then((signedTx) => {
+      // should be DEBUG level
+      console.log('[Addr:',decryptedAcct.address,'] Cast registration vote message.')
+      // should be VERBOSE level
+      console.log(signedTx)
+      return web3.eth.sendSignedTransaction(signedTx.rawTransaction)
+    })
+    .then((txReceipt) => {
+      // should be DEBUG level
+      console.log('[Addr:',decryptedAcct.address,'] Cast registration vote complete.')
+      // should be VERBOSE level
+      console.log(txReceipt)
+      return { 'success': true, 'receipt': txReceipt }
+    })
+    .catch((error) => {
+      // should be ERROR level
+      console.log('[Addr:',decryptedAcct.address,'] castRegistrationVote',error)
+      return { 'success': false, 'error': error }
+    })
+}
+
 module.exports = Curation;
