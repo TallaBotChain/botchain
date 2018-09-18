@@ -125,11 +125,60 @@ Curation.prototype.totalMembers = async function() {
   return this.abi.get('curation').methods.totalMembers()
     .call()
     .then((result) => {
-      console.log('[Addr: ',addr+'] Total Members:',result)
+      console.log('Total Members:',result)
       return result
     })
     .catch((error) => {
-      console.log('Address:', addr, 'Total Members',error)
+      console.log('Total Members',error)
+    })
+}
+
+Curation.prototype.getAutoApproveThreshold = async function() {
+
+  return this.abi.get('curation').methods.getAutoApproveThreshold()
+    .call()
+    .then((result) => {
+      console.log('Auto Approve Threshold:',result)
+      return result
+    })
+    .catch((error) => {
+      console.log('Auto Approve Threshold',error)
+    })
+}
+
+Curation.prototype.setAutoApproveThreshold = async function(decryptedAcct, threshold) {
+  let nonce = await web3.eth.setAutoApproveThreshold(threshold)
+
+  // Transaction to approve token transfer
+  let rawTx = {
+    'from': decryptedAcct.address,
+    'to': this.curationCouncilAddr,
+    'nonce': nonce,
+    'gasPrice': web3.utils.toHex(4 * 1e8),
+    'gasLimit': web3.utils.toHex(7900000),
+    'value': '0x0',
+    'data': this.abi.get('curation').methods.setAutoApproveThreshold().encodeABI()
+  }
+
+  return decryptedAcct.signTransaction(rawTx)
+    .then((signedTx) => {
+      // should be DEBUG level
+      console.log('Signed auto approve threshold message.')
+      // should be VERBOSE level
+      console.log(signedTx)
+      return web3.eth.sendSignedTransaction(signedTx.rawTransaction)
+    })
+    .then((txReceipt) => {
+      // should be DEBUG level
+      console.log('Set auto approve threshold complete.')
+      // should be VERBOSE level
+      console.log(txReceipt)
+      return { 'success': true, 'receipt': txReceipt }
+    })
+    .catch((error) => {
+      // should be ERROR level
+      console.log('setAutoApproveThreshold',error)
+      return { 'success': false, 'error': error }
     })
 }
 
@@ -147,26 +196,26 @@ Curation.prototype.createRegistrationVote = async function(decryptedAcct) {
     'data': this.abi.get('curation').methods.createRegistrationVote().encodeABI()
   }
 
-    return decryptedAcct.signTransaction(rawTx)
-      .then((signedTx) => {
-        // should be DEBUG level
-        console.log('[Addr:',decryptedAcct.address,'] Signed vote creation message.')
-        // should be VERBOSE level
-        console.log(signedTx)
-        return web3.eth.sendSignedTransaction(signedTx.rawTransaction)
-      })
-      .then((txReceipt) => {
-        // should be DEBUG level
-        console.log('[Addr:',decryptedAcct.address,'] Vote creation complete.')
-        // should be VERBOSE level
-        console.log(txReceipt)
-        return { 'success': true, 'receipt': txReceipt }
-      })
-      .catch((error) => {
-        // should be ERROR level
-        console.log('[Addr:',decryptedAcct.address,'] createRegistrationVote',error)
-        return { 'success': false, 'error': error }
-      })
+  return decryptedAcct.signTransaction(rawTx)
+    .then((signedTx) => {
+      // should be DEBUG level
+      console.log('[Addr:',decryptedAcct.address,'] Signed vote creation message.')
+      // should be VERBOSE level
+      console.log(signedTx)
+      return web3.eth.sendSignedTransaction(signedTx.rawTransaction)
+    })
+    .then((txReceipt) => {
+      // should be DEBUG level
+      console.log('[Addr:',decryptedAcct.address,'] Vote creation complete.')
+      // should be VERBOSE level
+      console.log(txReceipt)
+      return { 'success': true, 'receipt': txReceipt }
+    })
+    .catch((error) => {
+      // should be ERROR level
+      console.log('[Addr:',decryptedAcct.address,'] createRegistrationVote',error)
+      return { 'success': false, 'error': error }
+    })
 }
 
 Curation.prototype.joinCouncil = async function(decryptedAcct, amount) {
