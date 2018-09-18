@@ -15,7 +15,7 @@ sharing, and potentially skill sharing.
 
   - [Botchain.js](https://github.com/TallaBotChain/botchain/tree/master/src) - JavaScript Library which supports both Node and Modern Web Browsers.
   - [Botchain Smart Contracts](https://github.com/TallaBotChain/botchain/tree/master/contracts) - The core platform deployed on the Ethereum Network.
-  - [Botchain CLI](https://github.com/TallaBotChain/botchain/tree/master/cli) - CLI for interacting directly with the Smart Contracts.
+  - [Botchain CLI](https://github.com/TallaBotChain/botchain/tree/master/cli) - provides command line tools for interacting directly with the Smart Contracts.
   - [Botchain Curation GUI](https://github.com/TallaBotChain/botchain-electron-ui) - An Electrum GUI for participating in the curation process.
   - [Example Registration WebApp](https://github.com/TallaBotChain/botchain-example-service) - An demonstration of how the Registration process can be included in an existing Web App.
 
