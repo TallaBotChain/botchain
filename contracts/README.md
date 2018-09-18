@@ -1,7 +1,5 @@
 # Botchain Smart Contracts (Platform)
 
-Platform smart contracts for Botchain.
-
 ## Setup
 
 Make sure you have the following installed globally:
