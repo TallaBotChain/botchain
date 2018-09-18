@@ -106,6 +106,7 @@ Owner (address)
 └── Developer (ID)
     │
     ├── Bot Product (ID)
+    |   |
     │   └── Bot Instance (ID)
     │
     └── Bot Service (ID)
