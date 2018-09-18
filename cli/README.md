@@ -1,4 +1,4 @@
-# BotChain CLI
+# Botchain CLI
 
 Command line tools for interacting with and managing https://www.botchain.network
 
