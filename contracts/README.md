@@ -1,6 +1,6 @@
-# BotChain
+# Botchain Smart Contracts (Platform)
 
-Platform smart contracts for BotChain.
+Platform smart contracts for Botchain.
 
 ## Setup
 
