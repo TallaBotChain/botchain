@@ -4,6 +4,7 @@
 // This module contains wallet related helper functions and structures to
 // facilitate interacting with Botchain contracts.  This is provided by
 // interacting with a provided web3 instantiation.
+const botcoinJSON   = require('../build/contracts/BotCoin.json')
 const contractAddrs = require('../build/contracts.json')
 
 // Static variables are provided mostly as conveniences
@@ -15,27 +16,72 @@ Wallet.instanceRegistryAddr  = '0x0';
 *  following this template:
 *     module.<exported name> = function myFancyFunc(args){ ... }
 */
-function Wallet(_web3) {
+  function Wallet(_web3, _keystore, _password) {
+  
+    // Botcoin Interface
+    this.token = new _web3.eth.Contract(botcoinJSON.abi, contractAddrs.Botcoin);
+    this.web3 = _web3;
+  
+    if (_keystore !== undefined) {
+      this.encrypted_keystore = _web3.eth.accounts.create();
+    }
+    else {
+      this.encrypted_keystore = _keystore
+    }
 
-  // Botcoin Interface
-  this.token = new _web3.eth.Contract(botCoinJSON.abi, contractAddrs.BotCoin);
-  this.web3 = _web3;
-  this.keystore = _web3.eth.accounts.create();
+    if (_password !== undefined) {
+      this.account = _keystore.decrypt(_password) 
+    }
+    else {
+      this.account = undefined
+    }
+  }
 
-}
+  Wallet.prototype.decrypt = async function(_password) {
+    if (this.encrypted_keystore !== undefined) {
+      this.account = this.encrypted_keystore.decrypt(_password)
+    }
+  }
 
-Wallet.prototype.send = function(destAddr) {
-    abi.get('dev').methods.owns(addr)
-      .call()
-      .then((id) => {
-        console.log('[Addr:', addr+'] ID:', id)
+  function isFloat(n){
+    return Number(n) === n && n % 1 !== 0;
+  }
+
+  Wallet.prototype.sendEth = async function(toAddr, amount) {
+    let nonce = await this.web3.eth.getTransactionCount(this.account.address)
+
+    if (!isFloat(amount)) return
+
+    let rawEthTx = {
+      'from': this.account.address,
+      'to': toAddr,
+      'nonce': nonce,
+      'gasPrice': this.web3.utils.toHex(3 * 1e9),
+      'gasLimit': this.web3.utils.toHex(3000000),
+      'value': amount.toString()
+    }
+
+    return decryptedAcct.signTransaction(rawTokenTx)
+      .then((signedTx) => {
+        console.log('[Addr:',decryptedAcct.address,'] Signed ETH transfer.')
+        // should be VERBOSE level
+        console.log(signedTx)
+        return this.web3.eth.sendSignedTransaction(signedTx.rawTransaction)
+      })
+      .then((txReceipt) => {
+        console.log('[Addr:',decryptedAcct.address,'] ETH transfer tx complete.')
+        // should be VERBOSE level
+        console.log(txReceipt)
+        return { 'success': true, 'receipt': txReceipt }
       })
       .catch((error) => {
-        console.log('[Addr:', addr+'] getId', error)
+        // should be ERROR level
+        console.log('[Addr:',decryptedAcct.address,'] ETH Send',error)
+        return { 'success': false, 'error': error }
       })
   }
   
-  Registry.prototype.approveTokenTransfer = async function(to, decryptedAcct, amount) {
+  Wallet.prototype.approveTokenTransfer = async function(to, amount) {
     let nonce = await this.web3.eth.getTransactionCount(decryptedAcct.address)
 
     // Transaction to approve token transfer
