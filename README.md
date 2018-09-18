@@ -3,7 +3,7 @@
 Botchain is a registration, identification, and audit enablement platform built
 using the Ethereum blockchain. Botchain aims to provide a management platform for 
 enterprise bots to ensure that businesses have a robust, efficient, and secure system.
-Libraries provided by this repository will aid bot developers to incorporate Botchain
+Libraries provided by this repository will aid bot developers in incorporating Botchain
 capabilities into their bots so that businesses can utilize the management capabilities
 according to their needs.
 
