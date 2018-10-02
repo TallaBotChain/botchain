@@ -40,7 +40,7 @@ contract BaseStorage is KeyValueStorage {
   }
 
   function getIpfs(bytes32 key) public view isAllowed returns (bytes32 digest, uint8 fnCode, uint8 size) {
-    Multihash entry = _multiHashStorage[scopedKey(key)];
+    Multihash storage entry = _multiHashStorage[scopedKey(key)];
     return (entry.digest, entry.fnCode, entry.size);
   }
 
@@ -75,7 +75,7 @@ contract BaseStorage is KeyValueStorage {
   }
 
   function setIpfs(bytes32 key, bytes32 digest, uint8 fnCode, uint8 size) public isAllowed {
-    Multihash entry = Multihash(digest, fnCode, size);
+    Multihash memory entry = Multihash(digest, fnCode, size);
     _multiHashStorage[scopedKey(key)] = entry;
   }
 

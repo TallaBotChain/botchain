@@ -17,10 +17,11 @@ contract DeveloperRegistryDelegate is ApprovableRegistry, OwnerRegistry, BotCoin
   * @dev Event for when developer is added
   * @param owner address that owns the developer
   * @param developerId ID of the developer
-  * @param dataHash Hash of data associated with the developer
-  * @param url A URL associated with the developer
+  * @param IpfsDigest IPFS Digest of the data associated with the new developer
+  * @param IpfsFnCode IPFS Function Code associated with the new developer
+  * @param IpfsSize IPRS Digest size associated with the new developer
   */
-  event DeveloperAdded(address owner, uint256 developerId, bytes32 dataHash, bytes32 url);
+  event DeveloperAdded(address owner, uint256 developerId, bytes32 IpfsDigest, uint8 IpfsFnCode, uint8 IpfsSize);
 
   /**
   * @dev Constructor for DeveloperRegistryDelegate
@@ -76,26 +77,26 @@ contract DeveloperRegistryDelegate is ApprovableRegistry, OwnerRegistry, BotCoin
   /**
   * @dev Adds a new developer entry which is owned by the sender address. Defaults to unapproved,
   *  but can be approved by the contract owner in a subsequent transaction.
-  * @param _data A hash of the data associated with the new developer
-  * @param _url A URL associated with the new developer
+  * @param IpfsDigest IPFS Digest of the data associated with the new developer
+  * @param IpfsFnCode IPFS Function Code associated with the new developer
+  * @param IpfsSize IPRS Digest size associated with the new developer
   */
-  function addDeveloper(bytes32 IpfsDigest, uint8 IpfsFnCode, uint8 IpfsSize, bytes32 _url) public {
+  function addDeveloper(bytes32 IpfsDigest, uint8 IpfsFnCode, uint8 IpfsSize) public {
     require(owns(msg.sender) == 0);
     require(IpfsDigest != 0x0);
     require(IpfsFnCode != 0);
     require(IpfsSize != 0);
-    require(_url != 0x0);
 
     uint256 _developerId = totalSupply().add(1);
 
-    setDeveloperUrl(_developerId, _url);
+    setDeveloperIpfs(_developerId, IpfsDigest, IpfsFnCode, IpfsSize);
     setOwnerId(msg.sender, _developerId);
 
     transferBotCoin();
 
     _mint(msg.sender, _developerId);
 
-    DeveloperAdded(msg.sender, _developerId, _data, _url);
+    DeveloperAdded(msg.sender, _developerId, IpfsDigest, IpfsFnCode, IpfsSize);
   }
 
 
