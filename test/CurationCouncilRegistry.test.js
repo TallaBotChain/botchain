@@ -72,7 +72,7 @@ contract('CurationCouncilRegistry', () => {
       await cc.joinCouncil(500, { from: accounts[2] })
       await cc.setAutoApproveThreshold(200, { from: accounts[0] })
       await botCoin.approve(developerRegistry.address, 10000, { from: accounts[3]} )
-      await developerRegistry.addDeveloper("{data: 'somedata'}", 'https://example.com', { from: accounts[3]} )
+      await developerRegistry.addDeveloper('7D5A99F603F231D53A4F39D1521F98D2E8BB279CF29BEBFD0687DC98458E7F89', '12', '20', { from: accounts[3]} )
       createVoteTxResult = await cc.createRegistrationVote({ from: accounts[3]} )
     })
 
