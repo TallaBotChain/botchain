@@ -8,7 +8,7 @@ contract DeveloperRegistryInterface {
   * @param developerId ID of the developer
   * @param IpfsDigest IPFS Digest of the data associated with the new developer
   * @param IpfsFnCode IPFS Function Code associated with the new developer
-  * @param IpfsSize IPRS Digest size associated with the new developer
+  * @param IpfsSize IPFS Digest size associated with the new developer
   */
   event DeveloperAdded(address owner, uint256 developerId, bytes32 IpfsDigest, uint8 IpfsFnCode, uint8 IpfsSize);
 
@@ -49,7 +49,7 @@ contract DeveloperRegistryInterface {
   *  but can be approved by the contract owner in a subsequent transaction.
   * @param IpfsDigest IPFS Digest of the data associated with the new developer
   * @param IpfsFnCode IPFS Function Code associated with the new developer
-  * @param IpfsSize IPRS Digest size associated with the new developer
+  * @param IpfsSize IPFS Digest size associated with the new developer
   */
   function addDeveloper(bytes32 IpfsDigest, uint8 IpfsFnCode, uint8 IpfsSize) public;
 

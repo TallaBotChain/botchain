@@ -3,6 +3,7 @@
 import _ from 'lodash'
 import { expect } from 'chai'
 import { web3 } from './helpers/w3'
+import { bs58 } from 'bs58'
 import expectRevert from './helpers/expectRevert'
 import { hasEvent } from './helpers/event'
 import botCoinTransferApproveSetup from './helpers/botCoinTransferApproveSetup'
@@ -22,6 +23,8 @@ const PublicStorage = artifacts.require('./PublicStorage.sol')
 const MockOwnerRegistry = artifacts.require('./MockOwnerRegistry.sol')
 const BotEntryStorableRegistry = artifacts.require('./MockBotEntryStorableRegistry.sol')
 const BotCoin = artifacts.require('BotCoin')
+const b58IPFSHash = 'QmWmyoMoctfbAaiEs2G46gpeUmhqFRDW6KWo64y5r581Vz'
+const hexIPFSHash = '0x7d5a99f603f231d53a4f39d1521f98d2e8bb279cf29bebfd0687dc98458e7f89'
 
 contract('BotEntryStorableRegistry', () => {
   let botEntryStorableRegistry, botCoin, ownerRegistry, accounts
@@ -58,15 +61,15 @@ contract('BotEntryStorableRegistry', () => {
       let txResult
 
       beforeEach(async () => {
-        txResult = await botEntryStorableRegistry.createBotEntry(1, botAddr1, dataHash, url, { from: accounts[1] })
+        txResult = await botEntryStorableRegistry.createBotEntry(1, botAddr1, hexIPFSHash, '0x12', '0x20', { from: accounts[1] })
       })
 
-      it('should add bot with the given owner, bot address, data hash, and url', async () => {
+      it('should add bot with the given owner, bot address, and IPFS hash', async () => {
         await ownerRegistry.setMockOwner(1, accounts[1])
         let bot = await botEntryStorableRegistry.getBotEntry(1)
         expect(bot[0]).to.equal(accounts[1].toLowerCase())
         expect(bot[1]).to.equal(botAddr1.toLowerCase())
-        expect(bot[2]).to.equal(dataHash)
+        expect(bot[2]).to.equal(hexIPFSHash.toLowerCase())
       })
 
       it('should add bot address to bot ID mapping', async () => {
@@ -95,7 +98,7 @@ contract('BotEntryStorableRegistry', () => {
     describe('when given params for deactivate() and activate()', () => {
       beforeEach(async () => {
         await ownerRegistry.setMockOwner(1, accounts[1])
-        await botEntryStorableRegistry.createBotEntry(1, botAddr1, dataHash, url, { from: accounts[1] })
+        await botEntryStorableRegistry.createBotEntry(1, botAddr1, hexIPFSHash, '0x12', '0x20', { from: accounts[1] })
       })
 
       it('should set active to false when deactivate is called', async () => {
@@ -126,26 +129,26 @@ contract('BotEntryStorableRegistry', () => {
     describe('when minting is not allowed by the owner registry', () => {
       it('should revert', async () => {
         await ownerRegistry.disableMinting()
-        await expectRevert(botEntryStorableRegistry.createBotEntry(1, botAddr1, dataHash, url, { from: accounts[1] }))
+        await expectRevert(botEntryStorableRegistry.createBotEntry(1, botAddr1, hexIPFSHash, '0x12', '0x20', { from: accounts[1] }))
       })
     })
 
     describe('when given invalid bot address', () => {
       it('should revert', async () => {
-        await expectRevert(botEntryStorableRegistry.createBotEntry(1, zero, dataHash, url, { from: accounts[1] }))
+        await expectRevert(botEntryStorableRegistry.createBotEntry(1, zero, hexIPFSHash, '0x12', '0x20', { from: accounts[1] }))
       })
     })
 
     describe('when given invalid data', () => {
       it('should revert', async () => {
-        await expectRevert(botEntryStorableRegistry.createBotEntry(1, botAddr1, zero, url, { from: accounts[1] }))
+        await expectRevert(botEntryStorableRegistry.createBotEntry(1, botAddr1, '0x0', '0x12', '0x20', { from: accounts[1] }))
       })
     })
 
     describe('when bot address already exists', () => {
       it('should revert', async () => {
-        await botEntryStorableRegistry.createBotEntry(1, botAddr1, dataHash, url, { from: accounts[1] })
-        await expectRevert(botEntryStorableRegistry.createBotEntry(1, botAddr1, dataHash, url, { from: accounts[1] }))
+        await botEntryStorableRegistry.createBotEntry(1, botAddr1, hexIPFSHash, '0x12', '0x20', { from: accounts[1] })
+        await expectRevert(botEntryStorableRegistry.createBotEntry(1, botAddr1, hexIPFSHash, '0x12', '0x20', { from: accounts[1] }))
       })
     })
   })
@@ -157,8 +160,8 @@ contract('BotEntryStorableRegistry', () => {
       beforeEach(async () => {
         await ownerRegistry.setMockOwner(1, accounts[1])
         await ownerRegistry.setMockOwner(2, accounts[2])
-        await botEntryStorableRegistry.createBotEntry(1, botAddr1, dataHash, url, { from: accounts[1] })
-        await botEntryStorableRegistry.createBotEntry(2, botAddr2, dataHash2, url, { from: accounts[2] })
+        await botEntryStorableRegistry.createBotEntry(1, botAddr1, hexIPFSHash, '0x12', '0x20', { from: accounts[1] })
+        await botEntryStorableRegistry.createBotEntry(2, botAddr2, hexIPFSHash, '0x12', '0x20', { from: accounts[2] })
         bot = await botEntryStorableRegistry.getBotEntry(2)
       })
 
@@ -170,17 +173,17 @@ contract('BotEntryStorableRegistry', () => {
         expect(bot[1]).to.equal(botAddr2)
       })
 
-      it('should return bot data', () => {
-        expect(bot[2]).to.equal(dataHash2)
+      it('should return bot IPFS hash', () => {
+        expect(bot[2]).to.equal(hexIPFSHash)
       })
     })
   })
 
   describe('balanceOf()', () => {
     it('should return number of bots owned by an address', async () => {
-      await botEntryStorableRegistry.createBotEntry(1, botAddr1, dataHash, url, { from: accounts[1] })
-      await botEntryStorableRegistry.createBotEntry(1, botAddr2, dataHash, url, { from: accounts[1] })
-      await botEntryStorableRegistry.createBotEntry(1, botAddr3, dataHash, url, { from: accounts[1] })
+      await botEntryStorableRegistry.createBotEntry(1, botAddr1, hexIPFSHash, '0x12', '0x20', { from: accounts[1] })
+      await botEntryStorableRegistry.createBotEntry(1, botAddr2, hexIPFSHash, '0x12', '0x20', { from: accounts[1] })
+      await botEntryStorableRegistry.createBotEntry(1, botAddr3, hexIPFSHash, '0x12', '0x20', { from: accounts[1] })
       let numBots = (await botEntryStorableRegistry.balanceOf(1)).toNumber()
       expect(numBots).to.equal(3)
     })

@@ -3,6 +3,7 @@
 import _ from 'lodash'
 import { expect } from 'chai'
 import { web3 } from './helpers/w3'
+import { bs58 } from 'bs58'
 import expectRevert from './helpers/expectRevert'
 import botCoinTransferApproveSetup from './helpers/botCoinTransferApproveSetup'
 
@@ -18,6 +19,8 @@ const PublicStorage = artifacts.require('./PublicStorage.sol')
 const MockOwnerRegistry = artifacts.require('./MockOwnerRegistry.sol')
 const BotServiceRegistry = artifacts.require('./MockBotServiceRegistry.sol')
 const BotCoin = artifacts.require('BotCoin')
+const b58IPFSHash = 'QmWmyoMoctfbAaiEs2G46gpeUmhqFRDW6KWo64y5r581Vz'
+const hexIPFSHash = '0x7d5a99f603f231d53a4f39d1521f98d2e8bb279cf29bebfd0687dc98458e7f89'
 
 contract('BotServiceRegistry', () => {
   let botServiceRegistry, botCoin, ownerRegistry, accounts
@@ -63,14 +66,14 @@ contract('BotServiceRegistry', () => {
 
     describe('when params are valid', async () => {
       it('should succeed', async () => {
-        await botServiceRegistry.createBotService(1, botAddr1, dataHash, url, { from: accounts[1] })
+        await botServiceRegistry.createBotService(1, botAddr1, hexIPFSHash, '0x12', '0x20', { from: accounts[1] })
       })
     })
 
     describe('when url is empty', async () => {
       it('should revert', async () => {
         await expectRevert(
-          botServiceRegistry.createBotService(1, botAddr1, dataHash, zeroAddr, { from: accounts[1] })
+          botServiceRegistry.createBotService(1, botAddr1, '0x0', '0x12', '0x20', { from: accounts[1] })
         )
       })
     })

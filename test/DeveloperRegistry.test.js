@@ -12,6 +12,7 @@ const BotCoin = artifacts.require('BotCoin')
 const zeroHash = '0x0000000000000000000000000000000000000000000000000000000000000000'
 const tallaWalletAddress = '0x1ae554eea0dcfdd72dcc3fa4034761cf6d041bf3'
 const b58IPFSHash = 'QmWmyoMoctfbAaiEs2G46gpeUmhqFRDW6KWo64y5r581Vz'
+const hexIPFSHash = '0x7d5a99f603f231d53a4f39d1521f98d2e8bb279cf29bebfd0687dc98458e7f89'
 
 const entryPrice = 100
 const url = web3.utils.fromAscii('www.google.com')
@@ -32,7 +33,7 @@ contract('DeveloperRegistry', () => {
       let txResult
 
       beforeEach(async () => {
-        txResult = await bc.addDeveloper('0x7d5a99f603f231d53a4f39d1521f98d2e8bb279cf29bebfd0687dc98458e7f89', '0x12', '0x20', { from: accounts[2] })
+        txResult = await bc.addDeveloper(hexIPFSHash, '0x12', '0x20', { from: accounts[2] })
       })
 
       it('should add developer to data mapping', async () => {
@@ -68,8 +69,8 @@ contract('DeveloperRegistry', () => {
 
     describe('when given an owner address that already exists', () => {
       it('should revert', async () => {
-        await bc.addDeveloper('0x7d5a99f603f231d53a4f39d1521f98d2e8bb279cf29bebfd0687dc98458e7f89', '0x12', '0x20', { from: accounts[2] })
-        await expectRevert(bc.addDeveloper('0x7d5a99f603f231d53a4f39d1521f98d2e8bb279cf29bebfd0687dc98458e7f89', '0x12', '0x20', { from: accounts[2] }))
+        await bc.addDeveloper(hexIPFSHash, '0x12', '0x20', { from: accounts[2] })
+        await expectRevert(bc.addDeveloper(hexIPFSHash, '0x12', '0x20', { from: accounts[2] }))
       })
     })
   })
@@ -77,7 +78,7 @@ contract('DeveloperRegistry', () => {
   describe('grantApproval()', () => {
     it('should be executable by owner', async () => {
       expect(await bc.approvalStatus(1)).to.equal(false)
-      await bc.addDeveloper('0x7d5a99f603f231d53a4f39d1521f98d2e8bb279cf29bebfd0687dc98458e7f89', '0x12', '0x20', { from: accounts[2] })
+      await bc.addDeveloper(hexIPFSHash, '0x12', '0x20', { from: accounts[2] })
       await bc.grantApproval(1)
       expect(await bc.approvalStatus(1)).to.equal(true)
     })

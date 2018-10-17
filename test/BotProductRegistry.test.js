@@ -3,6 +3,7 @@
 import _ from 'lodash'
 import { expect } from 'chai'
 import { web3 } from './helpers/w3'
+import { bs58 } from 'bs58'
 import expectRevert from './helpers/expectRevert'
 import botCoinTransferApproveSetup from './helpers/botCoinTransferApproveSetup'
 
@@ -19,6 +20,8 @@ const MockOwnerRegistry = artifacts.require('./MockOwnerRegistry.sol')
 const MockOwnedRegistry = artifacts.require('./MockOwnedRegistry.sol')
 const BotProductRegistry = artifacts.require('./MockBotProductRegistry.sol')
 const BotCoin = artifacts.require('BotCoin')
+const b58IPFSHash = 'QmWmyoMoctfbAaiEs2G46gpeUmhqFRDW6KWo64y5r581Vz'
+const hexIPFSHash = '0x7d5a99f603f231d53a4f39d1521f98d2e8bb279cf29bebfd0687dc98458e7f89'
 
 contract('BotProductRegistry', () => {
   let botProductRegistry, mockInstanceRegistry, botCoin, ownerRegistry, accounts
@@ -65,14 +68,14 @@ contract('BotProductRegistry', () => {
 
     describe('when params are valid', async () => {
       it('should succeed', async () => {
-        await botProductRegistry.createBotProduct(1, botAddr1, dataHash, url, { from: accounts[1] })
+        await botProductRegistry.createBotProduct(1, botAddr1, hexIPFSHash, '0x12', '0x20', { from: accounts[1] })
       })
     })
 
-    describe('when url is empty', async () => {
+    describe('when digest is empty', async () => {
       it('should revert', async () => {
         await expectRevert(
-          botProductRegistry.createBotProduct(1, botAddr1, dataHash, zeroAddr, { from: accounts[1] })
+          botProductRegistry.createBotProduct(1, botAddr1, '0x0', '0x12', '0x20', { from: accounts[1] })
         )
       })
     })
@@ -82,7 +85,7 @@ contract('BotProductRegistry', () => {
     describe('when conditions are valid', () => {
       it('should return true', async () => {
         await ownerRegistry.setMockOwner(1, accounts[1])
-        await botProductRegistry.createBotProduct(1, botAddr1, dataHash, url, { from: accounts[1] })
+        await botProductRegistry.createBotProduct(1, botAddr1, hexIPFSHash, '0x12', '0x20', { from: accounts[1] })
         expect(
           await mockInstanceRegistry.mintingAllowedOnOwner(accounts[1], 1)
         ).to.equal(true)
@@ -92,7 +95,7 @@ contract('BotProductRegistry', () => {
     describe('when minting is not allowed by owner registry', () => {
       it('should return false', async () => {
         await ownerRegistry.setMockOwner(1, accounts[1])
-        await botProductRegistry.createBotProduct(1, botAddr1, dataHash, url, { from: accounts[1] })
+        await botProductRegistry.createBotProduct(1, botAddr1, hexIPFSHash, '0x12', '0x20', { from: accounts[1] })
         await ownerRegistry.disableMinting()
         expect(
           await mockInstanceRegistry.mintingAllowedOnOwner(accounts[1], 1)
@@ -102,7 +105,7 @@ contract('BotProductRegistry', () => {
 
     describe('when sender is not the owner of the bot product', () => {
       it('should return false', async () => {
-        await botProductRegistry.createBotProduct(1, botAddr1, dataHash, url, { from: accounts[1] })
+        await botProductRegistry.createBotProduct(1, botAddr1, hexIPFSHash, '0x12', '0x20', { from: accounts[1] })
         expect(
           await mockInstanceRegistry.mintingAllowedOnOwner(accounts[1], 1)
         ).to.equal(false)
@@ -112,7 +115,7 @@ contract('BotProductRegistry', () => {
     describe('when bot product is disabled', () => {
       it('should return false', async () => {
         await ownerRegistry.setMockOwner(1, accounts[1])
-        await botProductRegistry.createBotProduct(1, botAddr1, dataHash, url, { from: accounts[1] })
+        await botProductRegistry.createBotProduct(1, botAddr1, hexIPFSHash, '0x12', '0x20', { from: accounts[1] })
         await botProductRegistry.revokeApproval(1)
         expect(
           await mockInstanceRegistry.mintingAllowedOnOwner(accounts[1], 1)

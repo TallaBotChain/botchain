@@ -19,16 +19,18 @@ contract BotEntryStorableRegistry is BotCoinPayableRegistry, ApprovableRegistry,
   * @param parentEntryId An id associated with the developer
   * @param developerOwnerAddress An address associated with the developer owner
   * @param botEntryAddress An address associated with the bot entry
-  * @param data Data associated with the bot entry
-  * @param url A url associated with this bot entry
+  * @param IpfsDigest IPFS Digest of the data associated with the new bot
+  * @param IpfsFnCode IPFS Function Code associated with the new bot
+  * @param IpfsSize IPFS Digest size associated with the new bot
   */
   event BotEntryCreated(
     uint256 botEntryId, 
     uint256 parentEntryId, 
     address developerOwnerAddress, 
     address botEntryAddress, 
-    bytes32 data, 
-    bytes32 url
+    bytes32 IpfsDigest,
+    uint8 IpfsFnCode,
+    uint8 IpfsSize
   );
 
   /** @dev Constructor for BotEntryStorableRegistry */
@@ -49,19 +51,11 @@ contract BotEntryStorableRegistry is BotCoinPayableRegistry, ApprovableRegistry,
   }
 
   /**
-  * @dev Returns data hash of bot entry
-  * @param botEntryId An id associated with the bot entry
-  */
-  function botEntryDataHash(uint256 botEntryId) public view returns (bytes32) {
-    return _storage.getBytes32(keccak256("botEntryDataHashes", botEntryId));
-  }
-
-  /**
   * @dev Returns bot entry url of botEntryId 
   * @param botEntryId An id associated with the bot entry
   */
-  function botEntryUrl(uint256 botEntryId) public view returns (bytes32) {
-    return _storage.getBytes32(keccak256("botEntryUrl", botEntryId));
+  function botEntryIpfs(uint256 botEntryId) public view returns (bytes32 digest, uint8 fnCode, uint8 size) {
+    return _storage.getIpfs(keccak256("botEntryIpfsHash", botEntryId));
   }
 
   /**
@@ -88,58 +82,60 @@ contract BotEntryStorableRegistry is BotCoinPayableRegistry, ApprovableRegistry,
   (
     address _owner,
     address _botEntryAddress,
-    bytes32 _data, 
-    bytes32 _url
+    bytes32 _digest,
+    uint8 _fnCode, 
+    uint8 _size
   ) {
     _owner = ownerOfEntry(botEntryId); 
     _botEntryAddress = botEntryAddress(botEntryId);
-    _data = botEntryDataHash(botEntryId);
-    _url = botEntryUrl(botEntryId);
+    (_digest, _fnCode, _size) = botEntryIpfs(botEntryId);
   }
 
   /**
   * @dev Creates a new bot entry.
   * @param parentEntryId ID of the developer that will own this bot entry
   * @param botEntryAddress Address of the bot
-  * @param dataHash Hash of data associated with the bot
-  * @param url A url associated with this bot entry
+  * @param IpfsDigest IPFS Digest of the data associated with the new bot
+  * @param IpfsFnCode IPFS Function Code associated with the new bot
+  * @param IpfsSize IPFS Digest size associated with the new bot
   */
   function createBotEntry(
     uint256 parentEntryId, 
     address botEntryAddress, 
-    bytes32 dataHash, 
-    bytes32 url
+    bytes32 IpfsDigest,
+    uint8 IpfsFnCode,
+    uint8 IpfsSize
   )
     public 
   {
     require(ownerRegistry().mintingAllowed(msg.sender, parentEntryId));
     require(botEntryAddress != 0x0);
-    require(dataHash != 0x0);
     require(!botEntryAddressExists(botEntryAddress));
+    require(IpfsDigest != 0x0);
+    require(IpfsFnCode != 0);
+    require(IpfsSize != 0);
 
     uint256 botEntryId = totalSupply().add(1);
 
     transferBotCoin();
 
     _mint(parentEntryId, botEntryId);
-    setBotEntryData(botEntryId, botEntryAddress, dataHash);
+    setBotEntryData(botEntryId, botEntryAddress);
     setBotEntryIdForAddress(botEntryAddress, botEntryId);
-    setBotEntryUrl(botEntryId, url);
+    setBotEntryIpfs(botEntryId, IpfsDigest, IpfsFnCode, IpfsSize);
     setApprovalStatus(botEntryId, true);
     setActiveStatus(botEntryId, true);
 
-    BotEntryCreated(botEntryId, parentEntryId, msg.sender, botEntryAddress, dataHash, url);
+    BotEntryCreated(botEntryId, parentEntryId, msg.sender, botEntryAddress, IpfsDigest, IpfsFnCode, IpfsSize);
   }
 
   /**
   * @dev Sets bot entry data
   * @param botEntryId An id associated with the bot entry
   * @param botEntryAddress An address associated with the bot entry
-  * @param botDataHash A data hash associated with the bot entry
   */
-  function setBotEntryData(uint256 botEntryId, address botEntryAddress, bytes32 botDataHash) private {
+  function setBotEntryData(uint256 botEntryId, address botEntryAddress) private {
     _storage.setAddress(keccak256("botEntryAddresses", botEntryId), botEntryAddress);
-    _storage.setBytes32(keccak256("botEntryDataHashes", botEntryId), botDataHash);
   }
 
   /**
@@ -154,10 +150,12 @@ contract BotEntryStorableRegistry is BotCoinPayableRegistry, ApprovableRegistry,
   /**
   * @dev Sets url of botEntryId 
   * @param botEntryId An id associated with the bot entry
-  * @param url An url associated with the bot entry
+  * @param digest bytes32 Multihash digest
+  * @param fnCode uint8 Multihash function code
+  * @param size uint8 URL Multihash digest size
   */
-  function setBotEntryUrl(uint256 botEntryId, bytes32 url) private {
-    _storage.setBytes32(keccak256("botEntryUrl", botEntryId), url);
+  function setBotEntryIpfs(uint256 botEntryId, bytes32 digest, uint8 fnCode, uint8 size) private {
+    _storage.setIpfs(keccak256("botEntryIpfsHash", botEntryId), digest, fnCode, size);
   }
 
   /**
