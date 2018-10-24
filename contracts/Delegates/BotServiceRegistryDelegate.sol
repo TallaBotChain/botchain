@@ -26,15 +26,17 @@ contract BotServiceRegistryDelegate is BotEntryStorableRegistry {
   * @param botServiceId A bot service ID
   * @return _owner The address that owns the bot service
   * @return _botServiceAddress The address of the bot service
-  * @return _data A hash of data associated with the bot service
-  * @return _url A URL for the bot service
+  * @return IpfsDigest IPFS Digest of the data associated with the bot
+  * @return IpfsFnCode IPFS Function Code associated with the bot
+  * @return IpfsSize IPFS Digest size associated with the bot
   */
   function getBotService(uint256 botServiceId) public view returns
   (
     address _owner,
     address _botServiceAddress,
-    bytes32 _data,
-    bytes32 _url
+    bytes32 IpfsDigest,
+    uint8 IpfsFnCode,
+    uint8 IpfsSize
   ) {
     return getBotEntry(botServiceId);
   }
@@ -43,18 +45,20 @@ contract BotServiceRegistryDelegate is BotEntryStorableRegistry {
   * @dev Creates a new bot service.
   * @param developerId ID for the developer that this bot service will belong to
   * @param botServiceAddress Address of the bot service
-  * @param dataHash Hash of data associated with the bot service
-  * @param url A URL associated with this bot service
+  * @param IpfsDigest IPFS Digest of the data associated with the new bot
+  * @param IpfsFnCode IPFS Function Code associated with the new bot
+  * @param IpfsSize IPFS Digest size associated with the new bot
   */
   function createBotService(
     uint256 developerId, 
     address botServiceAddress, 
-    bytes32 dataHash,
-    bytes32 url
+    bytes32 IpfsDigest,
+    uint8 IpfsFnCode,
+    uint8 IpfsSize
   )
     public 
   {
-    createBotEntry(developerId, botServiceAddress, dataHash, url);
+    createBotEntry(developerId, botServiceAddress, IpfsDigest, IpfsFnCode, IpfsSize);
   }
 
   /**
@@ -63,13 +67,13 @@ contract BotServiceRegistryDelegate is BotEntryStorableRegistry {
   function createBotEntry(
     uint256 developerId, 
     address botServiceAddress, 
-    bytes32 dataHash,
-    bytes32 url
+    bytes32 IpfsDigest,
+    uint8 IpfsFnCode,
+    uint8 IpfsSize
   )
     public
   {
-    require(url != 0x0);
-    super.createBotEntry(developerId, botServiceAddress, dataHash, url);
+    super.createBotEntry(developerId, botServiceAddress, IpfsDigest, IpfsFnCode, IpfsSize);
   }
 
 }

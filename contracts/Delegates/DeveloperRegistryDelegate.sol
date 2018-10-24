@@ -17,10 +17,11 @@ contract DeveloperRegistryDelegate is ApprovableRegistry, OwnerRegistry, BotCoin
   * @dev Event for when developer is added
   * @param owner address that owns the developer
   * @param developerId ID of the developer
-  * @param dataHash Hash of data associated with the developer
-  * @param url A URL associated with the developer
+  * @param IpfsDigest IPFS Digest of the data associated with the new developer
+  * @param IpfsFnCode IPFS Function Code associated with the new developer
+  * @param IpfsSize IPFS Digest size associated with the new developer
   */
-  event DeveloperAdded(address owner, uint256 developerId, bytes32 dataHash, bytes32 url);
+  event DeveloperAdded(address owner, uint256 developerId, bytes32 IpfsDigest, uint8 IpfsFnCode, uint8 IpfsSize);
 
   /**
   * @dev Constructor for DeveloperRegistryDelegate
@@ -34,21 +35,12 @@ contract DeveloperRegistryDelegate is ApprovableRegistry, OwnerRegistry, BotCoin
     {}
 
   /**
-  * @dev Returns hash of data for the given developer ID
-  * @param developerId A developer ID
-  * @return bytes32 hash of data
-  */
-  function developerDataHash(uint256 developerId) public view returns (bytes32) {
-    return _storage.getBytes32(keccak256("developerDataHash", developerId));
-  }
-
-  /**
-  * @dev Returns URL for a given developer ID 
+  * @dev Returns IPFS hash for a given developer ID 
   * @param developerId A developer ID
   * @return bytes32 URL
   */
-  function developerUrl(uint256 developerId) public view returns (bytes32) {
-    return _storage.getBytes32(keccak256("developerUrl", developerId));
+  function developerIpfs(uint256 developerId) public view returns (bytes32 digest, uint8 fnCode, uint8 size) {
+    return _storage.getIpfs(keccak256("developerIpfsHash", developerId));
   }
 
   /**
@@ -85,43 +77,38 @@ contract DeveloperRegistryDelegate is ApprovableRegistry, OwnerRegistry, BotCoin
   /**
   * @dev Adds a new developer entry which is owned by the sender address. Defaults to unapproved,
   *  but can be approved by the contract owner in a subsequent transaction.
-  * @param _data A hash of the data associated with the new developer
-  * @param _url A URL associated with the new developer
+  * @param IpfsDigest IPFS Digest of the data associated with the new developer
+  * @param IpfsFnCode IPFS Function Code associated with the new developer
+  * @param IpfsSize IPFS Digest size associated with the new developer
   */
-  function addDeveloper(bytes32 _data, bytes32 _url) public {
+  function addDeveloper(bytes32 IpfsDigest, uint8 IpfsFnCode, uint8 IpfsSize) public {
     require(owns(msg.sender) == 0);
-    require(_data != 0x0);
-    require(_url != 0x0);
+    require(IpfsDigest != 0x0);
+    require(IpfsFnCode != 0);
+    require(IpfsSize != 0);
 
     uint256 _developerId = totalSupply().add(1);
 
-    setDeveloperDataHash(_developerId, _data);
-    setDeveloperUrl(_developerId, _url);
+    setDeveloperIpfs(_developerId, IpfsDigest, IpfsFnCode, IpfsSize);
     setOwnerId(msg.sender, _developerId);
 
     transferBotCoin();
 
     _mint(msg.sender, _developerId);
 
-    DeveloperAdded(msg.sender, _developerId, _data, _url);
+    DeveloperAdded(msg.sender, _developerId, IpfsDigest, IpfsFnCode, IpfsSize);
   }
 
-  /**
-  * @dev Private function to set a data hash for a developer
-  * @param developerId A developer ID
-  * @param dataHash bytes32 hash of data associated with the given developer ID
-  */
-  function setDeveloperDataHash(uint256 developerId, bytes32 dataHash) private {
-    _storage.setBytes32(keccak256("developerDataHash", developerId), dataHash);
-  }
 
   /**
-  * @dev Private function to set a URL for a developer
+  * @dev Private function to set a IPFS Hash for a developer
   * @param developerId A developer ID
-  * @param url bytes32 URL associated with the given developer ID
+  * @param digest bytes32 Multihash digest
+  * @param fnCode uint8 Multihash function code
+  * @param size uint8 URL Multihash digest size
   */
-  function setDeveloperUrl(uint256 developerId, bytes32 url) private {
-    _storage.setBytes32(keccak256("developerUrl", developerId), url);
+  function setDeveloperIpfs(uint256 developerId, bytes32 digest, uint8 fnCode, uint8 size) private {
+    _storage.setIpfs(keccak256("developerIpfsHash", developerId), digest, fnCode, size);
   }
 
   /**

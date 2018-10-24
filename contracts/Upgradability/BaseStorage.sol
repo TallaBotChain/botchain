@@ -39,6 +39,11 @@ contract BaseStorage is KeyValueStorage {
       return _intStorage[scopedKey(key)];
   }
 
+  function getIpfs(bytes32 key) public view isAllowed returns (bytes32 digest, uint8 fnCode, uint8 size) {
+    Multihash storage entry = _multiHashStorage[scopedKey(key)];
+    return (entry.digest, entry.fnCode, entry.size);
+  }
+
   /**** Set Methods ***********/
 
   function setAddress(bytes32 key, address value) public isAllowed {
@@ -67,6 +72,11 @@ contract BaseStorage is KeyValueStorage {
 
   function setInt(bytes32 key, int value) public isAllowed {
       _intStorage[scopedKey(key)] = value;
+  }
+
+  function setIpfs(bytes32 key, bytes32 digest, uint8 fnCode, uint8 size) public isAllowed {
+    Multihash memory entry = Multihash(digest, fnCode, size);
+    _multiHashStorage[scopedKey(key)] = entry;
   }
 
   /**** Delete Methods ***********/
