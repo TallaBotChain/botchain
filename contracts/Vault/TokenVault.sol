@@ -56,14 +56,14 @@ contract TokenVault is IncentiveMap {
    *  validate developer registrations.
    * @return uint the reward rate denominated in BOTC.
    */
-  function curatorRewardRate() public returns (uint);
+  function curatorRewardRate() public view returns (uint);
 
   /**
    * @dev Gets the current emission rate rewarded to developers for successfully
    *  completing their registration.
    * @return uint the reward rate denominated in BOTC.
    */
-  function developerRewardRate() public returns (uint);
+  function developerRewardRate() public view returns (uint);
 
   /**
     * @dev 

@@ -92,6 +92,12 @@ contract('CurationCouncilRegistry', () => {
         expect(await cc.getVotedOnStatus(1, accounts[2], {from: accounts[2]})).to.equal(true)
       })
 
+      it('totalVotes should return 1', async() => {
+        await cc.castRegistrationVote(1, true, { from: accounts[2]} )
+        const voteTotalSupply = await cc.totalVotes()
+        expect(voteTotalSupply.toNumber()).to.equal(1)
+      })
+
       it('should increase yay count by stake amount', async () => {
         await cc.castRegistrationVote(1, true, { from: accounts[2]} )
         const data = await cc.getYayCount(1, {from: accounts[2]})

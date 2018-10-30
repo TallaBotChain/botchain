@@ -39,7 +39,7 @@ contract VoteRegistry is StorageConsumer {
   }
 
   function incrementTotalVotes() internal {
-    _storage.setUint(keccak256("totalMembers"), totalVotes().add(1));
+    _storage.setUint(keccak256("totalVotes"), totalVotes().add(1));
   }
 
   function getRegistrationVoteAddressById(uint256 registrationVoteId) public view returns (address) {

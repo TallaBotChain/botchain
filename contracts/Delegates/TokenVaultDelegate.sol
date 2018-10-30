@@ -93,7 +93,7 @@ contract TokenVaultDelegate is TokenVault {
    * @dev Returns the current reward rate that can be claimed by a curator for doing
    *  work.
    */
-  function curatorRewardRate() public returns (uint) {
+  function curatorRewardRate() public view returns (uint) {
     // TODO: This should be returning a value based on an asymptotic function
     // rather than an absolute value. What's the appropriate function?
     // I.E. return calculateReward(curatorRewardRate())
@@ -121,7 +121,7 @@ contract TokenVaultDelegate is TokenVault {
   /**
    * @dev Returns the current developer reward rate available for registrations.
    */
-  function developerRewardRate() public returns (uint) {
+  function developerRewardRate() public view returns (uint) {
     return _storage.getUint('developerEmissionRate');
   }
 
