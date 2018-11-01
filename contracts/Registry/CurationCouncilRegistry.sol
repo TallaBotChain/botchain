@@ -60,6 +60,14 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, VoteRegistry {
     _storage.setUint(keccak256("totalMembers"), totalMembers().add(1));
   }
 
+  function setMinStake(uint256 amount) onlyOwner public {
+    _storage.setUint(keccak256("minStakeAmount"), amount);
+  }
+
+  function getMinStake() public view returns (uint256) {
+    return _storage.getUint(keccak256("minStakeAmount"));
+  }
+
   /**
   * @dev Join council by staking BOTC 
   * @param stakeAmount amount of BOTC in wei
@@ -67,6 +75,7 @@ contract CurationCouncilRegistry is BotCoinPayableRegistry, VoteRegistry {
   function joinCouncil(uint256 stakeAmount) public {
     require(getStakeAmount(msg.sender) == 0);
     require(botCoin().transferFrom(msg.sender, this, stakeAmount));
+    require(stakeAmount >= getMinStake());
 
     uint256 memberId = totalMembers().add(1);
     _storage.setAddress(keccak256("memberAddress", memberId), msg.sender);

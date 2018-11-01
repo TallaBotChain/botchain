@@ -32,6 +32,7 @@ contract('CurationCouncilRegistry', () => {
 
   describe('joinCouncil() with valid botCoin stake amount', () => {
     beforeEach(async () => {
+      await cc.setMinStake(500, { from: accounts[0]})
       await botCoin.approve(cc.address, 500, { from: accounts[2]} )
       await cc.joinCouncil(500, { from: accounts[2] })
     })
@@ -54,6 +55,12 @@ contract('CurationCouncilRegistry', () => {
       expect(memberTotalSupply.toNumber()).to.equal(2)
       const voteTotalSupply = await cc.totalVotes()
       expect(voteTotalSupply.toNumber()).to.equal(0)
+    })
+
+    it('should revert if stake amount is less than minimum', async() => {
+      await cc.setMinStake(1000, { from: accounts[0]})
+      await botCoin.approve(cc.address, 500, { from: accounts[3]} )
+      expectRevert(cc.joinCouncil(500, {from: accounts[3]} ))
     })
   })
 
