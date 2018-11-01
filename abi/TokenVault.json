@@ -1,0 +1,1754 @@
+{
+  "contractName": "TokenVault",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "newArbiter",
+          "type": "address"
+        }
+      ],
+      "name": "changeArbiter",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getOwner",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "balance",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getArbiter",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "name": "_storage",
+          "type": "address"
+        },
+        {
+          "name": "_arbiter",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "_balance",
+          "type": "uint256"
+        }
+      ],
+      "name": "BalanceUpdate",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "previousArbiter",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "newArbiter",
+          "type": "address"
+        }
+      ],
+      "name": "ArbiterChange",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "applyCuratorReward",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "applyDeveloperReward",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "reservedBalance",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "rate",
+          "type": "uint256"
+        }
+      ],
+      "name": "setCuratorRewardRate",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "rate",
+          "type": "uint256"
+        }
+      ],
+      "name": "setDeveloperRewardRate",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "curatorRewardRate",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "developerRewardRate",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "collectCuratorReward",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "pragma solidity ^0.4.18;\n\nimport \"../Upgradability/OwnableKeyed.sol\";\nimport \"../Upgradability/ArbiterKeyed.sol\";\nimport '../Upgradability/BaseStorage.sol';\nimport './IncentiveMap.sol';\n\n/**\n* @title TokenVault\n* @dev Contract defining the external interfaces to the TokenVault.\n*/\ncontract TokenVault is IncentiveMap {\n\n  /**\n   * @dev Creates a new TokenVault.\n   * @param _storage The BaseStorage contract that stores TokenVault's internal map.\n   * @param _arbiter The address of the wallet or contract that acts as the arbiter.\n   */\n  function TokenVault(BaseStorage _storage, address _arbiter)\n    IncentiveMap(_storage,_arbiter)\n    public\n    {}\n\n  /**\n   * @dev Applies a reward to the balance of a curator address.\n   */\n  function applyCuratorReward() onlyArbiter public; \n\n  /**\n   * @dev Sends reward to the address of a successfully registered developer.\n   *  It also updates the relevent balanace information stored in the TokenVault.\n   */\n  function applyDeveloperReward() onlyArbiter public; \n\n  /**\n   * @return uint Returns the number of tokens that have been reserved for Curator rewards\n   * that have already been earned, but not collected.\n   */\n  function reservedBalance() public returns (uint); \n\n  /**\n   * @dev Sets the current emission rate rewarded to curators for performing work.\n   * @param rate the rate to set denominated in BOTC.\n   */\n  function setCuratorRewardRate(uint rate) onlyOwner public; \n\n  /**\n   * @dev Sets the current emission rate rewarded to developers for successfully\n   *  completing their registration.\n   * @param rate the rate to set denominated in BOTC.\n   */\n  function setDeveloperRewardRate(uint rate) onlyOwner public; \n\n  /**\n   * @dev Gets the current emission rate rewarded to curators for doing work to\n   *  validate developer registrations.\n   * @return uint the reward rate denominated in BOTC.\n   */\n  function curatorRewardRate() public view returns (uint);\n\n  /**\n   * @dev Gets the current emission rate rewarded to developers for successfully\n   *  completing their registration.\n   * @return uint the reward rate denominated in BOTC.\n   */\n  function developerRewardRate() public view returns (uint);\n\n  /**\n    * @dev \n    * @return uint The total balance held by the TokenVault.\n    */\n  function vaultBalance() internal returns (uint); \n\n  /**\n    * @dev Send the current balance of a curator held in the TokenVault to the transaction origin.\n    * @return uint The total balance held by the TokenVault.\n    */\n  function collectCuratorReward() public; \n}\n",
+  "sourcePath": "/home/henry/ws/botchain/contracts/Vault/TokenVault.sol",
+  "ast": {
+    "absolutePath": "/home/henry/ws/botchain/contracts/Vault/TokenVault.sol",
+    "exportedSymbols": {
+      "TokenVault": [
+        5407
+      ]
+    },
+    "id": 5408,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 5341,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".18"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:34"
+      },
+      {
+        "absolutePath": "/home/henry/ws/botchain/contracts/Upgradability/OwnableKeyed.sol",
+        "file": "../Upgradability/OwnableKeyed.sol",
+        "id": 5342,
+        "nodeType": "ImportDirective",
+        "scope": 5408,
+        "sourceUnit": 4692,
+        "src": "26:43:34",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/home/henry/ws/botchain/contracts/Upgradability/ArbiterKeyed.sol",
+        "file": "../Upgradability/ArbiterKeyed.sol",
+        "id": 5343,
+        "nodeType": "ImportDirective",
+        "scope": 5408,
+        "sourceUnit": 3340,
+        "src": "70:43:34",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/home/henry/ws/botchain/contracts/Upgradability/BaseStorage.sol",
+        "file": "../Upgradability/BaseStorage.sol",
+        "id": 5344,
+        "nodeType": "ImportDirective",
+        "scope": 5408,
+        "sourceUnit": 3807,
+        "src": "114:42:34",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/home/henry/ws/botchain/contracts/Vault/IncentiveMap.sol",
+        "file": "./IncentiveMap.sol",
+        "id": 5345,
+        "nodeType": "ImportDirective",
+        "scope": 5408,
+        "sourceUnit": 5340,
+        "src": "157:28:34",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 5346,
+              "name": "IncentiveMap",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 5339,
+              "src": "305:12:34",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_IncentiveMap_$5339",
+                "typeString": "contract IncentiveMap"
+              }
+            },
+            "id": 5347,
+            "nodeType": "InheritanceSpecifier",
+            "src": "305:12:34"
+          }
+        ],
+        "contractDependencies": [
+          3339,
+          4691,
+          5271,
+          5277,
+          5339
+        ],
+        "contractKind": "contract",
+        "documentation": "@title TokenVault\n@dev Contract defining the external interfaces to the TokenVault.",
+        "fullyImplemented": false,
+        "id": 5407,
+        "linearizedBaseContracts": [
+          5407,
+          5339,
+          3339,
+          4691,
+          5271,
+          5277
+        ],
+        "name": "TokenVault",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 5358,
+              "nodeType": "Block",
+              "src": "652:2:34",
+              "statements": []
+            },
+            "documentation": "@dev Creates a new TokenVault.\n@param _storage The BaseStorage contract that stores TokenVault's internal map.\n@param _arbiter The address of the wallet or contract that acts as the arbiter.",
+            "id": 5359,
+            "implemented": true,
+            "isConstructor": true,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": [
+                  {
+                    "argumentTypes": null,
+                    "id": 5354,
+                    "name": "_storage",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 5349,
+                    "src": "618:8:34",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                      "typeString": "contract BaseStorage"
+                    }
+                  },
+                  {
+                    "argumentTypes": null,
+                    "id": 5355,
+                    "name": "_arbiter",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 5351,
+                    "src": "627:8:34",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  }
+                ],
+                "id": 5356,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 5353,
+                  "name": "IncentiveMap",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 5339,
+                  "src": "605:12:34",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_type$_t_contract$_IncentiveMap_$5339_$",
+                    "typeString": "type(contract IncentiveMap)"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "605:31:34"
+              }
+            ],
+            "name": "TokenVault",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5352,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5349,
+                  "name": "_storage",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5359,
+                  "src": "561:20:34",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                    "typeString": "contract BaseStorage"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 5348,
+                    "name": "BaseStorage",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 3806,
+                    "src": "561:11:34",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                      "typeString": "contract BaseStorage"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5351,
+                  "name": "_arbiter",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5359,
+                  "src": "583:16:34",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 5350,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "583:7:34",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "560:40:34"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5357,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "652:0:34"
+            },
+            "scope": 5407,
+            "src": "541:113:34",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Applies a reward to the balance of a curator address.",
+            "id": 5364,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": null,
+                "id": 5362,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 5361,
+                  "name": "onlyArbiter",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 3250,
+                  "src": "764:11:34",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_modifier$__$",
+                    "typeString": "modifier ()"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "764:11:34"
+              }
+            ],
+            "name": "applyCuratorReward",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5360,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "761:2:34"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5363,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "782:0:34"
+            },
+            "scope": 5407,
+            "src": "734:49:34",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Sends reward to the address of a successfully registered developer.\n It also updates the relevent balanace information stored in the TokenVault.",
+            "id": 5369,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": null,
+                "id": 5367,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 5366,
+                  "name": "onlyArbiter",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 3250,
+                  "src": "992:11:34",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_modifier$__$",
+                    "typeString": "modifier ()"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "992:11:34"
+              }
+            ],
+            "name": "applyDeveloperReward",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5365,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "989:2:34"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5368,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1010:0:34"
+            },
+            "scope": 5407,
+            "src": "960:51:34",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": "@return uint Returns the number of tokens that have been reserved for Curator rewards\nthat have already been earned, but not collected.",
+            "id": 5374,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "reservedBalance",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5370,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1198:2:34"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5373,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5372,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5374,
+                  "src": "1217:4:34",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5371,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1217:4:34",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1216:6:34"
+            },
+            "scope": 5407,
+            "src": "1174:49:34",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Sets the current emission rate rewarded to curators for performing work.\n@param rate the rate to set denominated in BOTC.",
+            "id": 5381,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": null,
+                "id": 5379,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 5378,
+                  "name": "onlyOwner",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 4619,
+                  "src": "1418:9:34",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_modifier$__$",
+                    "typeString": "modifier ()"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "1418:9:34"
+              }
+            ],
+            "name": "setCuratorRewardRate",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5377,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5376,
+                  "name": "rate",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5381,
+                  "src": "1407:9:34",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5375,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1407:4:34",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1406:11:34"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5380,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1434:0:34"
+            },
+            "scope": 5407,
+            "src": "1377:58:34",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Sets the current emission rate rewarded to developers for successfully\n completing their registration.\n@param rate the rate to set denominated in BOTC.",
+            "id": 5388,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": null,
+                "id": 5386,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 5385,
+                  "name": "onlyOwner",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 4619,
+                  "src": "1667:9:34",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_modifier$__$",
+                    "typeString": "modifier ()"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "1667:9:34"
+              }
+            ],
+            "name": "setDeveloperRewardRate",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5384,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5383,
+                  "name": "rate",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5388,
+                  "src": "1656:9:34",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5382,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1656:4:34",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1655:11:34"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5387,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1683:0:34"
+            },
+            "scope": 5407,
+            "src": "1624:60:34",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Gets the current emission rate rewarded to curators for doing work to\n validate developer registrations.\n@return uint the reward rate denominated in BOTC.",
+            "id": 5393,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "curatorRewardRate",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5389,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1902:2:34"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5392,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5391,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5393,
+                  "src": "1926:4:34",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5390,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1926:4:34",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1925:6:34"
+            },
+            "scope": 5407,
+            "src": "1876:56:34",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Gets the current emission rate rewarded to developers for successfully\n completing their registration.\n@return uint the reward rate denominated in BOTC.",
+            "id": 5398,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "developerRewardRate",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5394,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2149:2:34"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5397,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5396,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5398,
+                  "src": "2173:4:34",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5395,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2173:4:34",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2172:6:34"
+            },
+            "scope": 5407,
+            "src": "2121:58:34",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": "@dev \n@return uint The total balance held by the TokenVault.",
+            "id": 5403,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "vaultBalance",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5399,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2290:2:34"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5402,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5401,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5403,
+                  "src": "2311:4:34",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5400,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2311:4:34",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2310:6:34"
+            },
+            "scope": 5407,
+            "src": "2269:48:34",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "internal"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Send the current balance of a curator held in the TokenVault to the transaction origin.\n@return uint The total balance held by the TokenVault.",
+            "id": 5406,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "collectCuratorReward",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5404,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2524:2:34"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5405,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2533:0:34"
+            },
+            "scope": 5407,
+            "src": "2495:39:34",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 5408,
+        "src": "282:2255:34"
+      }
+    ],
+    "src": "0:2538:34"
+  },
+  "legacyAST": {
+    "absolutePath": "/home/henry/ws/botchain/contracts/Vault/TokenVault.sol",
+    "exportedSymbols": {
+      "TokenVault": [
+        5407
+      ]
+    },
+    "id": 5408,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 5341,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".18"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:34"
+      },
+      {
+        "absolutePath": "/home/henry/ws/botchain/contracts/Upgradability/OwnableKeyed.sol",
+        "file": "../Upgradability/OwnableKeyed.sol",
+        "id": 5342,
+        "nodeType": "ImportDirective",
+        "scope": 5408,
+        "sourceUnit": 4692,
+        "src": "26:43:34",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/home/henry/ws/botchain/contracts/Upgradability/ArbiterKeyed.sol",
+        "file": "../Upgradability/ArbiterKeyed.sol",
+        "id": 5343,
+        "nodeType": "ImportDirective",
+        "scope": 5408,
+        "sourceUnit": 3340,
+        "src": "70:43:34",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/home/henry/ws/botchain/contracts/Upgradability/BaseStorage.sol",
+        "file": "../Upgradability/BaseStorage.sol",
+        "id": 5344,
+        "nodeType": "ImportDirective",
+        "scope": 5408,
+        "sourceUnit": 3807,
+        "src": "114:42:34",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/home/henry/ws/botchain/contracts/Vault/IncentiveMap.sol",
+        "file": "./IncentiveMap.sol",
+        "id": 5345,
+        "nodeType": "ImportDirective",
+        "scope": 5408,
+        "sourceUnit": 5340,
+        "src": "157:28:34",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 5346,
+              "name": "IncentiveMap",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 5339,
+              "src": "305:12:34",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_IncentiveMap_$5339",
+                "typeString": "contract IncentiveMap"
+              }
+            },
+            "id": 5347,
+            "nodeType": "InheritanceSpecifier",
+            "src": "305:12:34"
+          }
+        ],
+        "contractDependencies": [
+          3339,
+          4691,
+          5271,
+          5277,
+          5339
+        ],
+        "contractKind": "contract",
+        "documentation": "@title TokenVault\n@dev Contract defining the external interfaces to the TokenVault.",
+        "fullyImplemented": false,
+        "id": 5407,
+        "linearizedBaseContracts": [
+          5407,
+          5339,
+          3339,
+          4691,
+          5271,
+          5277
+        ],
+        "name": "TokenVault",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 5358,
+              "nodeType": "Block",
+              "src": "652:2:34",
+              "statements": []
+            },
+            "documentation": "@dev Creates a new TokenVault.\n@param _storage The BaseStorage contract that stores TokenVault's internal map.\n@param _arbiter The address of the wallet or contract that acts as the arbiter.",
+            "id": 5359,
+            "implemented": true,
+            "isConstructor": true,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": [
+                  {
+                    "argumentTypes": null,
+                    "id": 5354,
+                    "name": "_storage",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 5349,
+                    "src": "618:8:34",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                      "typeString": "contract BaseStorage"
+                    }
+                  },
+                  {
+                    "argumentTypes": null,
+                    "id": 5355,
+                    "name": "_arbiter",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 5351,
+                    "src": "627:8:34",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  }
+                ],
+                "id": 5356,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 5353,
+                  "name": "IncentiveMap",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 5339,
+                  "src": "605:12:34",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_type$_t_contract$_IncentiveMap_$5339_$",
+                    "typeString": "type(contract IncentiveMap)"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "605:31:34"
+              }
+            ],
+            "name": "TokenVault",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5352,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5349,
+                  "name": "_storage",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5359,
+                  "src": "561:20:34",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                    "typeString": "contract BaseStorage"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 5348,
+                    "name": "BaseStorage",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 3806,
+                    "src": "561:11:34",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                      "typeString": "contract BaseStorage"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5351,
+                  "name": "_arbiter",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5359,
+                  "src": "583:16:34",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 5350,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "583:7:34",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "560:40:34"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5357,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "652:0:34"
+            },
+            "scope": 5407,
+            "src": "541:113:34",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Applies a reward to the balance of a curator address.",
+            "id": 5364,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": null,
+                "id": 5362,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 5361,
+                  "name": "onlyArbiter",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 3250,
+                  "src": "764:11:34",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_modifier$__$",
+                    "typeString": "modifier ()"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "764:11:34"
+              }
+            ],
+            "name": "applyCuratorReward",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5360,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "761:2:34"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5363,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "782:0:34"
+            },
+            "scope": 5407,
+            "src": "734:49:34",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Sends reward to the address of a successfully registered developer.\n It also updates the relevent balanace information stored in the TokenVault.",
+            "id": 5369,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": null,
+                "id": 5367,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 5366,
+                  "name": "onlyArbiter",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 3250,
+                  "src": "992:11:34",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_modifier$__$",
+                    "typeString": "modifier ()"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "992:11:34"
+              }
+            ],
+            "name": "applyDeveloperReward",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5365,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "989:2:34"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5368,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1010:0:34"
+            },
+            "scope": 5407,
+            "src": "960:51:34",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": "@return uint Returns the number of tokens that have been reserved for Curator rewards\nthat have already been earned, but not collected.",
+            "id": 5374,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "reservedBalance",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5370,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1198:2:34"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5373,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5372,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5374,
+                  "src": "1217:4:34",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5371,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1217:4:34",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1216:6:34"
+            },
+            "scope": 5407,
+            "src": "1174:49:34",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Sets the current emission rate rewarded to curators for performing work.\n@param rate the rate to set denominated in BOTC.",
+            "id": 5381,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": null,
+                "id": 5379,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 5378,
+                  "name": "onlyOwner",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 4619,
+                  "src": "1418:9:34",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_modifier$__$",
+                    "typeString": "modifier ()"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "1418:9:34"
+              }
+            ],
+            "name": "setCuratorRewardRate",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5377,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5376,
+                  "name": "rate",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5381,
+                  "src": "1407:9:34",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5375,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1407:4:34",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1406:11:34"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5380,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1434:0:34"
+            },
+            "scope": 5407,
+            "src": "1377:58:34",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Sets the current emission rate rewarded to developers for successfully\n completing their registration.\n@param rate the rate to set denominated in BOTC.",
+            "id": 5388,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": null,
+                "id": 5386,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 5385,
+                  "name": "onlyOwner",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 4619,
+                  "src": "1667:9:34",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_modifier$__$",
+                    "typeString": "modifier ()"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "1667:9:34"
+              }
+            ],
+            "name": "setDeveloperRewardRate",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5384,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5383,
+                  "name": "rate",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5388,
+                  "src": "1656:9:34",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5382,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1656:4:34",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1655:11:34"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5387,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1683:0:34"
+            },
+            "scope": 5407,
+            "src": "1624:60:34",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Gets the current emission rate rewarded to curators for doing work to\n validate developer registrations.\n@return uint the reward rate denominated in BOTC.",
+            "id": 5393,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "curatorRewardRate",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5389,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1902:2:34"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5392,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5391,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5393,
+                  "src": "1926:4:34",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5390,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1926:4:34",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1925:6:34"
+            },
+            "scope": 5407,
+            "src": "1876:56:34",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Gets the current emission rate rewarded to developers for successfully\n completing their registration.\n@return uint the reward rate denominated in BOTC.",
+            "id": 5398,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "developerRewardRate",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5394,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2149:2:34"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5397,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5396,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5398,
+                  "src": "2173:4:34",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5395,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2173:4:34",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2172:6:34"
+            },
+            "scope": 5407,
+            "src": "2121:58:34",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": "@dev \n@return uint The total balance held by the TokenVault.",
+            "id": 5403,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "vaultBalance",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5399,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2290:2:34"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5402,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5401,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5403,
+                  "src": "2311:4:34",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 5400,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2311:4:34",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2310:6:34"
+            },
+            "scope": 5407,
+            "src": "2269:48:34",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "internal"
+          },
+          {
+            "body": null,
+            "documentation": "@dev Send the current balance of a curator held in the TokenVault to the transaction origin.\n@return uint The total balance held by the TokenVault.",
+            "id": 5406,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "collectCuratorReward",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5404,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2524:2:34"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5405,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "2533:0:34"
+            },
+            "scope": 5407,
+            "src": "2495:39:34",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 5408,
+        "src": "282:2255:34"
+      }
+    ],
+    "src": "0:2538:34"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.24+commit.e67f0147.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "2.0.1",
+  "updatedAt": "2018-11-01T15:08:00.556Z"
+}

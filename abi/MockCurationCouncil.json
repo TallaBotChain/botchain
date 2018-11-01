@@ -1,0 +1,1752 @@
+{
+  "contractName": "MockCurationCouncil",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "name": "storage_",
+          "type": "address"
+        },
+        {
+          "name": "botcoin",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "tokenVault",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "vote",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "addr",
+          "type": "address"
+        }
+      ],
+      "name": "changeTokenVault",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b50604051604080610561833981018060405281019080805190602001909291908051906020019092919050505081806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550506000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663ca446dd9826040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f626f74636f696e436f6e747261637400000000000000000000000000000000008152506020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050600060405180830381600087803b15801561016357600080fd5b505af1158015610177573d6000803e3d6000fd5b5050505050506103d58061018c6000396000f300608060405260043610610057576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680635bc789d91461005c578063632a9a52146100b3578063dce53844146100ca575b600080fd5b34801561006857600080fd5b5061007161010d565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156100bf57600080fd5b506100c86101ff565b005b3480156100d657600080fd5b5061010b600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610284565b005b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166321f8a7216040518163ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f746f6b656e5661756c74436f6e747261637400000000000000000000000000008152506020019050602060405180830381600087803b1580156101bf57600080fd5b505af11580156101d3573d6000803e3d6000fd5b505050506040513d60208110156101e957600080fd5b8101908080519060200190929190505050905090565b61020761010d565b73ffffffffffffffffffffffffffffffffffffffff1663538ed7286040518163ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401600060405180830381600087803b15801561026a57600080fd5b505af115801561027e573d6000803e3d6000fd5b50505050565b60008173ffffffffffffffffffffffffffffffffffffffff16141515156102aa57600080fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663ca446dd9826040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f746f6b656e5661756c74436f6e747261637400000000000000000000000000008152506020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050600060405180830381600087803b15801561038e57600080fd5b505af11580156103a2573d6000803e3d6000fd5b50505050505600a165627a7a7230582057aa54cdd2cb28f5cf1fe0ecd7d559e9a200fbcaad86875bdfc36597d79eed3a0029",
+  "deployedBytecode": "0x608060405260043610610057576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680635bc789d91461005c578063632a9a52146100b3578063dce53844146100ca575b600080fd5b34801561006857600080fd5b5061007161010d565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156100bf57600080fd5b506100c86101ff565b005b3480156100d657600080fd5b5061010b600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610284565b005b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166321f8a7216040518163ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f746f6b656e5661756c74436f6e747261637400000000000000000000000000008152506020019050602060405180830381600087803b1580156101bf57600080fd5b505af11580156101d3573d6000803e3d6000fd5b505050506040513d60208110156101e957600080fd5b8101908080519060200190929190505050905090565b61020761010d565b73ffffffffffffffffffffffffffffffffffffffff1663538ed7286040518163ffffffff167c0100000000000000000000000000000000000000000000000000000000028152600401600060405180830381600087803b15801561026a57600080fd5b505af115801561027e573d6000803e3d6000fd5b50505050565b60008173ffffffffffffffffffffffffffffffffffffffff16141515156102aa57600080fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663ca446dd9826040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f746f6b656e5661756c74436f6e747261637400000000000000000000000000008152506020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050600060405180830381600087803b15801561038e57600080fd5b505af11580156103a2573d6000803e3d6000fd5b50505050505600a165627a7a7230582057aa54cdd2cb28f5cf1fe0ecd7d559e9a200fbcaad86875bdfc36597d79eed3a0029",
+  "sourceMap": "153:560:35:-;;;206:172;8:9:-1;5:2;;;30:1;27;20:12;5:2;206:172:35;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;296:8;206::31;195;;:19;;;;;;;;;;;;;;;;;;135:84;326:8:35;;;;;;;;;;;:19;;;365:7;326:47;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;326:47:35;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;326:47:35;;;;206:172;;153:560;;;;;;",
+  "deployedSourceMap": "153:560:35:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;384:121;;8:9:-1;5:2;;;30:1;27;20:12;5:2;384:121:35;;;;;;;;;;;;;;;;;;;;;;;;;;;509:67;;8:9:-1;5:2;;;30:1;27;20:12;5:2;509:67:35;;;;;;580:131;;8:9:-1;5:2;;;30:1;27;20:12;5:2;580:131:35;;;;;;;;;;;;;;;;;;;;;;;;;;;;384:121;422:10;458:8;;;;;;;;;;;:19;;;:41;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;458:41:35;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;458:41:35;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;458:41:35;;;;;;;;;;;;;;;;440:60;;384:121;:::o;509:67::-;538:12;:10;:12::i;:::-;:31;;;:33;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;538:33:35;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;538:33:35;;;;509:67::o;580:131::-;649:3;641:4;:11;;;;633:20;;;;;;;;659:8;;;;;;;;;;;:19;;;701:4;659:47;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;659:47:35;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;659:47:35;;;;580:131;:::o",
+  "source": "pragma solidity ^0.4.18;\n\nimport \"../Upgradability/PublicStorage.sol\";\nimport '../Upgradability/StorageConsumer.sol';\nimport '../Vault/TokenVault.sol';\n\ncontract MockCurationCouncil is StorageConsumer {\n\n  function MockCurationCouncil(PublicStorage storage_, address botcoin)\n    StorageConsumer(storage_)\n    public\n  { \n    _storage.setAddress('botcoinContract', botcoin);\n  }\n  \n  function tokenVault() public returns (TokenVault) {\n    return TokenVault(_storage.getAddress('tokenVaultContract'));\n  }\n\n  function vote() public {\n    tokenVault().applyCuratorReward();\n  }\n\n  function changeTokenVault(address addr) public {\n    require(addr != 0x0);\n    _storage.setAddress('tokenVaultContract', addr);\n  }\n}\n",
+  "sourcePath": "/home/henry/ws/botchain/contracts/mocks/MockCurationCouncil.sol",
+  "ast": {
+    "absolutePath": "/home/henry/ws/botchain/contracts/mocks/MockCurationCouncil.sol",
+    "exportedSymbols": {
+      "MockCurationCouncil": [
+        5474
+      ]
+    },
+    "id": 5475,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 5409,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".18"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:35"
+      },
+      {
+        "absolutePath": "/home/henry/ws/botchain/contracts/Upgradability/PublicStorage.sol",
+        "file": "../Upgradability/PublicStorage.sol",
+        "id": 5410,
+        "nodeType": "ImportDirective",
+        "scope": 5475,
+        "sourceUnit": 5255,
+        "src": "26:44:35",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/home/henry/ws/botchain/contracts/Upgradability/StorageConsumer.sol",
+        "file": "../Upgradability/StorageConsumer.sol",
+        "id": 5411,
+        "nodeType": "ImportDirective",
+        "scope": 5475,
+        "sourceUnit": 5272,
+        "src": "71:46:35",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/home/henry/ws/botchain/contracts/Vault/TokenVault.sol",
+        "file": "../Vault/TokenVault.sol",
+        "id": 5412,
+        "nodeType": "ImportDirective",
+        "scope": 5475,
+        "sourceUnit": 5408,
+        "src": "118:33:35",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 5413,
+              "name": "StorageConsumer",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 5271,
+              "src": "185:15:35",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_StorageConsumer_$5271",
+                "typeString": "contract StorageConsumer"
+              }
+            },
+            "id": 5414,
+            "nodeType": "InheritanceSpecifier",
+            "src": "185:15:35"
+          }
+        ],
+        "contractDependencies": [
+          5271,
+          5277
+        ],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 5474,
+        "linearizedBaseContracts": [
+          5474,
+          5271,
+          5277
+        ],
+        "name": "MockCurationCouncil",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 5431,
+              "nodeType": "Block",
+              "src": "319:59:35",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "626f74636f696e436f6e7472616374",
+                        "id": 5427,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "346:17:35",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_1b1fa37f658c34be18244b3427eef94fe0b13284cbecc8ceb8e66add055342ee",
+                          "typeString": "literal_string \"botcoinContract\""
+                        },
+                        "value": "botcoinContract"
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 5428,
+                        "name": "botcoin",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 5418,
+                        "src": "365:7:35",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_stringliteral_1b1fa37f658c34be18244b3427eef94fe0b13284cbecc8ceb8e66add055342ee",
+                          "typeString": "literal_string \"botcoinContract\""
+                        },
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 5424,
+                        "name": "_storage",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 5276,
+                        "src": "326:8:35",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                          "typeString": "contract BaseStorage"
+                        }
+                      },
+                      "id": 5426,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "setAddress",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 3544,
+                      "src": "326:19:35",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$_t_bytes32_$_t_address_$returns$__$",
+                        "typeString": "function (bytes32,address) external"
+                      }
+                    },
+                    "id": 5429,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "326:47:35",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 5430,
+                  "nodeType": "ExpressionStatement",
+                  "src": "326:47:35"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 5432,
+            "implemented": true,
+            "isConstructor": true,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": [
+                  {
+                    "argumentTypes": null,
+                    "id": 5421,
+                    "name": "storage_",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 5416,
+                    "src": "296:8:35",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_PublicStorage_$5254",
+                      "typeString": "contract PublicStorage"
+                    }
+                  }
+                ],
+                "id": 5422,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 5420,
+                  "name": "StorageConsumer",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 5271,
+                  "src": "280:15:35",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_type$_t_contract$_StorageConsumer_$5271_$",
+                    "typeString": "type(contract StorageConsumer)"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "280:25:35"
+              }
+            ],
+            "name": "MockCurationCouncil",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5419,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5416,
+                  "name": "storage_",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5432,
+                  "src": "235:22:35",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_PublicStorage_$5254",
+                    "typeString": "contract PublicStorage"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 5415,
+                    "name": "PublicStorage",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 5254,
+                    "src": "235:13:35",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_PublicStorage_$5254",
+                      "typeString": "contract PublicStorage"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5418,
+                  "name": "botcoin",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5432,
+                  "src": "259:15:35",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 5417,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "259:7:35",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "234:41:35"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5423,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "319:0:35"
+            },
+            "scope": 5474,
+            "src": "206:172:35",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 5444,
+              "nodeType": "Block",
+              "src": "434:71:35",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "hexValue": "746f6b656e5661756c74436f6e7472616374",
+                            "id": 5440,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "string",
+                            "lValueRequested": false,
+                            "nodeType": "Literal",
+                            "src": "478:20:35",
+                            "subdenomination": null,
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_stringliteral_eddbfc3217d2ed4ec99f05f34cb7a7200b4cc3293d4c5c15937138523a79f566",
+                              "typeString": "literal_string \"tokenVaultContract\""
+                            },
+                            "value": "tokenVaultContract"
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_stringliteral_eddbfc3217d2ed4ec99f05f34cb7a7200b4cc3293d4c5c15937138523a79f566",
+                              "typeString": "literal_string \"tokenVaultContract\""
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 5438,
+                            "name": "_storage",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 5276,
+                            "src": "458:8:35",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                              "typeString": "contract BaseStorage"
+                            }
+                          },
+                          "id": 5439,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "getAddress",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": 3400,
+                          "src": "458:19:35",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_function_external_view$_t_bytes32_$returns$_t_address_$",
+                            "typeString": "function (bytes32) view external returns (address)"
+                          }
+                        },
+                        "id": 5441,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "functionCall",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "458:41:35",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      ],
+                      "id": 5437,
+                      "name": "TokenVault",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 5407,
+                      "src": "447:10:35",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_type$_t_contract$_TokenVault_$5407_$",
+                        "typeString": "type(contract TokenVault)"
+                      }
+                    },
+                    "id": 5442,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "typeConversion",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "447:53:35",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_TokenVault_$5407",
+                      "typeString": "contract TokenVault"
+                    }
+                  },
+                  "functionReturnParameters": 5436,
+                  "id": 5443,
+                  "nodeType": "Return",
+                  "src": "440:60:35"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 5445,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "tokenVault",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5433,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "403:2:35"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5436,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5435,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5445,
+                  "src": "422:10:35",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_TokenVault_$5407",
+                    "typeString": "contract TokenVault"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 5434,
+                    "name": "TokenVault",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 5407,
+                    "src": "422:10:35",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_TokenVault_$5407",
+                      "typeString": "contract TokenVault"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "421:12:35"
+            },
+            "scope": 5474,
+            "src": "384:121:35",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 5453,
+              "nodeType": "Block",
+              "src": "532:44:35",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [],
+                    "expression": {
+                      "argumentTypes": [],
+                      "expression": {
+                        "argumentTypes": null,
+                        "arguments": [],
+                        "expression": {
+                          "argumentTypes": [],
+                          "id": 5448,
+                          "name": "tokenVault",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 5445,
+                          "src": "538:10:35",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_function_internal_nonpayable$__$returns$_t_contract$_TokenVault_$5407_$",
+                            "typeString": "function () returns (contract TokenVault)"
+                          }
+                        },
+                        "id": 5449,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "functionCall",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "538:12:35",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_TokenVault_$5407",
+                          "typeString": "contract TokenVault"
+                        }
+                      },
+                      "id": 5450,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "applyCuratorReward",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 5364,
+                      "src": "538:31:35",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$__$returns$__$",
+                        "typeString": "function () external"
+                      }
+                    },
+                    "id": 5451,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "538:33:35",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 5452,
+                  "nodeType": "ExpressionStatement",
+                  "src": "538:33:35"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 5454,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "vote",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5446,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "522:2:35"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5447,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "532:0:35"
+            },
+            "scope": 5474,
+            "src": "509:67:35",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 5472,
+              "nodeType": "Block",
+              "src": "627:84:35",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        "id": 5462,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "id": 5460,
+                          "name": "addr",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 5456,
+                          "src": "641:4:35",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "!=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "hexValue": "307830",
+                          "id": 5461,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "number",
+                          "lValueRequested": false,
+                          "nodeType": "Literal",
+                          "src": "649:3:35",
+                          "subdenomination": null,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_rational_0_by_1",
+                            "typeString": "int_const 0"
+                          },
+                          "value": "0x0"
+                        },
+                        "src": "641:11:35",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      ],
+                      "id": 5459,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        6143,
+                        6144
+                      ],
+                      "referencedDeclaration": 6143,
+                      "src": "633:7:35",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                        "typeString": "function (bool) pure"
+                      }
+                    },
+                    "id": 5463,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "633:20:35",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 5464,
+                  "nodeType": "ExpressionStatement",
+                  "src": "633:20:35"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "746f6b656e5661756c74436f6e7472616374",
+                        "id": 5468,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "679:20:35",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_eddbfc3217d2ed4ec99f05f34cb7a7200b4cc3293d4c5c15937138523a79f566",
+                          "typeString": "literal_string \"tokenVaultContract\""
+                        },
+                        "value": "tokenVaultContract"
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 5469,
+                        "name": "addr",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 5456,
+                        "src": "701:4:35",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_stringliteral_eddbfc3217d2ed4ec99f05f34cb7a7200b4cc3293d4c5c15937138523a79f566",
+                          "typeString": "literal_string \"tokenVaultContract\""
+                        },
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 5465,
+                        "name": "_storage",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 5276,
+                        "src": "659:8:35",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                          "typeString": "contract BaseStorage"
+                        }
+                      },
+                      "id": 5467,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "setAddress",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 3544,
+                      "src": "659:19:35",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$_t_bytes32_$_t_address_$returns$__$",
+                        "typeString": "function (bytes32,address) external"
+                      }
+                    },
+                    "id": 5470,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "659:47:35",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 5471,
+                  "nodeType": "ExpressionStatement",
+                  "src": "659:47:35"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 5473,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "changeTokenVault",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5457,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5456,
+                  "name": "addr",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5473,
+                  "src": "606:12:35",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 5455,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "606:7:35",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "605:14:35"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5458,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "627:0:35"
+            },
+            "scope": 5474,
+            "src": "580:131:35",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 5475,
+        "src": "153:560:35"
+      }
+    ],
+    "src": "0:714:35"
+  },
+  "legacyAST": {
+    "absolutePath": "/home/henry/ws/botchain/contracts/mocks/MockCurationCouncil.sol",
+    "exportedSymbols": {
+      "MockCurationCouncil": [
+        5474
+      ]
+    },
+    "id": 5475,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 5409,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".18"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:35"
+      },
+      {
+        "absolutePath": "/home/henry/ws/botchain/contracts/Upgradability/PublicStorage.sol",
+        "file": "../Upgradability/PublicStorage.sol",
+        "id": 5410,
+        "nodeType": "ImportDirective",
+        "scope": 5475,
+        "sourceUnit": 5255,
+        "src": "26:44:35",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/home/henry/ws/botchain/contracts/Upgradability/StorageConsumer.sol",
+        "file": "../Upgradability/StorageConsumer.sol",
+        "id": 5411,
+        "nodeType": "ImportDirective",
+        "scope": 5475,
+        "sourceUnit": 5272,
+        "src": "71:46:35",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/home/henry/ws/botchain/contracts/Vault/TokenVault.sol",
+        "file": "../Vault/TokenVault.sol",
+        "id": 5412,
+        "nodeType": "ImportDirective",
+        "scope": 5475,
+        "sourceUnit": 5408,
+        "src": "118:33:35",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 5413,
+              "name": "StorageConsumer",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 5271,
+              "src": "185:15:35",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_StorageConsumer_$5271",
+                "typeString": "contract StorageConsumer"
+              }
+            },
+            "id": 5414,
+            "nodeType": "InheritanceSpecifier",
+            "src": "185:15:35"
+          }
+        ],
+        "contractDependencies": [
+          5271,
+          5277
+        ],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 5474,
+        "linearizedBaseContracts": [
+          5474,
+          5271,
+          5277
+        ],
+        "name": "MockCurationCouncil",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 5431,
+              "nodeType": "Block",
+              "src": "319:59:35",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "626f74636f696e436f6e7472616374",
+                        "id": 5427,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "346:17:35",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_1b1fa37f658c34be18244b3427eef94fe0b13284cbecc8ceb8e66add055342ee",
+                          "typeString": "literal_string \"botcoinContract\""
+                        },
+                        "value": "botcoinContract"
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 5428,
+                        "name": "botcoin",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 5418,
+                        "src": "365:7:35",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_stringliteral_1b1fa37f658c34be18244b3427eef94fe0b13284cbecc8ceb8e66add055342ee",
+                          "typeString": "literal_string \"botcoinContract\""
+                        },
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 5424,
+                        "name": "_storage",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 5276,
+                        "src": "326:8:35",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                          "typeString": "contract BaseStorage"
+                        }
+                      },
+                      "id": 5426,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "setAddress",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 3544,
+                      "src": "326:19:35",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$_t_bytes32_$_t_address_$returns$__$",
+                        "typeString": "function (bytes32,address) external"
+                      }
+                    },
+                    "id": 5429,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "326:47:35",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 5430,
+                  "nodeType": "ExpressionStatement",
+                  "src": "326:47:35"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 5432,
+            "implemented": true,
+            "isConstructor": true,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": [
+                  {
+                    "argumentTypes": null,
+                    "id": 5421,
+                    "name": "storage_",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 5416,
+                    "src": "296:8:35",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_PublicStorage_$5254",
+                      "typeString": "contract PublicStorage"
+                    }
+                  }
+                ],
+                "id": 5422,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 5420,
+                  "name": "StorageConsumer",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 5271,
+                  "src": "280:15:35",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_type$_t_contract$_StorageConsumer_$5271_$",
+                    "typeString": "type(contract StorageConsumer)"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "280:25:35"
+              }
+            ],
+            "name": "MockCurationCouncil",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5419,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5416,
+                  "name": "storage_",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5432,
+                  "src": "235:22:35",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_PublicStorage_$5254",
+                    "typeString": "contract PublicStorage"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 5415,
+                    "name": "PublicStorage",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 5254,
+                    "src": "235:13:35",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_PublicStorage_$5254",
+                      "typeString": "contract PublicStorage"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 5418,
+                  "name": "botcoin",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5432,
+                  "src": "259:15:35",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 5417,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "259:7:35",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "234:41:35"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5423,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "319:0:35"
+            },
+            "scope": 5474,
+            "src": "206:172:35",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 5444,
+              "nodeType": "Block",
+              "src": "434:71:35",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "hexValue": "746f6b656e5661756c74436f6e7472616374",
+                            "id": 5440,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "string",
+                            "lValueRequested": false,
+                            "nodeType": "Literal",
+                            "src": "478:20:35",
+                            "subdenomination": null,
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_stringliteral_eddbfc3217d2ed4ec99f05f34cb7a7200b4cc3293d4c5c15937138523a79f566",
+                              "typeString": "literal_string \"tokenVaultContract\""
+                            },
+                            "value": "tokenVaultContract"
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_stringliteral_eddbfc3217d2ed4ec99f05f34cb7a7200b4cc3293d4c5c15937138523a79f566",
+                              "typeString": "literal_string \"tokenVaultContract\""
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 5438,
+                            "name": "_storage",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 5276,
+                            "src": "458:8:35",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                              "typeString": "contract BaseStorage"
+                            }
+                          },
+                          "id": 5439,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "getAddress",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": 3400,
+                          "src": "458:19:35",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_function_external_view$_t_bytes32_$returns$_t_address_$",
+                            "typeString": "function (bytes32) view external returns (address)"
+                          }
+                        },
+                        "id": 5441,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "functionCall",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "458:41:35",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      ],
+                      "id": 5437,
+                      "name": "TokenVault",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 5407,
+                      "src": "447:10:35",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_type$_t_contract$_TokenVault_$5407_$",
+                        "typeString": "type(contract TokenVault)"
+                      }
+                    },
+                    "id": 5442,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "typeConversion",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "447:53:35",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_TokenVault_$5407",
+                      "typeString": "contract TokenVault"
+                    }
+                  },
+                  "functionReturnParameters": 5436,
+                  "id": 5443,
+                  "nodeType": "Return",
+                  "src": "440:60:35"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 5445,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "tokenVault",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5433,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "403:2:35"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5436,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5435,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5445,
+                  "src": "422:10:35",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_TokenVault_$5407",
+                    "typeString": "contract TokenVault"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 5434,
+                    "name": "TokenVault",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 5407,
+                    "src": "422:10:35",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_TokenVault_$5407",
+                      "typeString": "contract TokenVault"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "421:12:35"
+            },
+            "scope": 5474,
+            "src": "384:121:35",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 5453,
+              "nodeType": "Block",
+              "src": "532:44:35",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [],
+                    "expression": {
+                      "argumentTypes": [],
+                      "expression": {
+                        "argumentTypes": null,
+                        "arguments": [],
+                        "expression": {
+                          "argumentTypes": [],
+                          "id": 5448,
+                          "name": "tokenVault",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 5445,
+                          "src": "538:10:35",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_function_internal_nonpayable$__$returns$_t_contract$_TokenVault_$5407_$",
+                            "typeString": "function () returns (contract TokenVault)"
+                          }
+                        },
+                        "id": 5449,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "functionCall",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "538:12:35",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_TokenVault_$5407",
+                          "typeString": "contract TokenVault"
+                        }
+                      },
+                      "id": 5450,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "applyCuratorReward",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 5364,
+                      "src": "538:31:35",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$__$returns$__$",
+                        "typeString": "function () external"
+                      }
+                    },
+                    "id": 5451,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "538:33:35",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 5452,
+                  "nodeType": "ExpressionStatement",
+                  "src": "538:33:35"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 5454,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "vote",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5446,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "522:2:35"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5447,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "532:0:35"
+            },
+            "scope": 5474,
+            "src": "509:67:35",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 5472,
+              "nodeType": "Block",
+              "src": "627:84:35",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        "id": 5462,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "id": 5460,
+                          "name": "addr",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 5456,
+                          "src": "641:4:35",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "!=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "hexValue": "307830",
+                          "id": 5461,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "number",
+                          "lValueRequested": false,
+                          "nodeType": "Literal",
+                          "src": "649:3:35",
+                          "subdenomination": null,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_rational_0_by_1",
+                            "typeString": "int_const 0"
+                          },
+                          "value": "0x0"
+                        },
+                        "src": "641:11:35",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      ],
+                      "id": 5459,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        6143,
+                        6144
+                      ],
+                      "referencedDeclaration": 6143,
+                      "src": "633:7:35",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                        "typeString": "function (bool) pure"
+                      }
+                    },
+                    "id": 5463,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "633:20:35",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 5464,
+                  "nodeType": "ExpressionStatement",
+                  "src": "633:20:35"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "746f6b656e5661756c74436f6e7472616374",
+                        "id": 5468,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "679:20:35",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_eddbfc3217d2ed4ec99f05f34cb7a7200b4cc3293d4c5c15937138523a79f566",
+                          "typeString": "literal_string \"tokenVaultContract\""
+                        },
+                        "value": "tokenVaultContract"
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 5469,
+                        "name": "addr",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 5456,
+                        "src": "701:4:35",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_stringliteral_eddbfc3217d2ed4ec99f05f34cb7a7200b4cc3293d4c5c15937138523a79f566",
+                          "typeString": "literal_string \"tokenVaultContract\""
+                        },
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 5465,
+                        "name": "_storage",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 5276,
+                        "src": "659:8:35",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                          "typeString": "contract BaseStorage"
+                        }
+                      },
+                      "id": 5467,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "setAddress",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 3544,
+                      "src": "659:19:35",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$_t_bytes32_$_t_address_$returns$__$",
+                        "typeString": "function (bytes32,address) external"
+                      }
+                    },
+                    "id": 5470,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "659:47:35",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 5471,
+                  "nodeType": "ExpressionStatement",
+                  "src": "659:47:35"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 5473,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "changeTokenVault",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5457,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5456,
+                  "name": "addr",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5473,
+                  "src": "606:12:35",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 5455,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "606:7:35",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "605:14:35"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5458,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "627:0:35"
+            },
+            "scope": 5474,
+            "src": "580:131:35",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 5475,
+        "src": "153:560:35"
+      }
+    ],
+    "src": "0:714:35"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.24+commit.e67f0147.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "2.0.1",
+  "updatedAt": "2018-11-01T15:08:00.556Z"
+}

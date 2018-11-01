@@ -1,0 +1,419 @@
+{
+  "contractName": "StorageConsumer",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "name": "storage_",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    }
+  ],
+  "bytecode": "0x6080604052348015600f57600080fd5b5060405160208060b483398101806040528101908080519060200190929190505050806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050603580607f6000396000f3006080604052600080fd00a165627a7a72305820d95641b38c6319379c43537a5bc7b14aeafc55b505fdcee6ef29d8e441d4ec530029",
+  "deployedBytecode": "0x6080604052600080fd00a165627a7a72305820d95641b38c6319379c43537a5bc7b14aeafc55b505fdcee6ef29d8e441d4ec530029",
+  "sourceMap": "87:134:31:-;;;135:84;8:9:-1;5:2;;;30:1;27;20:12;5:2;135:84:31;;;;;;;;;;;;;;;;;;;;;;;;;;;;;206:8;195;;:19;;;;;;;;;;;;;;;;;;135:84;87:134;;;;;;",
+  "deployedSourceMap": "87:134:31:-;;;;;",
+  "source": "pragma solidity ^0.4.18;\n\nimport \"./BaseStorage.sol\";\nimport \"./StorageStateful.sol\";\n\ncontract StorageConsumer is StorageStateful {\n  function StorageConsumer(BaseStorage storage_) public {\n    _storage = storage_;\n  }\n}\n",
+  "sourcePath": "/home/henry/ws/botchain/contracts/Upgradability/StorageConsumer.sol",
+  "ast": {
+    "absolutePath": "/home/henry/ws/botchain/contracts/Upgradability/StorageConsumer.sol",
+    "exportedSymbols": {
+      "StorageConsumer": [
+        5271
+      ]
+    },
+    "id": 5272,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 5256,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".18"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:31"
+      },
+      {
+        "absolutePath": "/home/henry/ws/botchain/contracts/Upgradability/BaseStorage.sol",
+        "file": "./BaseStorage.sol",
+        "id": 5257,
+        "nodeType": "ImportDirective",
+        "scope": 5272,
+        "sourceUnit": 3807,
+        "src": "26:27:31",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/home/henry/ws/botchain/contracts/Upgradability/StorageStateful.sol",
+        "file": "./StorageStateful.sol",
+        "id": 5258,
+        "nodeType": "ImportDirective",
+        "scope": 5272,
+        "sourceUnit": 5278,
+        "src": "54:31:31",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 5259,
+              "name": "StorageStateful",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 5277,
+              "src": "115:15:31",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_StorageStateful_$5277",
+                "typeString": "contract StorageStateful"
+              }
+            },
+            "id": 5260,
+            "nodeType": "InheritanceSpecifier",
+            "src": "115:15:31"
+          }
+        ],
+        "contractDependencies": [
+          5277
+        ],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 5271,
+        "linearizedBaseContracts": [
+          5271,
+          5277
+        ],
+        "name": "StorageConsumer",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 5269,
+              "nodeType": "Block",
+              "src": "189:30:31",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 5267,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 5265,
+                      "name": "_storage",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 5276,
+                      "src": "195:8:31",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                        "typeString": "contract BaseStorage"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 5266,
+                      "name": "storage_",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 5262,
+                      "src": "206:8:31",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                        "typeString": "contract BaseStorage"
+                      }
+                    },
+                    "src": "195:19:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                      "typeString": "contract BaseStorage"
+                    }
+                  },
+                  "id": 5268,
+                  "nodeType": "ExpressionStatement",
+                  "src": "195:19:31"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 5270,
+            "implemented": true,
+            "isConstructor": true,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "StorageConsumer",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5263,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5262,
+                  "name": "storage_",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5270,
+                  "src": "160:20:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                    "typeString": "contract BaseStorage"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 5261,
+                    "name": "BaseStorage",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 3806,
+                    "src": "160:11:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                      "typeString": "contract BaseStorage"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "159:22:31"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5264,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "189:0:31"
+            },
+            "scope": 5271,
+            "src": "135:84:31",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 5272,
+        "src": "87:134:31"
+      }
+    ],
+    "src": "0:222:31"
+  },
+  "legacyAST": {
+    "absolutePath": "/home/henry/ws/botchain/contracts/Upgradability/StorageConsumer.sol",
+    "exportedSymbols": {
+      "StorageConsumer": [
+        5271
+      ]
+    },
+    "id": 5272,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 5256,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".18"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:31"
+      },
+      {
+        "absolutePath": "/home/henry/ws/botchain/contracts/Upgradability/BaseStorage.sol",
+        "file": "./BaseStorage.sol",
+        "id": 5257,
+        "nodeType": "ImportDirective",
+        "scope": 5272,
+        "sourceUnit": 3807,
+        "src": "26:27:31",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/home/henry/ws/botchain/contracts/Upgradability/StorageStateful.sol",
+        "file": "./StorageStateful.sol",
+        "id": 5258,
+        "nodeType": "ImportDirective",
+        "scope": 5272,
+        "sourceUnit": 5278,
+        "src": "54:31:31",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 5259,
+              "name": "StorageStateful",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 5277,
+              "src": "115:15:31",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_StorageStateful_$5277",
+                "typeString": "contract StorageStateful"
+              }
+            },
+            "id": 5260,
+            "nodeType": "InheritanceSpecifier",
+            "src": "115:15:31"
+          }
+        ],
+        "contractDependencies": [
+          5277
+        ],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 5271,
+        "linearizedBaseContracts": [
+          5271,
+          5277
+        ],
+        "name": "StorageConsumer",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 5269,
+              "nodeType": "Block",
+              "src": "189:30:31",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 5267,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "id": 5265,
+                      "name": "_storage",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 5276,
+                      "src": "195:8:31",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                        "typeString": "contract BaseStorage"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 5266,
+                      "name": "storage_",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 5262,
+                      "src": "206:8:31",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                        "typeString": "contract BaseStorage"
+                      }
+                    },
+                    "src": "195:19:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                      "typeString": "contract BaseStorage"
+                    }
+                  },
+                  "id": 5268,
+                  "nodeType": "ExpressionStatement",
+                  "src": "195:19:31"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 5270,
+            "implemented": true,
+            "isConstructor": true,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "StorageConsumer",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 5263,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 5262,
+                  "name": "storage_",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 5270,
+                  "src": "160:20:31",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                    "typeString": "contract BaseStorage"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 5261,
+                    "name": "BaseStorage",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 3806,
+                    "src": "160:11:31",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                      "typeString": "contract BaseStorage"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "159:22:31"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 5264,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "189:0:31"
+            },
+            "scope": 5271,
+            "src": "135:84:31",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 5272,
+        "src": "87:134:31"
+      }
+    ],
+    "src": "0:222:31"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.24+commit.e67f0147.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "2.0.1",
+  "updatedAt": "2018-11-01T15:08:00.555Z"
+}

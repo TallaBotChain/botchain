@@ -1,0 +1,285 @@
+{
+  "contractName": "Registry",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "_entryId",
+          "type": "uint256"
+        }
+      ],
+      "name": "ownerOfEntry",
+      "outputs": [
+        {
+          "name": "_owner",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "pragma solidity ^0.4.18;\n\n/**\n* @title Registry interface\n* @dev Interface for a registry\n*/\ncontract Registry {\n\t/**\n\t* @dev Returns address of owner of entry\n\t* @param _entryId An id associated with the entry\n\t* @return address of owner of entry\n\t*/\n  function ownerOfEntry(uint256 _entryId) public view returns (address _owner);\n}\n",
+  "sourcePath": "/home/henry/ws/botchain/contracts/Registry/Registry.sol",
+  "ast": {
+    "absolutePath": "/home/henry/ws/botchain/contracts/Registry/Registry.sol",
+    "exportedSymbols": {
+      "Registry": [
+        2749
+      ]
+    },
+    "id": 2750,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 2741,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".18"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:19"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": "@title Registry interface\n@dev Interface for a registry",
+        "fullyImplemented": false,
+        "id": 2749,
+        "linearizedBaseContracts": [
+          2749
+        ],
+        "name": "Registry",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": "@dev Returns address of owner of entry\n@param _entryId An id associated with the entry\n@return address of owner of entry",
+            "id": 2748,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "ownerOfEntry",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2744,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2743,
+                  "name": "_entryId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2748,
+                  "src": "276:16:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2742,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "276:7:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "275:18:19"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2747,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2746,
+                  "name": "_owner",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2748,
+                  "src": "315:14:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 2745,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "315:7:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "314:16:19"
+            },
+            "scope": 2749,
+            "src": "254:77:19",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 2750,
+        "src": "93:240:19"
+      }
+    ],
+    "src": "0:334:19"
+  },
+  "legacyAST": {
+    "absolutePath": "/home/henry/ws/botchain/contracts/Registry/Registry.sol",
+    "exportedSymbols": {
+      "Registry": [
+        2749
+      ]
+    },
+    "id": 2750,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 2741,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".18"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:19"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": "@title Registry interface\n@dev Interface for a registry",
+        "fullyImplemented": false,
+        "id": 2749,
+        "linearizedBaseContracts": [
+          2749
+        ],
+        "name": "Registry",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": "@dev Returns address of owner of entry\n@param _entryId An id associated with the entry\n@return address of owner of entry",
+            "id": 2748,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "ownerOfEntry",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2744,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2743,
+                  "name": "_entryId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2748,
+                  "src": "276:16:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2742,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "276:7:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "275:18:19"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2747,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2746,
+                  "name": "_owner",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2748,
+                  "src": "315:14:19",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 2745,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "315:7:19",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "314:16:19"
+            },
+            "scope": 2749,
+            "src": "254:77:19",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 2750,
+        "src": "93:240:19"
+      }
+    ],
+    "src": "0:334:19"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.24+commit.e67f0147.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "2.0.1",
+  "updatedAt": "2018-11-01T15:08:00.545Z"
+}

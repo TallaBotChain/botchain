@@ -1,0 +1,823 @@
+{
+  "contractName": "CurationCouncil",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "impl",
+          "type": "address"
+        }
+      ],
+      "name": "upgradeTo",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "implementation",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getOwner",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "name": "storage_",
+          "type": "address"
+        },
+        {
+          "name": "curationCouncilRegistryDelegateAddress",
+          "type": "address"
+        },
+        {
+          "name": "botCoinAddress",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "fallback"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "implementation_",
+          "type": "address"
+        }
+      ],
+      "name": "Upgraded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b50604051606080610bd683398101806040528101908080519060200190929190805190602001909291908051906020019092919050505082828180806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505060008173ffffffffffffffffffffffffffffffffffffffff161415156100c5576100c4336101c3640100000000026401000000009004565b5b506100de816102c2640100000000026401000000009004565b50508273ffffffffffffffffffffffffffffffffffffffff1663ca446dd9826040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f626f74436f696e416464726573730000000000000000000000000000000000008152506020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050600060405180830381600087803b1580156101a357600080fd5b505af11580156101b7573d6000803e3d6000fd5b505050505050506103c1565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663ca446dd9826040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f6f776e65720000000000000000000000000000000000000000000000000000008152506020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050600060405180830381600087803b1580156102a757600080fd5b505af11580156102bb573d6000803e3d6000fd5b5050505050565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663ca446dd9826040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f696d706c656d656e746174696f6e0000000000000000000000000000000000008152506020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050600060405180830381600087803b1580156103a657600080fd5b505af11580156103ba573d6000803e3d6000fd5b5050505050565b610806806103d06000396000f300608060405260043610610062576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680633659cfe6146101085780635c60da1b1461014b578063893d20e8146101a2578063f2fde38b146101f9575b6000606061006e61023c565b9150600073ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff16141515156100ac57600080fd5b6000368080601f0160208091040260200160405190810160405280939291908181526020018383808284378201915050505050509050600080825160208401855af43d604051816000823e8260008114610104578282f35b8282fd5b34801561011457600080fd5b50610149600480360381019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919050505061032e565b005b34801561015757600080fd5b5061016061023c565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156101ae57600080fd5b506101b7610400565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34801561020557600080fd5b5061023a600480360381019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506104f2565b005b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166321f8a7216040518163ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f696d706c656d656e746174696f6e0000000000000000000000000000000000008152506020019050602060405180830381600087803b1580156102ee57600080fd5b505af1158015610302573d6000803e3d6000fd5b505050506040513d602081101561031857600080fd5b8101908080519060200190929190505050905090565b610336610400565b73ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561036f57600080fd5b8073ffffffffffffffffffffffffffffffffffffffff1661038e61023c565b73ffffffffffffffffffffffffffffffffffffffff16141515156103b157600080fd5b6103ba816105dc565b8073ffffffffffffffffffffffffffffffffffffffff167fbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b60405160405180910390a250565b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166321f8a7216040518163ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f6f776e65720000000000000000000000000000000000000000000000000000008152506020019050602060405180830381600087803b1580156104b257600080fd5b505af11580156104c6573d6000803e3d6000fd5b505050506040513d60208110156104dc57600080fd5b8101908080519060200190929190505050905090565b6104fa610400565b73ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561053357600080fd5b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff161415151561056f57600080fd5b8073ffffffffffffffffffffffffffffffffffffffff1661058e610400565b73ffffffffffffffffffffffffffffffffffffffff167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e060405160405180910390a36105d9816106db565b50565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663ca446dd9826040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f696d706c656d656e746174696f6e0000000000000000000000000000000000008152506020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050600060405180830381600087803b1580156106c057600080fd5b505af11580156106d4573d6000803e3d6000fd5b5050505050565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663ca446dd9826040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f6f776e65720000000000000000000000000000000000000000000000000000008152506020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050600060405180830381600087803b1580156107bf57600080fd5b505af11580156107d3573d6000803e3d6000fd5b50505050505600a165627a7a72305820f1e1aefc7968c7e4fc46ed60d057651b934a9c4cb62b02c9976534a6255a17180029",
+  "deployedBytecode": "0x608060405260043610610062576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680633659cfe6146101085780635c60da1b1461014b578063893d20e8146101a2578063f2fde38b146101f9575b6000606061006e61023c565b9150600073ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff16141515156100ac57600080fd5b6000368080601f0160208091040260200160405190810160405280939291908181526020018383808284378201915050505050509050600080825160208401855af43d604051816000823e8260008114610104578282f35b8282fd5b34801561011457600080fd5b50610149600480360381019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919050505061032e565b005b34801561015757600080fd5b5061016061023c565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156101ae57600080fd5b506101b7610400565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34801561020557600080fd5b5061023a600480360381019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506104f2565b005b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166321f8a7216040518163ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f696d706c656d656e746174696f6e0000000000000000000000000000000000008152506020019050602060405180830381600087803b1580156102ee57600080fd5b505af1158015610302573d6000803e3d6000fd5b505050506040513d602081101561031857600080fd5b8101908080519060200190929190505050905090565b610336610400565b73ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561036f57600080fd5b8073ffffffffffffffffffffffffffffffffffffffff1661038e61023c565b73ffffffffffffffffffffffffffffffffffffffff16141515156103b157600080fd5b6103ba816105dc565b8073ffffffffffffffffffffffffffffffffffffffff167fbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b60405160405180910390a250565b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166321f8a7216040518163ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f6f776e65720000000000000000000000000000000000000000000000000000008152506020019050602060405180830381600087803b1580156104b257600080fd5b505af11580156104c6573d6000803e3d6000fd5b505050506040513d60208110156104dc57600080fd5b8101908080519060200190929190505050905090565b6104fa610400565b73ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561053357600080fd5b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff161415151561056f57600080fd5b8073ffffffffffffffffffffffffffffffffffffffff1661058e610400565b73ffffffffffffffffffffffffffffffffffffffff167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e060405160405180910390a36105d9816106db565b50565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663ca446dd9826040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f696d706c656d656e746174696f6e0000000000000000000000000000000000008152506020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050600060405180830381600087803b1580156106c057600080fd5b505af11580156106d4573d6000803e3d6000fd5b5050505050565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663ca446dd9826040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f6f776e65720000000000000000000000000000000000000000000000000000008152506020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050600060405180830381600087803b1580156107bf57600080fd5b505af11580156107d3573d6000803e3d6000fd5b50505050505600a165627a7a72305820f1e1aefc7968c7e4fc46ed60d057651b934a9c4cb62b02c9976534a6255a17180029",
+  "sourceMap": "114:369:2:-;;;199:281;8:9:-1;5:2;;;30:1;27;20:12;5:2;199:281:2;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;353:8;363:38;345:8:28;440::27;206::31;195;;:19;;;;;;;;;;;;;;;;;;135:84;481:3:27;468:8;460:24;;;;456:65;;;494:20;503:10;494:8;;;:20;;;:::i;:::-;456:65;373:152;363:34:28;381:15;363:17;;;:34;;;:::i;:::-;248:154;;422:8:2;:19;;;460:14;422:53;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;422:53:2;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;422:53:2;;;;199:281;;;114:369;;966:88:27;1014:8;;;;;;;;;;;:19;;;1043:5;1014:35;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1014:35:27;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1014:35:27;;;;966:88;:::o;668:126:28:-;735:8;;;;;;;;;;;:19;;;773:15;735:54;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;735:54:28;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;735:54:28;;;;668:126;:::o;114:369:2:-;;;;;;;",
+  "deployedSourceMap": "114:369:2:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;144:13:23;216:17;160:16;:14;:16::i;:::-;144:32;;207:1;190:19;;:5;:19;;;;182:28;;;;;;;;236:8;;216:28;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;340:1;337;330:4;324:11;317:4;311;307:15;300:5;295:3;282:60;361:14;399:4;393:11;434:4;431:1;426:3;411:28;453:6;471:1;466:28;;;;523:4;518:3;511:17;466:28;487:4;482:3;475:17;521:143:28;;8:9:-1;5:2;;;30:1;27;20:12;5:2;521:143:28;;;;;;;;;;;;;;;;;;;;;;;;;;;;406:111;;8:9:-1;5:2;;;30:1;27;20:12;5:2;406:111:28;;;;;;;;;;;;;;;;;;;;;;;;;;;866:96:27;;8:9:-1;5:2;;;30:1;27;20:12;5:2;866:96:27;;;;;;;;;;;;;;;;;;;;;;;;;;;686:176;;8:9:-1;5:2;;;30:1;27;20:12;5:2;686:176:27;;;;;;;;;;;;;;;;;;;;;;;;;;;;406:111:28;453:7;475:8;;;;;;;;;;;:19;;;:37;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;475:37:28;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;475:37:28;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;475:37:28;;;;;;;;;;;;;;;;468:44;;406:111;:::o;521:143::-;346:10:27;:8;:10::i;:::-;332:24;;:10;:24;;;324:33;;;;;;;;605:4:28;585:24;;:16;:14;:16::i;:::-;:24;;;;577:33;;;;;;;;616:23;634:4;616:17;:23::i;:::-;654:4;645:14;;;;;;;;;;;;521:143;:::o;866:96:27:-;907:7;929:8;;;;;;;;;;;:19;;;:28;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;929:28:27;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;929:28:27;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;929:28:27;;;;;;;;;;;;;;;;922:35;;866:96;:::o;686:176::-;346:10;:8;:10::i;:::-;332:24;;:10;:24;;;324:33;;;;;;;;782:1;762:22;;:8;:22;;;;754:31;;;;;;;;824:8;791:42;;812:10;:8;:10::i;:::-;791:42;;;;;;;;;;;;839:18;848:8;839;:18::i;:::-;686:176;:::o;668:126:28:-;735:8;;;;;;;;;;;:19;;;773:15;735:54;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;735:54:28;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;735:54:28;;;;668:126;:::o;966:88:27:-;1014:8;;;;;;;;;;;:19;;;1043:5;1014:35;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1014:35:27;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1014:35:27;;;;966:88;:::o",
+  "source": "pragma solidity ^0.4.18;\n\nimport \"./Upgradability/OwnableProxy.sol\";\nimport \"./Upgradability/PublicStorage.sol\";\n\ncontract CurationCouncil is OwnableProxy {\n\n  /** @dev Creates curation council */\n  function CurationCouncil(\n    PublicStorage storage_,\n    address curationCouncilRegistryDelegateAddress,\n    address botCoinAddress\n  )\n    OwnableProxy(storage_, curationCouncilRegistryDelegateAddress)\n    public\n  {\n    storage_.setAddress(\"botCoinAddress\", botCoinAddress);\n  }\n\n}\n",
+  "sourcePath": "/home/henry/ws/botchain/contracts/CurationCouncil.sol",
+  "ast": {
+    "absolutePath": "/home/henry/ws/botchain/contracts/CurationCouncil.sol",
+    "exportedSymbols": {
+      "CurationCouncil": [
+        106
+      ]
+    },
+    "id": 107,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 80,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".18"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:2"
+      },
+      {
+        "absolutePath": "/home/henry/ws/botchain/contracts/Upgradability/OwnableProxy.sol",
+        "file": "./Upgradability/OwnableProxy.sol",
+        "id": 81,
+        "nodeType": "ImportDirective",
+        "scope": 107,
+        "sourceUnit": 4769,
+        "src": "26:42:2",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/home/henry/ws/botchain/contracts/Upgradability/PublicStorage.sol",
+        "file": "./Upgradability/PublicStorage.sol",
+        "id": 82,
+        "nodeType": "ImportDirective",
+        "scope": 107,
+        "sourceUnit": 5255,
+        "src": "69:43:2",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 83,
+              "name": "OwnableProxy",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 4768,
+              "src": "142:12:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_OwnableProxy_$4768",
+                "typeString": "contract OwnableProxy"
+              }
+            },
+            "id": 84,
+            "nodeType": "InheritanceSpecifier",
+            "src": "142:12:2"
+          }
+        ],
+        "contractDependencies": [
+          3370,
+          4691,
+          4768,
+          5271,
+          5277
+        ],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 106,
+        "linearizedBaseContracts": [
+          106,
+          4768,
+          3370,
+          4691,
+          5271,
+          5277
+        ],
+        "name": "CurationCouncil",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 104,
+              "nodeType": "Block",
+              "src": "416:64:2",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "626f74436f696e41646472657373",
+                        "id": 100,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "442:16:2",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_390dac53c4ff2946010740182f800bbb54cde7a8d090556a9440f558c73fd08d",
+                          "typeString": "literal_string \"botCoinAddress\""
+                        },
+                        "value": "botCoinAddress"
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 101,
+                        "name": "botCoinAddress",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 90,
+                        "src": "460:14:2",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_stringliteral_390dac53c4ff2946010740182f800bbb54cde7a8d090556a9440f558c73fd08d",
+                          "typeString": "literal_string \"botCoinAddress\""
+                        },
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 97,
+                        "name": "storage_",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 86,
+                        "src": "422:8:2",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_PublicStorage_$5254",
+                          "typeString": "contract PublicStorage"
+                        }
+                      },
+                      "id": 99,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "setAddress",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 3544,
+                      "src": "422:19:2",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$_t_bytes32_$_t_address_$returns$__$",
+                        "typeString": "function (bytes32,address) external"
+                      }
+                    },
+                    "id": 102,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "422:53:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 103,
+                  "nodeType": "ExpressionStatement",
+                  "src": "422:53:2"
+                }
+              ]
+            },
+            "documentation": "@dev Creates curation council ",
+            "id": 105,
+            "implemented": true,
+            "isConstructor": true,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": [
+                  {
+                    "argumentTypes": null,
+                    "id": 93,
+                    "name": "storage_",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 86,
+                    "src": "353:8:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_PublicStorage_$5254",
+                      "typeString": "contract PublicStorage"
+                    }
+                  },
+                  {
+                    "argumentTypes": null,
+                    "id": 94,
+                    "name": "curationCouncilRegistryDelegateAddress",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 88,
+                    "src": "363:38:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  }
+                ],
+                "id": 95,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 92,
+                  "name": "OwnableProxy",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 4768,
+                  "src": "340:12:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_type$_t_contract$_OwnableProxy_$4768_$",
+                    "typeString": "type(contract OwnableProxy)"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "340:62:2"
+              }
+            ],
+            "name": "CurationCouncil",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 91,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 86,
+                  "name": "storage_",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 105,
+                  "src": "229:22:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_PublicStorage_$5254",
+                    "typeString": "contract PublicStorage"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 85,
+                    "name": "PublicStorage",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 5254,
+                    "src": "229:13:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_PublicStorage_$5254",
+                      "typeString": "contract PublicStorage"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 88,
+                  "name": "curationCouncilRegistryDelegateAddress",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 105,
+                  "src": "257:46:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 87,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "257:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 90,
+                  "name": "botCoinAddress",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 105,
+                  "src": "309:22:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 89,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "309:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "223:112:2"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 96,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "416:0:2"
+            },
+            "scope": 106,
+            "src": "199:281:2",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 107,
+        "src": "114:369:2"
+      }
+    ],
+    "src": "0:484:2"
+  },
+  "legacyAST": {
+    "absolutePath": "/home/henry/ws/botchain/contracts/CurationCouncil.sol",
+    "exportedSymbols": {
+      "CurationCouncil": [
+        106
+      ]
+    },
+    "id": 107,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 80,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".18"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:2"
+      },
+      {
+        "absolutePath": "/home/henry/ws/botchain/contracts/Upgradability/OwnableProxy.sol",
+        "file": "./Upgradability/OwnableProxy.sol",
+        "id": 81,
+        "nodeType": "ImportDirective",
+        "scope": 107,
+        "sourceUnit": 4769,
+        "src": "26:42:2",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/home/henry/ws/botchain/contracts/Upgradability/PublicStorage.sol",
+        "file": "./Upgradability/PublicStorage.sol",
+        "id": 82,
+        "nodeType": "ImportDirective",
+        "scope": 107,
+        "sourceUnit": 5255,
+        "src": "69:43:2",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 83,
+              "name": "OwnableProxy",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 4768,
+              "src": "142:12:2",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_OwnableProxy_$4768",
+                "typeString": "contract OwnableProxy"
+              }
+            },
+            "id": 84,
+            "nodeType": "InheritanceSpecifier",
+            "src": "142:12:2"
+          }
+        ],
+        "contractDependencies": [
+          3370,
+          4691,
+          4768,
+          5271,
+          5277
+        ],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 106,
+        "linearizedBaseContracts": [
+          106,
+          4768,
+          3370,
+          4691,
+          5271,
+          5277
+        ],
+        "name": "CurationCouncil",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 104,
+              "nodeType": "Block",
+              "src": "416:64:2",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "626f74436f696e41646472657373",
+                        "id": 100,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "442:16:2",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_390dac53c4ff2946010740182f800bbb54cde7a8d090556a9440f558c73fd08d",
+                          "typeString": "literal_string \"botCoinAddress\""
+                        },
+                        "value": "botCoinAddress"
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 101,
+                        "name": "botCoinAddress",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 90,
+                        "src": "460:14:2",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_stringliteral_390dac53c4ff2946010740182f800bbb54cde7a8d090556a9440f558c73fd08d",
+                          "typeString": "literal_string \"botCoinAddress\""
+                        },
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 97,
+                        "name": "storage_",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 86,
+                        "src": "422:8:2",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_PublicStorage_$5254",
+                          "typeString": "contract PublicStorage"
+                        }
+                      },
+                      "id": 99,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "setAddress",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 3544,
+                      "src": "422:19:2",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$_t_bytes32_$_t_address_$returns$__$",
+                        "typeString": "function (bytes32,address) external"
+                      }
+                    },
+                    "id": 102,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "422:53:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 103,
+                  "nodeType": "ExpressionStatement",
+                  "src": "422:53:2"
+                }
+              ]
+            },
+            "documentation": "@dev Creates curation council ",
+            "id": 105,
+            "implemented": true,
+            "isConstructor": true,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": [
+                  {
+                    "argumentTypes": null,
+                    "id": 93,
+                    "name": "storage_",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 86,
+                    "src": "353:8:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_PublicStorage_$5254",
+                      "typeString": "contract PublicStorage"
+                    }
+                  },
+                  {
+                    "argumentTypes": null,
+                    "id": 94,
+                    "name": "curationCouncilRegistryDelegateAddress",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 88,
+                    "src": "363:38:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  }
+                ],
+                "id": 95,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 92,
+                  "name": "OwnableProxy",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 4768,
+                  "src": "340:12:2",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_type$_t_contract$_OwnableProxy_$4768_$",
+                    "typeString": "type(contract OwnableProxy)"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "340:62:2"
+              }
+            ],
+            "name": "CurationCouncil",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 91,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 86,
+                  "name": "storage_",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 105,
+                  "src": "229:22:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_PublicStorage_$5254",
+                    "typeString": "contract PublicStorage"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 85,
+                    "name": "PublicStorage",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 5254,
+                    "src": "229:13:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_PublicStorage_$5254",
+                      "typeString": "contract PublicStorage"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 88,
+                  "name": "curationCouncilRegistryDelegateAddress",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 105,
+                  "src": "257:46:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 87,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "257:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 90,
+                  "name": "botCoinAddress",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 105,
+                  "src": "309:22:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 89,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "309:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "223:112:2"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 96,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "416:0:2"
+            },
+            "scope": 106,
+            "src": "199:281:2",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 107,
+        "src": "114:369:2"
+      }
+    ],
+    "src": "0:484:2"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.24+commit.e67f0147.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "2.0.1",
+  "updatedAt": "2018-11-01T15:08:00.530Z"
+}

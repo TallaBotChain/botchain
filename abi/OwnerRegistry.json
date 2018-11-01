@@ -1,0 +1,426 @@
+{
+  "contractName": "OwnerRegistry",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "_entryId",
+          "type": "uint256"
+        }
+      ],
+      "name": "ownerOfEntry",
+      "outputs": [
+        {
+          "name": "_owner",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "_minter",
+          "type": "address"
+        },
+        {
+          "name": "_entryId",
+          "type": "uint256"
+        }
+      ],
+      "name": "mintingAllowed",
+      "outputs": [
+        {
+          "name": "_mintingAllowed",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "pragma solidity ^0.4.18;\n\nimport \"./Registry.sol\";\n\n/**\n* @title OwnerRegistry interface\n* @dev Interface for a registry with entries that own entries in another registry\n*/\ncontract OwnerRegistry is Registry {\n\t/**\n\t* @dev Returns true if minting is allowed\n\t* @param _minter Address of minter\n\t* @param _entryId An id associated with the entry\n\t* @return true if minting is allowed\n\t*/\n  \tfunction mintingAllowed(address _minter, uint256 _entryId) public view returns (bool _mintingAllowed);\n}\n",
+  "sourcePath": "/home/henry/ws/botchain/contracts/Registry/OwnerRegistry.sol",
+  "ast": {
+    "absolutePath": "/home/henry/ws/botchain/contracts/Registry/OwnerRegistry.sol",
+    "exportedSymbols": {
+      "OwnerRegistry": [
+        2739
+      ]
+    },
+    "id": 2740,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 2726,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".18"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:18"
+      },
+      {
+        "absolutePath": "/home/henry/ws/botchain/contracts/Registry/Registry.sol",
+        "file": "./Registry.sol",
+        "id": 2727,
+        "nodeType": "ImportDirective",
+        "scope": 2740,
+        "sourceUnit": 2750,
+        "src": "26:24:18",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 2728,
+              "name": "Registry",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 2749,
+              "src": "200:8:18",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Registry_$2749",
+                "typeString": "contract Registry"
+              }
+            },
+            "id": 2729,
+            "nodeType": "InheritanceSpecifier",
+            "src": "200:8:18"
+          }
+        ],
+        "contractDependencies": [
+          2749
+        ],
+        "contractKind": "contract",
+        "documentation": "@title OwnerRegistry interface\n@dev Interface for a registry with entries that own entries in another registry",
+        "fullyImplemented": false,
+        "id": 2739,
+        "linearizedBaseContracts": [
+          2739,
+          2749
+        ],
+        "name": "OwnerRegistry",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": "@dev Returns true if minting is allowed\n@param _minter Address of minter\n@param _entryId An id associated with the entry\n@return true if minting is allowed",
+            "id": 2738,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "mintingAllowed",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2734,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2731,
+                  "name": "_minter",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2738,
+                  "src": "415:15:18",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 2730,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "415:7:18",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2733,
+                  "name": "_entryId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2738,
+                  "src": "432:16:18",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2732,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "432:7:18",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "414:35:18"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2737,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2736,
+                  "name": "_mintingAllowed",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2738,
+                  "src": "471:20:18",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 2735,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "471:4:18",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "470:22:18"
+            },
+            "scope": 2739,
+            "src": "391:102:18",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 2740,
+        "src": "174:321:18"
+      }
+    ],
+    "src": "0:496:18"
+  },
+  "legacyAST": {
+    "absolutePath": "/home/henry/ws/botchain/contracts/Registry/OwnerRegistry.sol",
+    "exportedSymbols": {
+      "OwnerRegistry": [
+        2739
+      ]
+    },
+    "id": 2740,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 2726,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".18"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:18"
+      },
+      {
+        "absolutePath": "/home/henry/ws/botchain/contracts/Registry/Registry.sol",
+        "file": "./Registry.sol",
+        "id": 2727,
+        "nodeType": "ImportDirective",
+        "scope": 2740,
+        "sourceUnit": 2750,
+        "src": "26:24:18",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 2728,
+              "name": "Registry",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 2749,
+              "src": "200:8:18",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_Registry_$2749",
+                "typeString": "contract Registry"
+              }
+            },
+            "id": 2729,
+            "nodeType": "InheritanceSpecifier",
+            "src": "200:8:18"
+          }
+        ],
+        "contractDependencies": [
+          2749
+        ],
+        "contractKind": "contract",
+        "documentation": "@title OwnerRegistry interface\n@dev Interface for a registry with entries that own entries in another registry",
+        "fullyImplemented": false,
+        "id": 2739,
+        "linearizedBaseContracts": [
+          2739,
+          2749
+        ],
+        "name": "OwnerRegistry",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": "@dev Returns true if minting is allowed\n@param _minter Address of minter\n@param _entryId An id associated with the entry\n@return true if minting is allowed",
+            "id": 2738,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "mintingAllowed",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2734,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2731,
+                  "name": "_minter",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2738,
+                  "src": "415:15:18",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 2730,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "415:7:18",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2733,
+                  "name": "_entryId",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2738,
+                  "src": "432:16:18",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2732,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "432:7:18",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "414:35:18"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 2737,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2736,
+                  "name": "_mintingAllowed",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2738,
+                  "src": "471:20:18",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 2735,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "471:4:18",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "470:22:18"
+            },
+            "scope": 2739,
+            "src": "391:102:18",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 2740,
+        "src": "174:321:18"
+      }
+    ],
+    "src": "0:496:18"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.24+commit.e67f0147.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "2.0.1",
+  "updatedAt": "2018-11-01T15:08:00.545Z"
+}

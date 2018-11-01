@@ -1,0 +1,2716 @@
+{
+  "contractName": "BotCoinPayableRegistry",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getOwner",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "name": "storage_",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "tallaWallet",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "entryPrice",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "botCoin",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "tallaWallet",
+          "type": "address"
+        }
+      ],
+      "name": "setTallaWallet",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "entryPrice",
+          "type": "uint256"
+        }
+      ],
+      "name": "setEntryPrice",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b50604051602080610c86833981018060405281019080805190602001909291905050508080806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505060008173ffffffffffffffffffffffffffffffffffffffff161415156100af576100ae336100b6640100000000026401000000009004565b5b50506101b5565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663ca446dd9826040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f6f776e65720000000000000000000000000000000000000000000000000000008152506020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050600060405180830381600087803b15801561019a57600080fd5b505af11580156101ae573d6000803e3d6000fd5b5050505050565b610ac2806101c46000396000f300608060405260043610610083576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063047913ce146100885780636f1d8884146100df578063893d20e814610136578063a6e77af11461018d578063dcbd32fe146101ba578063f2fde38b146101fd578063f745adfc14610240575b600080fd5b34801561009457600080fd5b5061009d61026b565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156100eb57600080fd5b506100f461035d565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34801561014257600080fd5b5061014b61044f565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34801561019957600080fd5b506101b860048036038101908080359060200190929190505050610541565b005b3480156101c657600080fd5b506101fb600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610655565b005b34801561020957600080fd5b5061023e600480360381019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506107bb565b005b34801561024c57600080fd5b506102556108a5565b6040518082815260200191505060405180910390f35b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166321f8a7216040518163ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f626f74436f696e416464726573730000000000000000000000000000000000008152506020019050602060405180830381600087803b15801561031d57600080fd5b505af1158015610331573d6000803e3d6000fd5b505050506040513d602081101561034757600080fd5b8101908080519060200190929190505050905090565b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166321f8a7216040518163ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f74616c6c6157616c6c65740000000000000000000000000000000000000000008152506020019050602060405180830381600087803b15801561040f57600080fd5b505af1158015610423573d6000803e3d6000fd5b505050506040513d602081101561043957600080fd5b8101908080519060200190929190505050905090565b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166321f8a7216040518163ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f6f776e65720000000000000000000000000000000000000000000000000000008152506020019050602060405180830381600087803b15801561050157600080fd5b505af1158015610515573d6000803e3d6000fd5b505050506040513d602081101561052b57600080fd5b8101908080519060200190929190505050905090565b61054961044f565b73ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561058257600080fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663e2a4853a826040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f656e747279507269636500000000000000000000000000000000000000000000815250602001828152602001915050600060405180830381600087803b15801561063a57600080fd5b505af115801561064e573d6000803e3d6000fd5b5050505050565b61065d61044f565b73ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561069657600080fd5b60008173ffffffffffffffffffffffffffffffffffffffff16141515156106bc57600080fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663ca446dd9826040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f74616c6c6157616c6c65740000000000000000000000000000000000000000008152506020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050600060405180830381600087803b1580156107a057600080fd5b505af11580156107b4573d6000803e3d6000fd5b5050505050565b6107c361044f565b73ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161415156107fc57600080fd5b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff161415151561083857600080fd5b8073ffffffffffffffffffffffffffffffffffffffff1661085761044f565b73ffffffffffffffffffffffffffffffffffffffff167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e060405160405180910390a36108a281610997565b50565b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663bd02d0f56040518163ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f656e7472795072696365000000000000000000000000000000000000000000008152506020019050602060405180830381600087803b15801561095757600080fd5b505af115801561096b573d6000803e3d6000fd5b505050506040513d602081101561098157600080fd5b8101908080519060200190929190505050905090565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663ca446dd9826040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f6f776e65720000000000000000000000000000000000000000000000000000008152506020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050600060405180830381600087803b158015610a7b57600080fd5b505af1158015610a8f573d6000803e3d6000fd5b50505050505600a165627a7a7230582081504d4d0cc3cbbeb10f80acc60471ad52e5c447877b7387d29339347418f01f0029",
+  "deployedBytecode": "0x608060405260043610610083576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff168063047913ce146100885780636f1d8884146100df578063893d20e814610136578063a6e77af11461018d578063dcbd32fe146101ba578063f2fde38b146101fd578063f745adfc14610240575b600080fd5b34801561009457600080fd5b5061009d61026b565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b3480156100eb57600080fd5b506100f461035d565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34801561014257600080fd5b5061014b61044f565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34801561019957600080fd5b506101b860048036038101908080359060200190929190505050610541565b005b3480156101c657600080fd5b506101fb600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610655565b005b34801561020957600080fd5b5061023e600480360381019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506107bb565b005b34801561024c57600080fd5b506102556108a5565b6040518082815260200191505060405180910390f35b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166321f8a7216040518163ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f626f74436f696e416464726573730000000000000000000000000000000000008152506020019050602060405180830381600087803b15801561031d57600080fd5b505af1158015610331573d6000803e3d6000fd5b505050506040513d602081101561034757600080fd5b8101908080519060200190929190505050905090565b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166321f8a7216040518163ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f74616c6c6157616c6c65740000000000000000000000000000000000000000008152506020019050602060405180830381600087803b15801561040f57600080fd5b505af1158015610423573d6000803e3d6000fd5b505050506040513d602081101561043957600080fd5b8101908080519060200190929190505050905090565b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166321f8a7216040518163ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f6f776e65720000000000000000000000000000000000000000000000000000008152506020019050602060405180830381600087803b15801561050157600080fd5b505af1158015610515573d6000803e3d6000fd5b505050506040513d602081101561052b57600080fd5b8101908080519060200190929190505050905090565b61054961044f565b73ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561058257600080fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663e2a4853a826040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f656e747279507269636500000000000000000000000000000000000000000000815250602001828152602001915050600060405180830381600087803b15801561063a57600080fd5b505af115801561064e573d6000803e3d6000fd5b5050505050565b61065d61044f565b73ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614151561069657600080fd5b60008173ffffffffffffffffffffffffffffffffffffffff16141515156106bc57600080fd5b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663ca446dd9826040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f74616c6c6157616c6c65740000000000000000000000000000000000000000008152506020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050600060405180830381600087803b1580156107a057600080fd5b505af11580156107b4573d6000803e3d6000fd5b5050505050565b6107c361044f565b73ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161415156107fc57600080fd5b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff161415151561083857600080fd5b8073ffffffffffffffffffffffffffffffffffffffff1661085761044f565b73ffffffffffffffffffffffffffffffffffffffff167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e060405160405180910390a36108a281610997565b50565b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663bd02d0f56040518163ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f656e7472795072696365000000000000000000000000000000000000000000008152506020019050602060405180830381600087803b15801561095757600080fd5b505af115801561096b573d6000803e3d6000fd5b505050506040513d602081101561098157600080fd5b8101908080519060200190929190505050905090565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663ca446dd9826040518263ffffffff167c010000000000000000000000000000000000000000000000000000000002815260040180807f6f776e65720000000000000000000000000000000000000000000000000000008152506020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001915050600060405180830381600087803b158015610a7b57600080fd5b505af1158015610a8f573d6000803e3d6000fd5b50505050505600a165627a7a7230582081504d4d0cc3cbbeb10f80acc60471ad52e5c447877b7387d29339347418f01f0029",
+  "sourceMap": "228:1305:14:-;;;333:95;8:9:-1;5:2;;;30:1;27;20:12;5:2;333:95:14;;;;;;;;;;;;;;;;;;;;;;;;;;;;;402:8;440::27;206::31;195;;:19;;;;;;;;;;;;;;;;;;135:84;481:3:27;468:8;460:24;;;;456:65;;;494:20;503:10;494:8;;;:20;;;:::i;:::-;456:65;373:152;333:95:14;228:1305;;966:88:27;1014:8;;;;;;;;;;;:19;;;1043:5;1014:35;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1014:35:27;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1014:35:27;;;;966:88;:::o;228:1305:14:-;;;;;;;",
+  "deployedSourceMap": "228:1305:14:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;780:127;;8:9:-1;5:2;;;30:1;27;20:12;5:2;780:127:14;;;;;;;;;;;;;;;;;;;;;;;;;;;474:102;;8:9:-1;5:2;;;30:1;27;20:12;5:2;474:102:14;;;;;;;;;;;;;;;;;;;;;;;;;;;866:96:27;;8:9:-1;5:2;;;30:1;27;20:12;5:2;866:96:27;;;;;;;;;;;;;;;;;;;;;;;;;;;1235:110:14;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1235:110:14;;;;;;;;;;;;;;;;;;;;;;;;;;1010:148;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1010:148:14;;;;;;;;;;;;;;;;;;;;;;;;;;;;686:176:27;;8:9:-1;5:2;;;30:1;27;20:12;5:2;686:176:27;;;;;;;;;;;;;;;;;;;;;;;;;;;;635:97:14;;8:9:-1;5:2;;;30:1;27;20:12;5:2;635:97:14;;;;;;;;;;;;;;;;;;;;;;;780:127;820:13;863:8;;;;;;;;;;;:19;;;:37;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;863:37:14;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;863:37:14;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;863:37:14;;;;;;;;;;;;;;;;842:59;;780:127;:::o;474:102::-;518:7;538:8;;;;;;;;;;;:19;;;:34;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;538:34:14;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;538:34:14;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;538:34:14;;;;;;;;;;;;;;;;531:41;;474:102;:::o;866:96:27:-;907:7;929:8;;;;;;;;;;;:19;;;:28;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;929:28:27;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;929:28:27;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;929:28:27;;;;;;;;;;;;;;;;922:35;;866:96;:::o;1235:110:14:-;346:10:27;:8;:10::i;:::-;332:24;;:10;:24;;;324:33;;;;;;;;1299:8:14;;;;;;;;;;;:16;;;1330:10;1299:42;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1299:42:14;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1299:42:14;;;;1235:110;:::o;1010:148::-;346:10:27;:8;:10::i;:::-;332:24;;:10;:24;;;324:33;;;;;;;;1099:3:14;1084:11;:18;;;;1076:27;;;;;;;;1107:8;;;;;;;;;;;:19;;;1142:11;1107:47;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1107:47:14;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1107:47:14;;;;1010:148;:::o;686:176:27:-;346:10;:8;:10::i;:::-;332:24;;:10;:24;;;324:33;;;;;;;;782:1;762:22;;:8;:22;;;;754:31;;;;;;;;824:8;791:42;;812:10;:8;:10::i;:::-;791:42;;;;;;;;;;;;839:18;848:8;839;:18::i;:::-;686:176;:::o;635:97:14:-;678:7;698:8;;;;;;;;;;;:16;;;:30;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;698:30:14;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;698:30:14;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;698:30:14;;;;;;;;;;;;;;;;691:37;;635:97;:::o;966:88:27:-;1014:8;;;;;;;;;;;:19;;;1043:5;1014:35;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1014:35:27;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1014:35:27;;;;966:88;:::o",
+  "source": "pragma solidity ^0.4.18;\n\nimport 'zeppelin-solidity/contracts/token/ERC20/StandardToken.sol';\nimport \"../Upgradability/OwnableKeyed.sol\";\n\n/**\n* @title BotCoinPayableRegistry \n* @dev Contract for BotCoinPayment functionality\n*/\ncontract BotCoinPayableRegistry is OwnableKeyed {\n\n  \t/* @dev Constructor for BotCoinPayableRegistry */\n\tfunction BotCoinPayableRegistry(BaseStorage storage_)\n\t\tOwnableKeyed(storage_)\n\t    public\n\t\t{}\n\n\t/**\n\t* @dev Returns address of wallet\n\t*/\n\tfunction tallaWallet() public view returns (address) {\n\t\treturn _storage.getAddress(\"tallaWallet\");\n\t}\n\n\t/**\n\t* @dev Returns entry price associated with id\n\t*/\n\tfunction entryPrice() public view returns (uint256) {\n\t\treturn _storage.getUint(\"entryPrice\");\n\t}\n\n\t/**\n\t* @dev Returns instance of botCoin\n\t*/\n\tfunction botCoin() public view returns (StandardToken) {\n    \treturn StandardToken(_storage.getAddress(\"botCoinAddress\"));\n  \t}\n\n\t/**\n\t* @dev Sets wallet address\n\t* @param tallaWallet An address associated with the recipient\n\t*/\n\tfunction setTallaWallet(address tallaWallet) onlyOwner public {\n\t\trequire(tallaWallet != 0x0);\n\t\t_storage.setAddress(\"tallaWallet\", tallaWallet);\n\t}\n\n\t/**\n\t* @dev Sets entry price\n\t* @param entryPrice A value of payment\n\t*/\n\tfunction setEntryPrice(uint256 entryPrice) onlyOwner public {\n\t\t_storage.setUint(\"entryPrice\", entryPrice);\n\t}\n\n\t/**\n\t* @dev Transfers Botcoin payment from msg.sender to wallet\n\t*/\n\tfunction transferBotCoin() internal {\n    \tbotCoin().transferFrom(msg.sender, tallaWallet(), entryPrice());\n    }\n\n}",
+  "sourcePath": "/home/henry/ws/botchain/contracts/Registry/BotCoinPayableRegistry.sol",
+  "ast": {
+    "absolutePath": "/home/henry/ws/botchain/contracts/Registry/BotCoinPayableRegistry.sol",
+    "exportedSymbols": {
+      "BotCoinPayableRegistry": [
+        1558
+      ]
+    },
+    "id": 1559,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1458,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".18"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:14"
+      },
+      {
+        "absolutePath": "zeppelin-solidity/contracts/token/ERC20/StandardToken.sol",
+        "file": "zeppelin-solidity/contracts/token/ERC20/StandardToken.sol",
+        "id": 1459,
+        "nodeType": "ImportDirective",
+        "scope": 1559,
+        "sourceUnit": 6074,
+        "src": "26:67:14",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/home/henry/ws/botchain/contracts/Upgradability/OwnableKeyed.sol",
+        "file": "../Upgradability/OwnableKeyed.sol",
+        "id": 1460,
+        "nodeType": "ImportDirective",
+        "scope": 1559,
+        "sourceUnit": 4692,
+        "src": "94:43:14",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 1461,
+              "name": "OwnableKeyed",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 4691,
+              "src": "263:12:14",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_OwnableKeyed_$4691",
+                "typeString": "contract OwnableKeyed"
+              }
+            },
+            "id": 1462,
+            "nodeType": "InheritanceSpecifier",
+            "src": "263:12:14"
+          }
+        ],
+        "contractDependencies": [
+          4691,
+          5271,
+          5277
+        ],
+        "contractKind": "contract",
+        "documentation": "@title BotCoinPayableRegistry \n@dev Contract for BotCoinPayment functionality",
+        "fullyImplemented": true,
+        "id": 1558,
+        "linearizedBaseContracts": [
+          1558,
+          4691,
+          5271,
+          5277
+        ],
+        "name": "BotCoinPayableRegistry",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 1470,
+              "nodeType": "Block",
+              "src": "426:2:14",
+              "statements": []
+            },
+            "documentation": null,
+            "id": 1471,
+            "implemented": true,
+            "isConstructor": true,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": [
+                  {
+                    "argumentTypes": null,
+                    "id": 1467,
+                    "name": "storage_",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 1464,
+                    "src": "402:8:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                      "typeString": "contract BaseStorage"
+                    }
+                  }
+                ],
+                "id": 1468,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 1466,
+                  "name": "OwnableKeyed",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 4691,
+                  "src": "389:12:14",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_type$_t_contract$_OwnableKeyed_$4691_$",
+                    "typeString": "type(contract OwnableKeyed)"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "389:22:14"
+              }
+            ],
+            "name": "BotCoinPayableRegistry",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1465,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1464,
+                  "name": "storage_",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1471,
+                  "src": "365:20:14",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                    "typeString": "contract BaseStorage"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 1463,
+                    "name": "BaseStorage",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 3806,
+                    "src": "365:11:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                      "typeString": "contract BaseStorage"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "364:22:14"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 1469,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "426:0:14"
+            },
+            "scope": 1558,
+            "src": "333:95:14",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1481,
+              "nodeType": "Block",
+              "src": "527:49:14",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "74616c6c6157616c6c6574",
+                        "id": 1478,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "558:13:14",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_bc76a4d7c72b8b3e7b6cdf168817dcdb8a9df865c09172fdc3bb878559f95598",
+                          "typeString": "literal_string \"tallaWallet\""
+                        },
+                        "value": "tallaWallet"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_stringliteral_bc76a4d7c72b8b3e7b6cdf168817dcdb8a9df865c09172fdc3bb878559f95598",
+                          "typeString": "literal_string \"tallaWallet\""
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 1476,
+                        "name": "_storage",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 5276,
+                        "src": "538:8:14",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                          "typeString": "contract BaseStorage"
+                        }
+                      },
+                      "id": 1477,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "getAddress",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 3400,
+                      "src": "538:19:14",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_view$_t_bytes32_$returns$_t_address_$",
+                        "typeString": "function (bytes32) view external returns (address)"
+                      }
+                    },
+                    "id": 1479,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "538:34:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "functionReturnParameters": 1475,
+                  "id": 1480,
+                  "nodeType": "Return",
+                  "src": "531:41:14"
+                }
+              ]
+            },
+            "documentation": "@dev Returns address of wallet",
+            "id": 1482,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "tallaWallet",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1472,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "494:2:14"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 1475,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1474,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1482,
+                  "src": "518:7:14",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1473,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "518:7:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "517:9:14"
+            },
+            "scope": 1558,
+            "src": "474:102:14",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1492,
+              "nodeType": "Block",
+              "src": "687:45:14",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "656e7472795072696365",
+                        "id": 1489,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "715:12:14",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_0df20d1c0c15e39205e53310f56176d23ff06449fbd77c292c15d4c0249a8624",
+                          "typeString": "literal_string \"entryPrice\""
+                        },
+                        "value": "entryPrice"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_stringliteral_0df20d1c0c15e39205e53310f56176d23ff06449fbd77c292c15d4c0249a8624",
+                          "typeString": "literal_string \"entryPrice\""
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 1487,
+                        "name": "_storage",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 5276,
+                        "src": "698:8:14",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                          "typeString": "contract BaseStorage"
+                        }
+                      },
+                      "id": 1488,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "getUint",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 3416,
+                      "src": "698:16:14",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_view$_t_bytes32_$returns$_t_uint256_$",
+                        "typeString": "function (bytes32) view external returns (uint256)"
+                      }
+                    },
+                    "id": 1490,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "698:30:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "functionReturnParameters": 1486,
+                  "id": 1491,
+                  "nodeType": "Return",
+                  "src": "691:37:14"
+                }
+              ]
+            },
+            "documentation": "@dev Returns entry price associated with id",
+            "id": 1493,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "entryPrice",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1483,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "654:2:14"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 1486,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1485,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1493,
+                  "src": "678:7:14",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1484,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "678:7:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "677:9:14"
+            },
+            "scope": 1558,
+            "src": "635:97:14",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1505,
+              "nodeType": "Block",
+              "src": "835:72:14",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "hexValue": "626f74436f696e41646472657373",
+                            "id": 1501,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "string",
+                            "lValueRequested": false,
+                            "nodeType": "Literal",
+                            "src": "883:16:14",
+                            "subdenomination": null,
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_stringliteral_390dac53c4ff2946010740182f800bbb54cde7a8d090556a9440f558c73fd08d",
+                              "typeString": "literal_string \"botCoinAddress\""
+                            },
+                            "value": "botCoinAddress"
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_stringliteral_390dac53c4ff2946010740182f800bbb54cde7a8d090556a9440f558c73fd08d",
+                              "typeString": "literal_string \"botCoinAddress\""
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 1499,
+                            "name": "_storage",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 5276,
+                            "src": "863:8:14",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                              "typeString": "contract BaseStorage"
+                            }
+                          },
+                          "id": 1500,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "getAddress",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": 3400,
+                          "src": "863:19:14",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_function_external_view$_t_bytes32_$returns$_t_address_$",
+                            "typeString": "function (bytes32) view external returns (address)"
+                          }
+                        },
+                        "id": 1502,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "functionCall",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "863:37:14",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      ],
+                      "id": 1498,
+                      "name": "StandardToken",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 6073,
+                      "src": "849:13:14",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_type$_t_contract$_StandardToken_$6073_$",
+                        "typeString": "type(contract StandardToken)"
+                      }
+                    },
+                    "id": 1503,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "typeConversion",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "849:52:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_StandardToken_$6073",
+                      "typeString": "contract StandardToken"
+                    }
+                  },
+                  "functionReturnParameters": 1497,
+                  "id": 1504,
+                  "nodeType": "Return",
+                  "src": "842:59:14"
+                }
+              ]
+            },
+            "documentation": "@dev Returns instance of botCoin",
+            "id": 1506,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "botCoin",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1494,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "796:2:14"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 1497,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1496,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1506,
+                  "src": "820:13:14",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_StandardToken_$6073",
+                    "typeString": "contract StandardToken"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 1495,
+                    "name": "StandardToken",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 6073,
+                    "src": "820:13:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_StandardToken_$6073",
+                      "typeString": "contract StandardToken"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "819:15:14"
+            },
+            "scope": 1558,
+            "src": "780:127:14",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1526,
+              "nodeType": "Block",
+              "src": "1072:86:14",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        "id": 1516,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "id": 1514,
+                          "name": "tallaWallet",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1508,
+                          "src": "1084:11:14",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "!=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "hexValue": "307830",
+                          "id": 1515,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "number",
+                          "lValueRequested": false,
+                          "nodeType": "Literal",
+                          "src": "1099:3:14",
+                          "subdenomination": null,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_rational_0_by_1",
+                            "typeString": "int_const 0"
+                          },
+                          "value": "0x0"
+                        },
+                        "src": "1084:18:14",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      ],
+                      "id": 1513,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        6143,
+                        6144
+                      ],
+                      "referencedDeclaration": 6143,
+                      "src": "1076:7:14",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                        "typeString": "function (bool) pure"
+                      }
+                    },
+                    "id": 1517,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1076:27:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1518,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1076:27:14"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "74616c6c6157616c6c6574",
+                        "id": 1522,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "1127:13:14",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_bc76a4d7c72b8b3e7b6cdf168817dcdb8a9df865c09172fdc3bb878559f95598",
+                          "typeString": "literal_string \"tallaWallet\""
+                        },
+                        "value": "tallaWallet"
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 1523,
+                        "name": "tallaWallet",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 1508,
+                        "src": "1142:11:14",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_stringliteral_bc76a4d7c72b8b3e7b6cdf168817dcdb8a9df865c09172fdc3bb878559f95598",
+                          "typeString": "literal_string \"tallaWallet\""
+                        },
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 1519,
+                        "name": "_storage",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 5276,
+                        "src": "1107:8:14",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                          "typeString": "contract BaseStorage"
+                        }
+                      },
+                      "id": 1521,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "setAddress",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 3544,
+                      "src": "1107:19:14",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$_t_bytes32_$_t_address_$returns$__$",
+                        "typeString": "function (bytes32,address) external"
+                      }
+                    },
+                    "id": 1524,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1107:47:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1525,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1107:47:14"
+                }
+              ]
+            },
+            "documentation": "@dev Sets wallet address\n@param tallaWallet An address associated with the recipient",
+            "id": 1527,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": null,
+                "id": 1511,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 1510,
+                  "name": "onlyOwner",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 4619,
+                  "src": "1055:9:14",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_modifier$__$",
+                    "typeString": "modifier ()"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "1055:9:14"
+              }
+            ],
+            "name": "setTallaWallet",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1509,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1508,
+                  "name": "tallaWallet",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1527,
+                  "src": "1034:19:14",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1507,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1034:7:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1033:21:14"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 1512,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1072:0:14"
+            },
+            "scope": 1558,
+            "src": "1010:148:14",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1541,
+              "nodeType": "Block",
+              "src": "1295:50:14",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "656e7472795072696365",
+                        "id": 1537,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "1316:12:14",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_0df20d1c0c15e39205e53310f56176d23ff06449fbd77c292c15d4c0249a8624",
+                          "typeString": "literal_string \"entryPrice\""
+                        },
+                        "value": "entryPrice"
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 1538,
+                        "name": "entryPrice",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 1529,
+                        "src": "1330:10:14",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_stringliteral_0df20d1c0c15e39205e53310f56176d23ff06449fbd77c292c15d4c0249a8624",
+                          "typeString": "literal_string \"entryPrice\""
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 1534,
+                        "name": "_storage",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 5276,
+                        "src": "1299:8:14",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                          "typeString": "contract BaseStorage"
+                        }
+                      },
+                      "id": 1536,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "setUint",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 3562,
+                      "src": "1299:16:14",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$_t_bytes32_$_t_uint256_$returns$__$",
+                        "typeString": "function (bytes32,uint256) external"
+                      }
+                    },
+                    "id": 1539,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1299:42:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1540,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1299:42:14"
+                }
+              ]
+            },
+            "documentation": "@dev Sets entry price\n@param entryPrice A value of payment",
+            "id": 1542,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": null,
+                "id": 1532,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 1531,
+                  "name": "onlyOwner",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 4619,
+                  "src": "1278:9:14",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_modifier$__$",
+                    "typeString": "modifier ()"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "1278:9:14"
+              }
+            ],
+            "name": "setEntryPrice",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1530,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1529,
+                  "name": "entryPrice",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1542,
+                  "src": "1258:18:14",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1528,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1258:7:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1257:20:14"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 1533,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1295:0:14"
+            },
+            "scope": 1558,
+            "src": "1235:110:14",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1556,
+              "nodeType": "Block",
+              "src": "1453:77:14",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 1548,
+                          "name": "msg",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 6140,
+                          "src": "1483:3:14",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_magic_message",
+                            "typeString": "msg"
+                          }
+                        },
+                        "id": 1549,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "sender",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": null,
+                        "src": "1483:10:14",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "arguments": [],
+                        "expression": {
+                          "argumentTypes": [],
+                          "id": 1550,
+                          "name": "tallaWallet",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1482,
+                          "src": "1495:11:14",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_function_internal_view$__$returns$_t_address_$",
+                            "typeString": "function () view returns (address)"
+                          }
+                        },
+                        "id": 1551,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "functionCall",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "1495:13:14",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "arguments": [],
+                        "expression": {
+                          "argumentTypes": [],
+                          "id": 1552,
+                          "name": "entryPrice",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1493,
+                          "src": "1510:10:14",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_function_internal_view$__$returns$_t_uint256_$",
+                            "typeString": "function () view returns (uint256)"
+                          }
+                        },
+                        "id": 1553,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "functionCall",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "1510:12:14",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "arguments": [],
+                        "expression": {
+                          "argumentTypes": [],
+                          "id": 1545,
+                          "name": "botCoin",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1506,
+                          "src": "1460:7:14",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_function_internal_view$__$returns$_t_contract$_StandardToken_$6073_$",
+                            "typeString": "function () view returns (contract StandardToken)"
+                          }
+                        },
+                        "id": 1546,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "functionCall",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "1460:9:14",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_StandardToken_$6073",
+                          "typeString": "contract StandardToken"
+                        }
+                      },
+                      "id": 1547,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "transferFrom",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 5927,
+                      "src": "1460:22:14",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$_t_bool_$",
+                        "typeString": "function (address,address,uint256) external returns (bool)"
+                      }
+                    },
+                    "id": 1554,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1460:63:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "id": 1555,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1460:63:14"
+                }
+              ]
+            },
+            "documentation": "@dev Transfers Botcoin payment from msg.sender to wallet",
+            "id": 1557,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "transferBotCoin",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1543,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1441:2:14"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 1544,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1453:0:14"
+            },
+            "scope": 1558,
+            "src": "1417:113:14",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "internal"
+          }
+        ],
+        "scope": 1559,
+        "src": "228:1305:14"
+      }
+    ],
+    "src": "0:1533:14"
+  },
+  "legacyAST": {
+    "absolutePath": "/home/henry/ws/botchain/contracts/Registry/BotCoinPayableRegistry.sol",
+    "exportedSymbols": {
+      "BotCoinPayableRegistry": [
+        1558
+      ]
+    },
+    "id": 1559,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1458,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".18"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:14"
+      },
+      {
+        "absolutePath": "zeppelin-solidity/contracts/token/ERC20/StandardToken.sol",
+        "file": "zeppelin-solidity/contracts/token/ERC20/StandardToken.sol",
+        "id": 1459,
+        "nodeType": "ImportDirective",
+        "scope": 1559,
+        "sourceUnit": 6074,
+        "src": "26:67:14",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "absolutePath": "/home/henry/ws/botchain/contracts/Upgradability/OwnableKeyed.sol",
+        "file": "../Upgradability/OwnableKeyed.sol",
+        "id": 1460,
+        "nodeType": "ImportDirective",
+        "scope": 1559,
+        "sourceUnit": 4692,
+        "src": "94:43:14",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "baseContracts": [
+          {
+            "arguments": null,
+            "baseName": {
+              "contractScope": null,
+              "id": 1461,
+              "name": "OwnableKeyed",
+              "nodeType": "UserDefinedTypeName",
+              "referencedDeclaration": 4691,
+              "src": "263:12:14",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_OwnableKeyed_$4691",
+                "typeString": "contract OwnableKeyed"
+              }
+            },
+            "id": 1462,
+            "nodeType": "InheritanceSpecifier",
+            "src": "263:12:14"
+          }
+        ],
+        "contractDependencies": [
+          4691,
+          5271,
+          5277
+        ],
+        "contractKind": "contract",
+        "documentation": "@title BotCoinPayableRegistry \n@dev Contract for BotCoinPayment functionality",
+        "fullyImplemented": true,
+        "id": 1558,
+        "linearizedBaseContracts": [
+          1558,
+          4691,
+          5271,
+          5277
+        ],
+        "name": "BotCoinPayableRegistry",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 1470,
+              "nodeType": "Block",
+              "src": "426:2:14",
+              "statements": []
+            },
+            "documentation": null,
+            "id": 1471,
+            "implemented": true,
+            "isConstructor": true,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": [
+                  {
+                    "argumentTypes": null,
+                    "id": 1467,
+                    "name": "storage_",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 1464,
+                    "src": "402:8:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                      "typeString": "contract BaseStorage"
+                    }
+                  }
+                ],
+                "id": 1468,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 1466,
+                  "name": "OwnableKeyed",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 4691,
+                  "src": "389:12:14",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_type$_t_contract$_OwnableKeyed_$4691_$",
+                    "typeString": "type(contract OwnableKeyed)"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "389:22:14"
+              }
+            ],
+            "name": "BotCoinPayableRegistry",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1465,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1464,
+                  "name": "storage_",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1471,
+                  "src": "365:20:14",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                    "typeString": "contract BaseStorage"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 1463,
+                    "name": "BaseStorage",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 3806,
+                    "src": "365:11:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                      "typeString": "contract BaseStorage"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "364:22:14"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 1469,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "426:0:14"
+            },
+            "scope": 1558,
+            "src": "333:95:14",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1481,
+              "nodeType": "Block",
+              "src": "527:49:14",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "74616c6c6157616c6c6574",
+                        "id": 1478,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "558:13:14",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_bc76a4d7c72b8b3e7b6cdf168817dcdb8a9df865c09172fdc3bb878559f95598",
+                          "typeString": "literal_string \"tallaWallet\""
+                        },
+                        "value": "tallaWallet"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_stringliteral_bc76a4d7c72b8b3e7b6cdf168817dcdb8a9df865c09172fdc3bb878559f95598",
+                          "typeString": "literal_string \"tallaWallet\""
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 1476,
+                        "name": "_storage",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 5276,
+                        "src": "538:8:14",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                          "typeString": "contract BaseStorage"
+                        }
+                      },
+                      "id": 1477,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "getAddress",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 3400,
+                      "src": "538:19:14",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_view$_t_bytes32_$returns$_t_address_$",
+                        "typeString": "function (bytes32) view external returns (address)"
+                      }
+                    },
+                    "id": 1479,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "538:34:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "functionReturnParameters": 1475,
+                  "id": 1480,
+                  "nodeType": "Return",
+                  "src": "531:41:14"
+                }
+              ]
+            },
+            "documentation": "@dev Returns address of wallet",
+            "id": 1482,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "tallaWallet",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1472,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "494:2:14"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 1475,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1474,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1482,
+                  "src": "518:7:14",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1473,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "518:7:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "517:9:14"
+            },
+            "scope": 1558,
+            "src": "474:102:14",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1492,
+              "nodeType": "Block",
+              "src": "687:45:14",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "656e7472795072696365",
+                        "id": 1489,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "715:12:14",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_0df20d1c0c15e39205e53310f56176d23ff06449fbd77c292c15d4c0249a8624",
+                          "typeString": "literal_string \"entryPrice\""
+                        },
+                        "value": "entryPrice"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_stringliteral_0df20d1c0c15e39205e53310f56176d23ff06449fbd77c292c15d4c0249a8624",
+                          "typeString": "literal_string \"entryPrice\""
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 1487,
+                        "name": "_storage",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 5276,
+                        "src": "698:8:14",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                          "typeString": "contract BaseStorage"
+                        }
+                      },
+                      "id": 1488,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "getUint",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 3416,
+                      "src": "698:16:14",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_view$_t_bytes32_$returns$_t_uint256_$",
+                        "typeString": "function (bytes32) view external returns (uint256)"
+                      }
+                    },
+                    "id": 1490,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "698:30:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "functionReturnParameters": 1486,
+                  "id": 1491,
+                  "nodeType": "Return",
+                  "src": "691:37:14"
+                }
+              ]
+            },
+            "documentation": "@dev Returns entry price associated with id",
+            "id": 1493,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "entryPrice",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1483,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "654:2:14"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 1486,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1485,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1493,
+                  "src": "678:7:14",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1484,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "678:7:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "677:9:14"
+            },
+            "scope": 1558,
+            "src": "635:97:14",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1505,
+              "nodeType": "Block",
+              "src": "835:72:14",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "arguments": [
+                          {
+                            "argumentTypes": null,
+                            "hexValue": "626f74436f696e41646472657373",
+                            "id": 1501,
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "string",
+                            "lValueRequested": false,
+                            "nodeType": "Literal",
+                            "src": "883:16:14",
+                            "subdenomination": null,
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_stringliteral_390dac53c4ff2946010740182f800bbb54cde7a8d090556a9440f558c73fd08d",
+                              "typeString": "literal_string \"botCoinAddress\""
+                            },
+                            "value": "botCoinAddress"
+                          }
+                        ],
+                        "expression": {
+                          "argumentTypes": [
+                            {
+                              "typeIdentifier": "t_stringliteral_390dac53c4ff2946010740182f800bbb54cde7a8d090556a9440f558c73fd08d",
+                              "typeString": "literal_string \"botCoinAddress\""
+                            }
+                          ],
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 1499,
+                            "name": "_storage",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 5276,
+                            "src": "863:8:14",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                              "typeString": "contract BaseStorage"
+                            }
+                          },
+                          "id": 1500,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "getAddress",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": 3400,
+                          "src": "863:19:14",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_function_external_view$_t_bytes32_$returns$_t_address_$",
+                            "typeString": "function (bytes32) view external returns (address)"
+                          }
+                        },
+                        "id": 1502,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "functionCall",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "863:37:14",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      ],
+                      "id": 1498,
+                      "name": "StandardToken",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 6073,
+                      "src": "849:13:14",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_type$_t_contract$_StandardToken_$6073_$",
+                        "typeString": "type(contract StandardToken)"
+                      }
+                    },
+                    "id": 1503,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "typeConversion",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "849:52:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_StandardToken_$6073",
+                      "typeString": "contract StandardToken"
+                    }
+                  },
+                  "functionReturnParameters": 1497,
+                  "id": 1504,
+                  "nodeType": "Return",
+                  "src": "842:59:14"
+                }
+              ]
+            },
+            "documentation": "@dev Returns instance of botCoin",
+            "id": 1506,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": true,
+            "modifiers": [],
+            "name": "botCoin",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1494,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "796:2:14"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 1497,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1496,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1506,
+                  "src": "820:13:14",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_StandardToken_$6073",
+                    "typeString": "contract StandardToken"
+                  },
+                  "typeName": {
+                    "contractScope": null,
+                    "id": 1495,
+                    "name": "StandardToken",
+                    "nodeType": "UserDefinedTypeName",
+                    "referencedDeclaration": 6073,
+                    "src": "820:13:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_StandardToken_$6073",
+                      "typeString": "contract StandardToken"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "819:15:14"
+            },
+            "scope": 1558,
+            "src": "780:127:14",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1526,
+              "nodeType": "Block",
+              "src": "1072:86:14",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        "id": 1516,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "id": 1514,
+                          "name": "tallaWallet",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1508,
+                          "src": "1084:11:14",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "!=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "hexValue": "307830",
+                          "id": 1515,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "number",
+                          "lValueRequested": false,
+                          "nodeType": "Literal",
+                          "src": "1099:3:14",
+                          "subdenomination": null,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_rational_0_by_1",
+                            "typeString": "int_const 0"
+                          },
+                          "value": "0x0"
+                        },
+                        "src": "1084:18:14",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      ],
+                      "id": 1513,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        6143,
+                        6144
+                      ],
+                      "referencedDeclaration": 6143,
+                      "src": "1076:7:14",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                        "typeString": "function (bool) pure"
+                      }
+                    },
+                    "id": 1517,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1076:27:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1518,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1076:27:14"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "74616c6c6157616c6c6574",
+                        "id": 1522,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "1127:13:14",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_bc76a4d7c72b8b3e7b6cdf168817dcdb8a9df865c09172fdc3bb878559f95598",
+                          "typeString": "literal_string \"tallaWallet\""
+                        },
+                        "value": "tallaWallet"
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 1523,
+                        "name": "tallaWallet",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 1508,
+                        "src": "1142:11:14",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_stringliteral_bc76a4d7c72b8b3e7b6cdf168817dcdb8a9df865c09172fdc3bb878559f95598",
+                          "typeString": "literal_string \"tallaWallet\""
+                        },
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 1519,
+                        "name": "_storage",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 5276,
+                        "src": "1107:8:14",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                          "typeString": "contract BaseStorage"
+                        }
+                      },
+                      "id": 1521,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "setAddress",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 3544,
+                      "src": "1107:19:14",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$_t_bytes32_$_t_address_$returns$__$",
+                        "typeString": "function (bytes32,address) external"
+                      }
+                    },
+                    "id": 1524,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1107:47:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1525,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1107:47:14"
+                }
+              ]
+            },
+            "documentation": "@dev Sets wallet address\n@param tallaWallet An address associated with the recipient",
+            "id": 1527,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": null,
+                "id": 1511,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 1510,
+                  "name": "onlyOwner",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 4619,
+                  "src": "1055:9:14",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_modifier$__$",
+                    "typeString": "modifier ()"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "1055:9:14"
+              }
+            ],
+            "name": "setTallaWallet",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1509,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1508,
+                  "name": "tallaWallet",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1527,
+                  "src": "1034:19:14",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 1507,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1034:7:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1033:21:14"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 1512,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1072:0:14"
+            },
+            "scope": 1558,
+            "src": "1010:148:14",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1541,
+              "nodeType": "Block",
+              "src": "1295:50:14",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "656e7472795072696365",
+                        "id": 1537,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "1316:12:14",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_0df20d1c0c15e39205e53310f56176d23ff06449fbd77c292c15d4c0249a8624",
+                          "typeString": "literal_string \"entryPrice\""
+                        },
+                        "value": "entryPrice"
+                      },
+                      {
+                        "argumentTypes": null,
+                        "id": 1538,
+                        "name": "entryPrice",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 1529,
+                        "src": "1330:10:14",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_stringliteral_0df20d1c0c15e39205e53310f56176d23ff06449fbd77c292c15d4c0249a8624",
+                          "typeString": "literal_string \"entryPrice\""
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 1534,
+                        "name": "_storage",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 5276,
+                        "src": "1299:8:14",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_BaseStorage_$3806",
+                          "typeString": "contract BaseStorage"
+                        }
+                      },
+                      "id": 1536,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "setUint",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 3562,
+                      "src": "1299:16:14",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$_t_bytes32_$_t_uint256_$returns$__$",
+                        "typeString": "function (bytes32,uint256) external"
+                      }
+                    },
+                    "id": 1539,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1299:42:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 1540,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1299:42:14"
+                }
+              ]
+            },
+            "documentation": "@dev Sets entry price\n@param entryPrice A value of payment",
+            "id": 1542,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [
+              {
+                "arguments": null,
+                "id": 1532,
+                "modifierName": {
+                  "argumentTypes": null,
+                  "id": 1531,
+                  "name": "onlyOwner",
+                  "nodeType": "Identifier",
+                  "overloadedDeclarations": [],
+                  "referencedDeclaration": 4619,
+                  "src": "1278:9:14",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_modifier$__$",
+                    "typeString": "modifier ()"
+                  }
+                },
+                "nodeType": "ModifierInvocation",
+                "src": "1278:9:14"
+              }
+            ],
+            "name": "setEntryPrice",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1530,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1529,
+                  "name": "entryPrice",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1542,
+                  "src": "1258:18:14",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1528,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1258:7:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "1257:20:14"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 1533,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1295:0:14"
+            },
+            "scope": 1558,
+            "src": "1235:110:14",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 1556,
+              "nodeType": "Block",
+              "src": "1453:77:14",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 1548,
+                          "name": "msg",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 6140,
+                          "src": "1483:3:14",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_magic_message",
+                            "typeString": "msg"
+                          }
+                        },
+                        "id": 1549,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "sender",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": null,
+                        "src": "1483:10:14",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "arguments": [],
+                        "expression": {
+                          "argumentTypes": [],
+                          "id": 1550,
+                          "name": "tallaWallet",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1482,
+                          "src": "1495:11:14",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_function_internal_view$__$returns$_t_address_$",
+                            "typeString": "function () view returns (address)"
+                          }
+                        },
+                        "id": 1551,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "functionCall",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "1495:13:14",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "arguments": [],
+                        "expression": {
+                          "argumentTypes": [],
+                          "id": 1552,
+                          "name": "entryPrice",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1493,
+                          "src": "1510:10:14",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_function_internal_view$__$returns$_t_uint256_$",
+                            "typeString": "function () view returns (uint256)"
+                          }
+                        },
+                        "id": 1553,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "functionCall",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "1510:12:14",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        },
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "arguments": [],
+                        "expression": {
+                          "argumentTypes": [],
+                          "id": 1545,
+                          "name": "botCoin",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1506,
+                          "src": "1460:7:14",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_function_internal_view$__$returns$_t_contract$_StandardToken_$6073_$",
+                            "typeString": "function () view returns (contract StandardToken)"
+                          }
+                        },
+                        "id": 1546,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "kind": "functionCall",
+                        "lValueRequested": false,
+                        "names": [],
+                        "nodeType": "FunctionCall",
+                        "src": "1460:9:14",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_StandardToken_$6073",
+                          "typeString": "contract StandardToken"
+                        }
+                      },
+                      "id": 1547,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "transferFrom",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 5927,
+                      "src": "1460:22:14",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$_t_bool_$",
+                        "typeString": "function (address,address,uint256) external returns (bool)"
+                      }
+                    },
+                    "id": 1554,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "1460:63:14",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "id": 1555,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1460:63:14"
+                }
+              ]
+            },
+            "documentation": "@dev Transfers Botcoin payment from msg.sender to wallet",
+            "id": 1557,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "transferBotCoin",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 1543,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1441:2:14"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 1544,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "1453:0:14"
+            },
+            "scope": 1558,
+            "src": "1417:113:14",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "internal"
+          }
+        ],
+        "scope": 1559,
+        "src": "228:1305:14"
+      }
+    ],
+    "src": "0:1533:14"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.24+commit.e67f0147.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "2.0.1",
+  "updatedAt": "2018-11-01T15:08:00.537Z"
+}
