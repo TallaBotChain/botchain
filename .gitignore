@@ -11,3 +11,4 @@ scTopics
 coverageEnv
 keys
 dist
+.DS_Store
