@@ -1,12 +1,12 @@
 pragma solidity ^0.4.18;
 
 import 'zeppelin-solidity/contracts/math/SafeMath.sol';
-import "../Upgradability/StorageConsumer.sol";
+import "../Upgradability/OwnableKeyed.sol";
 
 /**
 * @title VoteRegistry
 */
-contract VoteRegistry is StorageConsumer {
+contract VoteRegistry is OwnableKeyed {
   using SafeMath for uint256;
 
   /**
@@ -143,13 +143,29 @@ contract VoteRegistry is StorageConsumer {
   }
 
   /**
+  * @dev Get number of blocks vote will be open
+  * @return uint256 number of blocks vote will be open
+  */
+  function getVoteWindowBlocks() public view returns (uint256) {
+    return _storage.getUint(keccak256("voteWindowBlocks"));
+  }
+
+  /**
+  * @dev Set number of blocks vote will be open
+  * @param numOfBlocks number of blocks
+  */
+  function setVoteWindowBlocks(uint256 numOfBlocks) public onlyOwner {
+    _storage.setUint(keccak256("voteWindowBlocks"), numOfBlocks);
+  }
+
+  /**
   * @dev Creates a new registration vote
   */
   function createRegistrationVote() public {
     require(!registrationVoteExists(msg.sender));
 
     uint256 initialBlock = block.number;
-    uint256 finalBlock = initialBlock + 100000;
+    uint256 finalBlock = initialBlock + getVoteWindowBlocks();
     uint256 registrationVoteId = totalVotes().add(1);
 
     _storage.setAddress(keccak256("registrationVoteAddress", registrationVoteId), msg.sender);
