@@ -39,7 +39,8 @@ module.exports = {
       gasPrice: 0x01
     },
     rinkeby_infura: getInfuraConfig('rinkeby', 4),
-    kovan_infura: getInfuraConfig('kovan', 42)
+    kovan_infura: getInfuraConfig('kovan', 42),
+    mainnet_infura: getInfuraConfig('mainnet', 1)
   }
 }
 

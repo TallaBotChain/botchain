@@ -16,77 +16,143 @@ const CurationCouncil = artifacts.require('./CurationCouncil.sol')
 
 const tallaWalletAddress = '0xc3f61fca6bd491424bc19e844c6847c9c9ab3d2c'
 const entryPrice = 1 * 10 ** 18
+const mainnetBotCoinAddress = '0xe3118A166103F109643497DA22fA656cdE28ac73'
 
 const fs = require('fs')
 const contractsOutputFile = 'build/contracts.json'
 let jsonOutput = {}
 
-module.exports = function (deployer) {
-  let storage, botcoin
-  let developerRegistry, botProductRegistry, botServiceRegistry, botInstanceRegistry
+module.exports = function (deployer, network) {
+  if (network == 'mainnet_infura') {
+    let storage
+    let developerRegistry, botProductRegistry, botServiceRegistry, botInstanceRegistry
 
-  deployer.then(() => {
-    return PublicStorage.new()
-  }).then((_storage) => {
-    storage = _storage
-    addToJSON("PublicStorage", storage.address)
-    return BotCoin.new()
-  }).then((_botcoin) => {
-    botcoin = _botcoin
-    addToJSON("BotCoin", botcoin.address)
-    _curationCouncil = deployCurationCouncil(storage.address, botcoin.address)
-    _tokenVault = deployTokenVault(storage.address, _curationCouncil.address, botcoin.address)
-    return deployDeveloperRegistry(
-      storage.address,
-      botcoin.address
-    )
-  }).then((_developerRegistry) => {
-    developerRegistry = _developerRegistry
-    return deployRegistry(
-      'Bot Product',
-      'BotProductRegistry',
-      developerRegistry.address,
-      storage.address,
-      botcoin.address,
-      BotEntryRegistry,
-      BotProductRegistryDelegate
-    )
-  }).then((_botProductRegistry) => {
-    botProductRegistry = _botProductRegistry
-    return deployRegistry(
-      'Bot Service',
-      'BotServiceRegistry',
-      developerRegistry.address,
-      storage.address,
-      botcoin.address,
-      BotEntryRegistry,
-      BotServiceRegistryDelegate
-    )
-  }).then((_botServiceRegistry) => {
-    botServiceRegistry = _botServiceRegistry
-    return deployRegistry(
-      'Bot Instance',
-      'BotInstanceRegistry',
-      botProductRegistry.address,
-      storage.address,
-      botcoin.address,
-      BotEntryRegistry,
-      BotInstanceRegistryDelegate
-    )
-  }).then((_botInstanceRegistry) => {
-    botInstanceRegistry = _botInstanceRegistry
-    return configureRegistry('developer', developerRegistry, tallaWalletAddress, entryPrice)
-  }).then(() => {
-  }).then(() => {
-    return configureRegistry('bot product', botProductRegistry, tallaWalletAddress, entryPrice)
-  }).then(() => {
-    return configureRegistry('bot service', botServiceRegistry, tallaWalletAddress, entryPrice)
-  }).then(() => {
-    return configureRegistry('bot instance', botInstanceRegistry, tallaWalletAddress, entryPrice)
-  })
-  .catch((err) => {
-    console.error(err)
-  })
+    deployer.then(() => {
+      return PublicStorage.new()
+    }).then((_storage) => {
+      storage = _storage
+      addToJSON("PublicStorage", storage.address)
+      _curationCouncil = deployCurationCouncil(storage.address, mainnetBotCoinAddress)
+      _tokenVault = deployTokenVault(storage.address, _curationCouncil.address, mainnetBotCoinAddress)
+      return deployDeveloperRegistry(
+        storage.address,
+        mainnetBotCoinAddress
+      )
+    }).then((_developerRegistry) => {
+      developerRegistry = _developerRegistry
+      return deployRegistry(
+        'Bot Product',
+        'BotProductRegistry',
+        developerRegistry.address,
+        storage.address,
+        mainnetBotCoinAddress,
+        BotEntryRegistry,
+        BotProductRegistryDelegate
+      )
+    }).then((_botProductRegistry) => {
+      botProductRegistry = _botProductRegistry
+      return deployRegistry(
+        'Bot Service',
+        'BotServiceRegistry',
+        developerRegistry.address,
+        storage.address,
+        mainnetBotCoinAddress,
+        BotEntryRegistry,
+        BotServiceRegistryDelegate
+      )
+    }).then((_botServiceRegistry) => {
+      botServiceRegistry = _botServiceRegistry
+      return deployRegistry(
+        'Bot Instance',
+        'BotInstanceRegistry',
+        botProductRegistry.address,
+        storage.address,
+        mainnetBotCoinAddress,
+        BotEntryRegistry,
+        BotInstanceRegistryDelegate
+      )
+    }).then((_botInstanceRegistry) => {
+      botInstanceRegistry = _botInstanceRegistry
+      return configureRegistry('developer', developerRegistry, tallaWalletAddress, entryPrice)
+    }).then(() => {
+    }).then(() => {
+      return configureRegistry('bot product', botProductRegistry, tallaWalletAddress, entryPrice)
+    }).then(() => {
+      return configureRegistry('bot service', botServiceRegistry, tallaWalletAddress, entryPrice)
+    }).then(() => {
+      return configureRegistry('bot instance', botInstanceRegistry, tallaWalletAddress, entryPrice)
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+  } else {
+    let storage, botcoin
+    let developerRegistry, botProductRegistry, botServiceRegistry, botInstanceRegistry
+
+    deployer.then(() => {
+      return PublicStorage.new()
+    }).then((_storage) => {
+      storage = _storage
+      addToJSON("PublicStorage", storage.address)
+      return BotCoin.new()
+    }).then((_botcoin) => {
+      botcoin = _botcoin
+      addToJSON("BotCoin", botcoin.address)
+      _curationCouncil = deployCurationCouncil(storage.address, botcoin.address)
+      _tokenVault = deployTokenVault(storage.address, _curationCouncil.address, botcoin.address)
+      return deployDeveloperRegistry(
+        storage.address,
+        botcoin.address
+      )
+    }).then((_developerRegistry) => {
+      developerRegistry = _developerRegistry
+      return deployRegistry(
+        'Bot Product',
+        'BotProductRegistry',
+        developerRegistry.address,
+        storage.address,
+        botcoin.address,
+        BotEntryRegistry,
+        BotProductRegistryDelegate
+      )
+    }).then((_botProductRegistry) => {
+      botProductRegistry = _botProductRegistry
+      return deployRegistry(
+        'Bot Service',
+        'BotServiceRegistry',
+        developerRegistry.address,
+        storage.address,
+        botcoin.address,
+        BotEntryRegistry,
+        BotServiceRegistryDelegate
+      )
+    }).then((_botServiceRegistry) => {
+      botServiceRegistry = _botServiceRegistry
+      return deployRegistry(
+        'Bot Instance',
+        'BotInstanceRegistry',
+        botProductRegistry.address,
+        storage.address,
+        botcoin.address,
+        BotEntryRegistry,
+        BotInstanceRegistryDelegate
+      )
+    }).then((_botInstanceRegistry) => {
+      botInstanceRegistry = _botInstanceRegistry
+      return configureRegistry('developer', developerRegistry, tallaWalletAddress, entryPrice)
+    }).then(() => {
+    }).then(() => {
+      return configureRegistry('bot product', botProductRegistry, tallaWalletAddress, entryPrice)
+    }).then(() => {
+      return configureRegistry('bot service', botServiceRegistry, tallaWalletAddress, entryPrice)
+    }).then(() => {
+      return configureRegistry('bot instance', botInstanceRegistry, tallaWalletAddress, entryPrice)
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+  }
+  
 }
 
 function deployTokenVault (
